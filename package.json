@@ -1,0 +1,28 @@
+{
+  "name": "react-selectable",
+  "version": "0.1.0",
+  "description": "",
+  "main": "src/react-selectable.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/unclecheese/react-selectable.git"
+  },
+  "keywords": [
+    "selectable",
+    "selection",
+    "mouse",
+    "drag",
+    "react"
+  ],
+  "author": "Uncle Cheese",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/unclecheese/react-selectable/issues"
+  },
+  "devDependencies": {
+    "babel-core": "^4.6.6",
+    "babel-loader": "^4.0.0",
+    "react": "^0.12.2",
+    "webpack": "^1.7.2"
+  }
+}
