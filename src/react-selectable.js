@@ -12,9 +12,7 @@ function isNodeInRoot(node, root) {
   return false;
 }
 
-
 var Selectable = React.createClass({
-
 
 	propTypes: {
 		onSelection: React.PropTypes.func,
@@ -22,9 +20,9 @@ var Selectable = React.createClass({
 		tolerance: React.PropTypes.oneOfType([
 			React.PropTypes.object,
 			React.PropTypes.number
-		])
+		]),
+		globalMouse: React.PropTypes.bool
 	},
-
 
 	_mouseDownData: null,
 
@@ -39,15 +37,14 @@ var Selectable = React.createClass({
 		};
 	},
 
-
 	getDefaultProps: function() {
 		return {
 			onSelection: function () {},
 			component: 'div',
-			tolerance: 0
+			tolerance: 0,
+			globalMouse: false
 		};
 	},
-
 
 	componentDidMount: function() {
 		document.addEventListener('mousedown', this._mouseDown);
@@ -56,14 +53,12 @@ var Selectable = React.createClass({
 		document.addEventListener('click', this._clickListener);
 	},
 
-
 	componentWillUnmount: function() {		
 		document.removeEventListener('mousedown', this._mouseDown);		
 		document.removeEventListener('keydown', this._keyListener);
 		document.removeEventListener('keyup', this._keyListener);
 		document.removeEventListener('click', this._clickListener);
 	},
-
 
 	render: function() {
 		var boxStyle = {
@@ -99,7 +94,6 @@ var Selectable = React.createClass({
 
 		);
 	},
-
 	
 	_openSelector: function (e) {
 	    var w = Math.abs(this._mouseDownData.initialW - e.pageX);
@@ -115,11 +109,10 @@ var Selectable = React.createClass({
 	    });
 	},
 
-	
 	_mouseDown: function (e) {
 		var node = this.getDOMNode(),
 			collides;
-		if(!isNodeInRoot(e.target, node)) {			
+		if(!isNodeInRoot(e.target, node) && !this.props.globalMouse) {			
 			collides = this._objectsCollide(
 				node,
 				{
@@ -142,8 +135,8 @@ var Selectable = React.createClass({
         	initialH: e.pageY        	
 		};
 
-        document.addEventListener('mouseup', this._mouseUp);
-        document.addEventListener('mousemove', this._openSelector);
+		document.addEventListener('mouseup', this._mouseUp);
+		document.addEventListener('mousemove', this._openSelector);
 	},
 
 	_mouseUp: function (e) {
@@ -158,7 +151,6 @@ var Selectable = React.createClass({
 
 	    return this._selectElements(e);
 	},
-
 
 	_selectElement: function (x, y) {	    
 	    var currentItems = this.state.selectedItems,
@@ -205,7 +197,6 @@ var Selectable = React.createClass({
 		this.props.onSelection(currentItems);
 	},
 
-
 	_selectElements: function (e) {
 	    var currentItems = this.state.selectedItems;
 
@@ -232,7 +223,6 @@ var Selectable = React.createClass({
 		this.props.onSelection(currentItems);
 
 	},
-
 	
 	_getBoundsForNode: function (node) {
 		var rect = node.getBoundingClientRect();
@@ -244,7 +234,6 @@ var Selectable = React.createClass({
 			offsetHeight: node.offsetHeight
 		};
 	},
-
 
 	_objectsCollide: function (a, b, tolerance) {		
 		var aObj = (a instanceof HTMLElement) ? this._getBoundsForNode(a) : a,
@@ -258,18 +247,17 @@ var Selectable = React.createClass({
 			tolerance = {top: tolerance, left: tolerance, right: tolerance, bottom: tolerance};
 		}			
 
-    	return this._coordsCollide(
-    		aObj.top - tolerance.top, 
-    		aObj.left - tolerance.top, 
-    		bObj.top, 
-    		bObj.left, 
-    		aObj.offsetHeight + tolerance.bottom, 
-    		aObj.offsetWidth + tolerance.right, 
-    		bObj.offsetWidth, 
-    		bObj.offsetHeight
-    	);
+		return this._coordsCollide(
+			aObj.top - tolerance.top, 
+			aObj.left - tolerance.top, 
+			bObj.top, 
+			bObj.left, 
+			aObj.offsetHeight + tolerance.bottom, 
+			aObj.offsetWidth + tolerance.right, 
+			bObj.offsetWidth, 
+			bObj.offsetHeight
+		);
 	},
-
 
 	_coordsCollide: function (aTop, aLeft, bTop, bLeft, aWidth, aHeight, bWidth, bHeight) {
 	    return !(
@@ -279,7 +267,6 @@ var Selectable = React.createClass({
 	        (aLeft > (bLeft + bWidth))
 	    );		
 	},
-
 
 	_keyListener: function (e) {		
 		this.setState({
@@ -296,7 +283,6 @@ var Selectable = React.createClass({
 
 		this.props.onSelection([]);
 	}
-
 
 });
 
