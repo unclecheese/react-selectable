@@ -121,17 +121,17 @@ var Selectable = React.createClass({
 	 * of the selection box
 	 */
 	_openSelector: function (e) {
-	    var w = Math.abs(this._mouseDownData.initialW - e.pageX);
-	    var h = Math.abs(this._mouseDownData.initialH - e.pageY);
+		var w = Math.abs(this._mouseDownData.initialW - e.pageX);
+		var h = Math.abs(this._mouseDownData.initialH - e.pageY);
 
-	    this.setState({
-	    	isBoxSelecting: true,
-	    	boxWidth: w,
-	    	boxHeight: h,
-	    	boxLeft: Math.min(e.pageX, this._mouseDownData.initialW),
-	    	boxTop: Math.min(e.pageY, this._mouseDownData.initialH),
-	    	selectedItems: this.state.persist ? this.state.selectedItems : []
-	    });
+		this.setState({
+	    		isBoxSelecting: true,
+	    		boxWidth: w,
+	    		boxHeight: h,
+	    		boxLeft: Math.min(e.pageX, this._mouseDownData.initialW),
+	    		boxTop: Math.min(e.pageY, this._mouseDownData.initialH),
+	    		selectedItems: this.state.persist ? this.state.selectedItems : []
+	    	});
 	},
 
 	/**
@@ -165,8 +165,8 @@ var Selectable = React.createClass({
 		this._mouseDownData = {			
 			boxLeft: e.pageX,
 			boxTop: e.pageY,
-	        initialW: e.pageX,
-        	initialH: e.pageY        	
+	        	initialW: e.pageX,
+        		initialH: e.pageY        	
 		};
 
 		document.addEventListener('mouseup', this._mouseUp);
@@ -349,12 +349,12 @@ var Selectable = React.createClass({
 	 * @return {bool}
 	 */
 	_coordsCollide: function (aTop, aLeft, bTop, bLeft, aWidth, aHeight, bWidth, bHeight) {
-	    return !(
-	        ((aTop + aHeight) < (bTop)) ||
-	        (aTop > (bTop + bHeight)) ||
-	        ((aLeft + aWidth) < bLeft) ||
-	        (aLeft > (bLeft + bWidth))
-	    );		
+		return !(
+		        ((aTop + aHeight) < (bTop)) ||
+		        (aTop > (bTop + bHeight)) ||
+	        	((aLeft + aWidth) < bLeft) ||
+	        	(aLeft > (bLeft + bWidth))
+	    	);		
 	},
 
 	/**
