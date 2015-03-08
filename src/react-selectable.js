@@ -14,6 +14,9 @@ function isNodeInRoot(node, root) {
 
 var Selectable = React.createClass({
 
+	/**	 
+	 * @type {Object}
+	 */
 	propTypes: {
 		onSelection: React.PropTypes.func,
 		component: React.PropTypes.string,
@@ -24,9 +27,16 @@ var Selectable = React.createClass({
 		globalMouse: React.PropTypes.bool
 	},
 
+	/**
+	 * This is stored outside the state, so that setting it doesn't
+	 * rerender the app during selection. shouldComponentUpdate() could work around that.
+	 * @type {Object}
+	 */
 	_mouseDownData: null,
 
-
+	/**	 
+	 * @return {Object}
+	 */
 	getInitialState: function() {
 		return {
 			isBoxSelecting: false,
@@ -37,6 +47,9 @@ var Selectable = React.createClass({
 		};
 	},
 
+	/**	 
+	 * @return {Object}
+	 */
 	getDefaultProps: function() {
 		return {
 			onSelection: function () {},
@@ -46,20 +59,28 @@ var Selectable = React.createClass({
 		};
 	},
 
+	/**	 
+	 * Attach global event listeners
+	 */
 	componentDidMount: function() {
 		document.addEventListener('mousedown', this._mouseDown);
 		document.addEventListener('keydown', this._keyListener);
 		document.addEventListener('keyup', this._keyListener);
-		document.addEventListener('click', this._clickListener);
 	},
 
+	/**	 
+	 * Remove global event listeners
+	 */
 	componentWillUnmount: function() {		
 		document.removeEventListener('mousedown', this._mouseDown);		
 		document.removeEventListener('keydown', this._keyListener);
 		document.removeEventListener('keyup', this._keyListener);
-		document.removeEventListener('click', this._clickListener);
 	},
 
+	/**
+	 * Renders the component
+	 * @return {ReactComponent}
+	 */
 	render: function() {
 		var boxStyle = {
 			left: this.state.boxLeft,
@@ -95,6 +116,10 @@ var Selectable = React.createClass({
 		);
 	},
 	
+	/**
+	 * Called while moving the mouse with the button down. Changes the boundaries
+	 * of the selection box
+	 */
 	_openSelector: function (e) {
 	    var w = Math.abs(this._mouseDownData.initialW - e.pageX);
 	    var h = Math.abs(this._mouseDownData.initialH - e.pageY);
@@ -109,9 +134,17 @@ var Selectable = React.createClass({
 	    });
 	},
 
+	/**
+	 * Called when a user presses the mouse button. Determines if a select box should
+	 * be added, and if so, attach event listeners
+	 */
 	_mouseDown: function (e) {
 		var node = this.getDOMNode(),
 			collides;
+
+		// Right clicks
+		if(e.which === 3 || e.button === 2) return;
+
 		if(!isNodeInRoot(e.target, node) && !this.props.globalMouse) {			
 			collides = this._objectsCollide(
 				node,
@@ -128,6 +161,7 @@ var Selectable = React.createClass({
 		} 
 
 		e.preventDefault();
+
 		this._mouseDownData = {			
 			boxLeft: e.pageX,
 			boxTop: e.pageY,
@@ -139,19 +173,40 @@ var Selectable = React.createClass({
 		document.addEventListener('mousemove', this._openSelector);
 	},
 
+	/**
+	 * Called when the user has completed selection
+	 */
 	_mouseUp: function (e) {
 		e.preventDefault();
 
 	    document.removeEventListener('mousemove', this._openSelector);
 	    document.removeEventListener('mouseup', this._mouseUp);
 
+	    // Detect a "click"
 	    if(e.pageX === this._mouseDownData.initialW && e.pageY === this._mouseDownData.initialH) {
+		   
+		    // Clicks outside the Selectable node should reset clear selection
+		    if(!isNodeInRoot(e.target, this.getDOMNode())) {
+		    	this.setState({
+		    		selectedItems: []
+		    	});
+
+		    	return this.props.onSelection([]);
+		    }	
+
+	    	// Handle selection of a single element
 	    	return this._selectElement(e.pageX, e.pageY)
 	    }
 
+	    // Handle selection of multiple elements
 	    return this._selectElements(e);
 	},
 
+	/**
+	 * Selects a single child, given the x/y coords of the mouse
+	 * @param  {int} x
+	 * @param  {int} y 	 
+	 */
 	_selectElement: function (x, y) {	    
 	    var currentItems = this.state.selectedItems,
 	    	index;    	
@@ -197,6 +252,9 @@ var Selectable = React.createClass({
 		this.props.onSelection(currentItems);
 	},
 
+	/**
+	 * Selects multiple children given x/y coords of the mouse
+	 */
 	_selectElements: function (e) {
 	    var currentItems = this.state.selectedItems;
 
@@ -224,6 +282,11 @@ var Selectable = React.createClass({
 
 	},
 	
+	/**
+	 * Given a node, get everything needed to calculate its boundaries
+	 * @param  {HTMLElement} node 
+	 * @return {Object}
+	 */
 	_getBoundsForNode: function (node) {
 		var rect = node.getBoundingClientRect();
 		
@@ -235,6 +298,20 @@ var Selectable = React.createClass({
 		};
 	},
 
+	/**
+	 * Given two objects containing "top", "left", "offsetWidth" and "offsetHeight"
+	 * properties, determine if they collide. Accepts a "tolerance" for expanding
+	 * the boundary.
+	 *
+	 * "tolerance" can be an integer, which applies to all sides, or an object
+	 * containing "top", "bottom", "left", and "right" values for custom tolerances
+	 * on each side
+	 * 
+	 * @param  {Object|HTMLElement} a
+	 * @param  {Object|HTMLElement} b
+	 * @param  {Object|int} tolerance
+	 * @return {bool}
+	 */
 	_objectsCollide: function (a, b, tolerance) {		
 		var aObj = (a instanceof HTMLElement) ? this._getBoundsForNode(a) : a,
 			bObj = (b instanceof HTMLElement) ? this._getBoundsForNode(b) : b;
@@ -259,6 +336,18 @@ var Selectable = React.createClass({
 		);
 	},
 
+	/**
+	 * Given offsets, widths, and heights of two objects, determine if they collide (overlap).
+	 * @param  {int} aTop    The top position of the first object
+	 * @param  {int} aLeft   The left position of the first object
+	 * @param  {int} bTop    The top position of the second object
+	 * @param  {int} bLeft   The left position of the second object
+	 * @param  {int} aWidth  The width of the first object
+	 * @param  {int} aHeight The height of the first object
+	 * @param  {int} bWidth  The width of the second object
+	 * @param  {int} bHeight The height of the second object
+	 * @return {bool}
+	 */
 	_coordsCollide: function (aTop, aLeft, bTop, bLeft, aWidth, aHeight, bWidth, bHeight) {
 	    return !(
 	        ((aTop + aHeight) < (bTop)) ||
@@ -268,22 +357,14 @@ var Selectable = React.createClass({
 	    );		
 	},
 
+	/**
+	 * Listens for the meta key
+	 */
 	_keyListener: function (e) {		
 		this.setState({
 			persist: !!e.metaKey
 		});
-	},
-
-	_clickListener: function (e) {
-		if(isNodeInRoot(e.target, this.getDOMNode())) return;
-
-		this.setState({
-			selectedItems: []
-		});
-
-		this.props.onSelection([]);
 	}
-
 });
 
 module.exports = Selectable;
