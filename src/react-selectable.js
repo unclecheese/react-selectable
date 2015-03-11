@@ -213,7 +213,6 @@ var Selectable = React.createClass({
 	 * Called when the user has completed selection
 	 */
 	_mouseUp: function (e) {
-		//e.preventDefault();
 
 	    document.removeEventListener('mousemove', this._openSelector);
 	    document.removeEventListener('mouseup', this._mouseUp);
