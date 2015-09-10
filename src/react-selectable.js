@@ -14,415 +14,416 @@ function isNodeInRoot(node, root) {
 
 var Selectable = React.createClass({
 
-	/**	 	 
-	 * @type {Object}
-	 */
-	propTypes: {
+  /**
+   * @type {Object}
+   */
+  propTypes: {
 
-		/**
-		 * Event that will fire when items are selected. Passes an array of keys		 
-		 */
-		onSelection: React.PropTypes.func,
-		
-		/**
-		 * The component that will represent the Selectable DOM node		 
-		 */
-		component: React.PropTypes.oneOfType([
-			React.PropTypes.func,
-			React.PropTypes.string
-		]),
-		
-		/**
-		 * Expands the boundary of the selectable area. It can be an integer, which 
-		 * applies to all sides, or an object containing "top", "bottom", "left", 
-		 * and "right" values for custom distance on each side
-		 */
-		distance: React.PropTypes.oneOfType([
-			React.PropTypes.object,
-			React.PropTypes.number
-		]),
+    /**
+     * Event that will fire when items are selected. Passes an array of keys
+     */
+    onSelection: React.PropTypes.func,
 
-		/**
-		 * Amount of forgiveness an item will offer to the selectbox before registering
-		 * a selection, i.e. if only 1px of the item is in the selection, it shouldn't be 
-		 * included.		 
-		 */
-		tolerance: React.PropTypes.number,
-		
-		/**
-		 * If true, a click-and-drag with the mouse will generate a select box anywhere
-		 * in the document.		 
-		 */
-		globalMouse: React.PropTypes.bool
-	},
+    /**
+     * The component that will represent the Selectable DOM node
+     */
+    component: React.PropTypes.oneOfType([
+      React.PropTypes.func,
+      React.PropTypes.string
+    ]),
 
-	/**
-	 * This is stored outside the state, so that setting it doesn't
-	 * rerender the app during selection. shouldComponentUpdate() could work around that.
-	 * @type {Object}
-	 */
-	_mouseDownData: null,
+    /**
+     * Expands the boundary of the selectable area. It can be an integer, which
+     * applies to all sides, or an object containing "top", "bottom", "left",
+     * and "right" values for custom distance on each side
+     */
+    distance: React.PropTypes.oneOfType([
+      React.PropTypes.object,
+      React.PropTypes.number
+    ]),
 
-	/**	 
-	 * @return {Object}
-	 */
-	getInitialState: function() {
-		return {
-			isBoxSelecting: false,
-			persist: false,
-			boxWidth: 0,
-			boxHeight: 0,
-			selectedItems: []
-		};
-	},
+    /**
+     * Amount of forgiveness an item will offer to the selectbox before registering
+     * a selection, i.e. if only 1px of the item is in the selection, it shouldn't be
+     * included.
+     */
+    tolerance: React.PropTypes.number,
 
-	/**	 
-	 * @return {Object}
-	 */
-	getDefaultProps: function() {
-		return {
-			onSelection: function () {},
-			component: 'div',
-			distance: 0,
-			tolerance: 0,
-			globalMouse: false
-		};
-	},
+    /**
+     * If true, a click-and-drag with the mouse will generate a select box anywhere
+     * in the document.
+     */
+    globalMouse: React.PropTypes.bool
+  },
 
-	/**	 
-	 * Attach global event listeners
-	 */
-	componentDidMount: function() {
-		document.addEventListener('mousedown', this._mouseDown);
-		document.addEventListener('keydown', this._keyListener);
-		document.addEventListener('keyup', this._keyListener);
-	},
+  /**
+   * This is stored outside the state, so that setting it doesn't
+   * rerender the app during selection. shouldComponentUpdate() could work around that.
+   * @type {Object}
+   */
+  _mouseDownData: null,
 
-	/**	 
-	 * Remove global event listeners
-	 */
-	componentWillUnmount: function() {		
-		document.removeEventListener('mousedown', this._mouseDown);		
-		document.removeEventListener('keydown', this._keyListener);
-		document.removeEventListener('keyup', this._keyListener);
-	},
+  /**
+   * @return {Object}
+   */
+  getInitialState: function() {
+    return {
+      isBoxSelecting: false,
+      persist: false,
+      boxWidth: 0,
+      boxHeight: 0,
+      selectedItems: []
+    };
+  },
 
-	/**
-	 * Renders the component
-	 * @return {ReactComponent}
-	 */
-	render: function() {
-		var boxStyle = {
-			left: this.state.boxLeft,
-			top: this.state.boxTop,
-			width: this.state.boxWidth,
-			height: this.state.boxHeight,
-			zIndex: 9000,
-			position: 'absolute',
-			cursor: 'default'
-		};
-		var spanStyle = {
-			backgroundColor: 'transparent',
-			border: '1px dashed #999',
-			width: '100%',
-			height: '100%',
-			float: 'left'			
-		};
+  /**
+   * @return {Object}
+   */
+  getDefaultProps: function() {
+    return {
+      onSelection: function () {},
+      component: 'div',
+      distance: 0,
+      tolerance: 0,
+      globalMouse: false
+    };
+  },
 
-		return (
-			<this.props.component {...this.props}>				
-			{this.state.isBoxSelecting &&
-			  <div style={boxStyle} ref="selectbox"><span style={spanStyle}></span></div>
-			}
-			  {React.Children.map(this.props.children, function (child, i) {
-			  	return cloneWithProps(child, {
-			  		key: child.key || i, 
-			  		ref: 'selectable_'+child.key,
-			  		selected: this.state.selectedItems.indexOf(child.key) > -1
-			  	})
-			  }.bind(this))}
-			</this.props.component>
+  /**
+   * Attach global event listeners
+   */
+  componentDidMount: function() {
+    document.addEventListener('mousedown', this._mouseDown);
+    document.addEventListener('keydown', this._keyListener);
+    document.addEventListener('keyup', this._keyListener);
+  },
 
-		);
-	},
-	
-	/**
-	 * Called while moving the mouse with the button down. Changes the boundaries
-	 * of the selection box
-	 */
-	_openSelector: function (e) {		
-	    var w = Math.abs(this._mouseDownData.initialW - e.pageX);
-	    var h = Math.abs(this._mouseDownData.initialH - e.pageY);
+  /**
+   * Remove global event listeners
+   */
+  componentWillUnmount: function() {
+    document.removeEventListener('mousedown', this._mouseDown);
+    document.removeEventListener('keydown', this._keyListener);
+    document.removeEventListener('keyup', this._keyListener);
+  },
 
-	    this.setState({
-	    	isBoxSelecting: true,
-	    	boxWidth: w,
-	    	boxHeight: h,
-	    	boxLeft: Math.min(e.pageX, this._mouseDownData.initialW),
-	    	boxTop: Math.min(e.pageY, this._mouseDownData.initialH),
-	    	selectedItems: this.state.persist ? this.state.selectedItems : []
-	    });
-	},
+  /**
+   * Renders the component
+   * @return {ReactComponent}
+   */
+  render: function() {
+    var boxStyle = {
+      left: this.state.boxLeft,
+      top: this.state.boxTop,
+      width: this.state.boxWidth,
+      height: this.state.boxHeight,
+      zIndex: 9000,
+      position: 'absolute',
+      cursor: 'default'
+    };
+    var spanStyle = {
+      backgroundColor: 'transparent',
+      border: '1px dashed #999',
+      width: '100%',
+      height: '100%',
+      float: 'left'
+    };
 
-	/**
-	 * Called when a user presses the mouse button. Determines if a select box should
-	 * be added, and if so, attach event listeners
-	 */
-	_mouseDown: function (e) {
-		var node = this.getDOMNode(),collides, offsetData, distanceData;
-		
-		document.addEventListener('mouseup', this._mouseUp);
-		
-		// Right clicks
-		if(e.which === 3 || e.button === 2) return;
+    return (
+      <this.props.component {...this.props}>
+    {this.state.isBoxSelecting &&
+    <div style={boxStyle} ref="selectbox"><span style={spanStyle}></span></div>
+    }
+    {React.Children.map(this.props.children, function (child, i) {
+      return cloneWithProps(child, {
+        key: child.key || i,
+        ref: 'selectable_'+child.key,
+        selected: this.state.selectedItems.indexOf(child.key) > -1
+      })
+    }.bind(this))}
+    </this.props.component>
 
-		if(!isNodeInRoot(e.target, node) && !this.props.globalMouse) {	
-			distanceData = this._getDistanceData();
-			offsetData = this._getBoundsForNode(node);
-			collides = this._objectsCollide(
-				{
-					top: offsetData.top - distanceData.top,
-					left: offsetData.left - distanceData.left,
-					bottom: offsetData.offsetHeight + distanceData.bottom,
-					right: offsetData.offsetWidth + distanceData.right
-				},
-				{
-					top: e.pageY,
-					left: e.pageX,
-					offsetWidth: 0,
-					offsetHeight: 0
-				}
-			);
-		
-			if(!collides) return;
-		} 
+    );
+  },
 
-		this._mouseDownData = {			
-			boxLeft: e.pageX,
-			boxTop: e.pageY,
-	        initialW: e.pageX,
-        	initialH: e.pageY        	
-		};		
+  /**
+   * Called while moving the mouse with the button down. Changes the boundaries
+   * of the selection box
+   */
+  _openSelector: function (e) {
+    var w = Math.abs(this._mouseDownData.initialW - e.pageX);
+    var h = Math.abs(this._mouseDownData.initialH - e.pageY);
 
-		e.preventDefault();
+    this.setState({
+      isBoxSelecting: true,
+      boxWidth: w,
+      boxHeight: h,
+      boxLeft: Math.min(e.pageX, this._mouseDownData.initialW),
+      boxTop: Math.min(e.pageY, this._mouseDownData.initialH),
+      selectedItems: this.state.persist ? this.state.selectedItems : []
+    });
+  },
 
-		document.addEventListener('mousemove', this._openSelector);
-	},
+  /**
+   * Called when a user presses the mouse button. Determines if a select box should
+   * be added, and if so, attach event listeners
+   */
+  _mouseDown: function (e) {
+    var node = this.getDOMNode(),collides, offsetData, distanceData;
 
-	/**
-	 * Called when the user has completed selection
-	 */
-	_mouseUp: function (e) {
+    document.addEventListener('mouseup', this._mouseUp);
 
-	    document.removeEventListener('mousemove', this._openSelector);
-	    document.removeEventListener('mouseup', this._mouseUp);
+    // Right clicks
+    if(e.which === 3 || e.button === 2) return;
 
-	    if(!this._mouseDownData) return;
+    if(!isNodeInRoot(e.target, node) && !this.props.globalMouse) {
+      distanceData = this._getDistanceData();
+      offsetData = this._getBoundsForNode(node);
+      collides = this._objectsCollide(
+        {
+          top: offsetData.top - distanceData.top,
+          left: offsetData.left - distanceData.left,
+          bottom: offsetData.offsetHeight + distanceData.bottom,
+          right: offsetData.offsetWidth + distanceData.right
+        },
+        {
+          top: e.pageY,
+          left: e.pageX,
+          offsetWidth: 0,
+          offsetHeight: 0
+        }
+      );
 
-	    var inRoot = isNodeInRoot(e.target, this.getDOMNode());
-	    var click = (e.pageX === this._mouseDownData.initialW && e.pageY === this._mouseDownData.initialH);
+      if(!collides) return;
+    }
 
-	    // Clicks outside the Selectable node should reset clear selection
-	    if(click && !inRoot) {	    	
-	    	this.setState({
-	    		selectedItems: []
-	    	});
-			return this.props.onSelection([]);
-		}
+    this._mouseDownData = {
+      boxLeft: e.pageX,
+      boxTop: e.pageY,
+      initialW: e.pageX,
+      initialH: e.pageY
+    };
 
-		// Handle selection of a single element		
-		if(click && inRoot) {			
-		    return this._selectElement(e.pageX, e.pageY)
-		}
+    e.preventDefault();
 
-		// User drag-clicked in the Selectable area
-		if(!click && inRoot) {
-			return this._selectElements(e);			
-		}
-	},
+    this.setState({selectedItems: []});
+    document.addEventListener('mousemove', this._openSelector);
+  },
 
-	/**
-	 * Selects a single child, given the x/y coords of the mouse
-	 * @param  {int} x
-	 * @param  {int} y 	 
-	 */
-	_selectElement: function (x, y) {	    
-	    var currentItems = this.state.selectedItems,
-	    	index;    	
+  /**
+   * Called when the user has completed selection
+   */
+  _mouseUp: function (e) {
 
-		React.Children.forEach(this.props.children, function (child) {
-			var node = this.refs['selectable_'+child.key].getDOMNode();				
-			var collision = this._objectsCollide(
-				node,
-				{
-					top: y,
-					left: x,
-					offsetWidth: 0,
-					offsetHeight: 0
-				},
-				this.props.tolerance
-			);
-			
-			if(collision) {				
-				index = currentItems.indexOf(child.key);
-				if(this.state.persist) {
-					if(index > -1) {
-						currentItems.splice(index, 1);
-					}
-					else {
-						currentItems.push(child.key);
-					}
-				}
-				else {
-					currentItems = [child.key];
-				}
-			}
+    document.removeEventListener('mousemove', this._openSelector);
+    document.removeEventListener('mouseup', this._mouseUp);
 
-		}.bind(this));
+    if(!this._mouseDownData) return;
 
-		this._mouseDownData = null;
+    var inRoot = isNodeInRoot(e.target, this.getDOMNode());
+    var click = (e.pageX === this._mouseDownData.initialW && e.pageY === this._mouseDownData.initialH);
 
-		this.setState({
-			isBoxSelecting: false,
-			boxWidth: 0,
-			boxHeight: 0,
-			selectedItems: currentItems
-		});
+    // Clicks outside the Selectable node should reset clear selection
+    if(click && !inRoot) {
+      this.setState({
+        selectedItems: []
+      });
+      return this.props.onSelection([]);
+    }
 
-		this.props.onSelection(currentItems);
-	},
+    // Handle selection of a single element
+    if(click && inRoot) {
+      return this._selectElement(e.pageX, e.pageY)
+    }
 
-	/**
-	 * Selects multiple children given x/y coords of the mouse
-	 */
-	_selectElements: function (e) {
-	    var currentItems = this.state.selectedItems;
+    // User drag-clicked in the Selectable area
+    if(!click && inRoot) {
+      return this._selectElements(e);
+    }
+  },
 
-	    this._mouseDownData = null;
+  /**
+   * Selects a single child, given the x/y coords of the mouse
+   * @param  {int} x
+   * @param  {int} y
+   */
+  _selectElement: function (x, y) {
+    var currentItems = this.state.selectedItems,
+      index;
 
-		React.Children.forEach(this.props.children, function (child) {
-			var collision = this._objectsCollide(
-				this.refs.selectbox.getDOMNode(),
-				this.refs['selectable_'+child.key].getDOMNode(),
-				this.props.tolerance
-			);
-			if(collision) {
-				currentItems.push(child.key);
-			}
+    React.Children.forEach(this.props.children, function (child) {
+      var node = this.refs['selectable_'+child.key].getDOMNode();
+      var collision = this._objectsCollide(
+        node,
+        {
+          top: y,
+          left: x,
+          offsetWidth: 0,
+          offsetHeight: 0
+        },
+        this.props.tolerance
+      );
 
-		}.bind(this));
+      if(collision) {
+        index = currentItems.indexOf(child.key);
+        if(this.state.persist) {
+          if(index > -1) {
+            currentItems.splice(index, 1);
+          }
+          else {
+            currentItems.push(child.key);
+          }
+        }
+        else {
+          currentItems = [child.key];
+        }
+      }
 
-		this.setState({
-			isBoxSelecting: false,
-			boxWidth: 0,
-			boxHeight: 0,
-			selectedItems: currentItems
-		});
+    }.bind(this));
 
-		this.props.onSelection(currentItems);
+    this._mouseDownData = null;
 
-	},
-	
-	/**
-	 * Given a node, get everything needed to calculate its boundaries
-	 * @param  {HTMLElement} node 
-	 * @return {Object}
-	 */
-	_getBoundsForNode: function (node) {
-		var rect = node.getBoundingClientRect();
-		
-		return {
-			top: rect.top+document.body.scrollTop,
-			left: rect.left+document.body.scrollLeft,
-			offsetWidth: node.offsetWidth,
-			offsetHeight: node.offsetHeight
-		};
-	},
+    this.setState({
+      isBoxSelecting: false,
+      boxWidth: 0,
+      boxHeight: 0,
+      selectedItems: currentItems
+    });
 
-	/**
-	 * Resolve the disance prop from either an Int or an Object
-	 * @return {Object}
-	 */
-	_getDistanceData: function () {
-		var distance = this.props.distance;
+    this.props.onSelection(currentItems);
+  },
 
-		if(!distance) {
-			distance = 0;
-		}
-	
-		if(typeof distance !== 'object') {
-			return {
-				top: distance,
-				left: distance, 
-				right: distance, 
-				bottom: distance
-			};
-		}
+  /**
+   * Selects multiple children given x/y coords of the mouse
+   */
+  _selectElements: function (e) {
+    var currentItems = this.state.selectedItems;
 
-		return distance;
-	},
+    this._mouseDownData = null;
 
-	/**
-	 * Given two objects containing "top", "left", "offsetWidth" and "offsetHeight"
-	 * properties, determine if they collide. 
-	 * @param  {Object|HTMLElement} a
-	 * @param  {Object|HTMLElement} b	 
-	 * @return {bool}
-	 */
-	_objectsCollide: function (a, b, tolerance) {		
-		var aObj = (a instanceof HTMLElement) ? this._getBoundsForNode(a) : a,
-			bObj = (b instanceof HTMLElement) ? this._getBoundsForNode(b) : b;
-		
-		return this._coordsCollide(
-			aObj.top, 
-			aObj.left, 
-			bObj.top, 
-			bObj.left, 
-			aObj.offsetWidth, 
-			aObj.offsetHeight, 
-			bObj.offsetWidth, 
-			bObj.offsetHeight,
-			tolerance
-		);
-	},
+    React.Children.forEach(this.props.children, function (child) {
+      var collision = this._objectsCollide(
+        this.refs.selectbox.getDOMNode(),
+        this.refs['selectable_'+child.key].getDOMNode(),
+        this.props.tolerance
+      );
+      if(collision) {
+        currentItems.push(child.key);
+      }
 
-	/**
-	 * Given offsets, widths, and heights of two objects, determine if they collide (overlap).
-	 * @param  {int} aTop    The top position of the first object
-	 * @param  {int} aLeft   The left position of the first object
-	 * @param  {int} bTop    The top position of the second object
-	 * @param  {int} bLeft   The left position of the second object
-	 * @param  {int} aWidth  The width of the first object
-	 * @param  {int} aHeight The height of the first object
-	 * @param  {int} bWidth  The width of the second object
-	 * @param  {int} bHeight The height of the second object
-	 * @return {bool}
-	 */
-	_coordsCollide: function (aTop, aLeft, bTop, bLeft, aWidth, aHeight, bWidth, bHeight, tolerance) {
-	    if(typeof tolerance === 'undefined') {
-	    	tolerance = 0;
-	    }
+    }.bind(this));
 
-	    return !(
-	    	// 'a' bottom doesn't touch 'b' top
-	        ( (aTop + aHeight - tolerance ) < bTop ) ||
-	        // 'a' top doesn't touch 'b' bottom
-	        ( (aTop + tolerance) > (bTop + bHeight) ) ||
-	        // 'a' right doesn't touch 'b' left
-	        ( (aLeft + aWidth - tolerance) < bLeft ) ||
-	        // 'a' left doesn't touch 'b' right
-	        ( (aLeft + tolerance) > (bLeft + bWidth) )
-	    );
-	},
+    this.setState({
+      isBoxSelecting: false,
+      boxWidth: 0,
+      boxHeight: 0,
+      selectedItems: currentItems
+    });
 
-	/**
-	 * Listens for the meta key
-	 */
-	_keyListener: function (e) {		
-		this.setState({
-			persist: !!e.metaKey
-		});
-	}
+    this.props.onSelection(currentItems);
+
+  },
+
+  /**
+   * Given a node, get everything needed to calculate its boundaries
+   * @param  {HTMLElement} node
+   * @return {Object}
+   */
+  _getBoundsForNode: function (node) {
+    var rect = node.getBoundingClientRect();
+
+    return {
+      top: rect.top+document.body.scrollTop,
+      left: rect.left+document.body.scrollLeft,
+      offsetWidth: node.offsetWidth,
+      offsetHeight: node.offsetHeight
+    };
+  },
+
+  /**
+   * Resolve the disance prop from either an Int or an Object
+   * @return {Object}
+   */
+  _getDistanceData: function () {
+    var distance = this.props.distance;
+
+    if(!distance) {
+      distance = 0;
+    }
+
+    if(typeof distance !== 'object') {
+      return {
+        top: distance,
+        left: distance,
+        right: distance,
+        bottom: distance
+      };
+    }
+
+    return distance;
+  },
+
+  /**
+   * Given two objects containing "top", "left", "offsetWidth" and "offsetHeight"
+   * properties, determine if they collide.
+   * @param  {Object|HTMLElement} a
+   * @param  {Object|HTMLElement} b
+   * @return {bool}
+   */
+  _objectsCollide: function (a, b, tolerance) {
+    var aObj = (a instanceof HTMLElement) ? this._getBoundsForNode(a) : a,
+      bObj = (b instanceof HTMLElement) ? this._getBoundsForNode(b) : b;
+
+    return this._coordsCollide(
+      aObj.top,
+      aObj.left,
+      bObj.top,
+      bObj.left,
+      aObj.offsetWidth,
+      aObj.offsetHeight,
+      bObj.offsetWidth,
+      bObj.offsetHeight,
+      tolerance
+    );
+  },
+
+  /**
+   * Given offsets, widths, and heights of two objects, determine if they collide (overlap).
+   * @param  {int} aTop    The top position of the first object
+   * @param  {int} aLeft   The left position of the first object
+   * @param  {int} bTop    The top position of the second object
+   * @param  {int} bLeft   The left position of the second object
+   * @param  {int} aWidth  The width of the first object
+   * @param  {int} aHeight The height of the first object
+   * @param  {int} bWidth  The width of the second object
+   * @param  {int} bHeight The height of the second object
+   * @return {bool}
+   */
+  _coordsCollide: function (aTop, aLeft, bTop, bLeft, aWidth, aHeight, bWidth, bHeight, tolerance) {
+    if(typeof tolerance === 'undefined') {
+      tolerance = 0;
+    }
+
+    return !(
+      // 'a' bottom doesn't touch 'b' top
+      ( (aTop + aHeight - tolerance ) < bTop ) ||
+        // 'a' top doesn't touch 'b' bottom
+      ( (aTop + tolerance) > (bTop + bHeight) ) ||
+        // 'a' right doesn't touch 'b' left
+      ( (aLeft + aWidth - tolerance) < bLeft ) ||
+        // 'a' left doesn't touch 'b' right
+      ( (aLeft + tolerance) > (bLeft + bWidth) )
+    );
+  },
+
+  /**
+   * Listens for the meta key
+   */
+  _keyListener: function (e) {
+    this.setState({
+      persist: !!e.metaKey
+    });
+  }
 });
 
 module.exports = Selectable;

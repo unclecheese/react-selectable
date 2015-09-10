@@ -7,6 +7,10 @@
     "type": "git",
     "url": "git://github.com/unclecheese/react-selectable.git"
   },
+  "scripts": {
+    "build": "webpack",
+    "watch": "webpack --watch"
+  },
   "homepage": "http://unclecheese.github.io/react-selectable",
   "keywords": [
     "selectable",
