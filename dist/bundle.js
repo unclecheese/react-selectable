@@ -17238,7 +17238,12 @@
 	     * If true, a click-and-drag with the mouse will generate a select box anywhere
 	     * in the document.
 	     */
-	    globalMouse: React.PropTypes.bool
+	    globalMouse: React.PropTypes.bool,
+
+	    /**
+	     * If true, a click will not generate event onSelection
+	     */
+	    disableSingleSelection: React.PropTypes.bool
 	  },
 
 	  /**
@@ -17270,7 +17275,8 @@
 	      component: "div",
 	      distance: 0,
 	      tolerance: 0,
-	      globalMouse: false
+	      globalMouse: false,
+	      disableSingleSelection: false
 	    };
 	  },
 
@@ -17419,9 +17425,11 @@
 	      return this.props.onSelection([]);
 	    }
 
-	    // Handle selection of a single element
-	    if (click && inRoot) {
-	      return this._selectElement(e.pageX, e.pageY);
+	    if (!this.props.disableSingleSelection) {
+	      // Handle selection of a single element
+	      if (click && inRoot) {
+	        return this._selectElement(e.pageX, e.pageY);
+	      }
 	    }
 
 	    // User drag-clicked in the Selectable area
