@@ -99,18 +99,20 @@ var Selectable = React.createClass({
    * Attach global event listeners
    */
   componentDidMount: function() {
-    document.addEventListener('mousedown', this._mouseDown);
-    document.addEventListener('keydown', this._keyListener);
-    document.addEventListener('keyup', this._keyListener);
+    var node = this.getDOMNode();
+    node.addEventListener('mousedown', this._mouseDown);
+    node.addEventListener('keydown', this._keyListener);
+    node.addEventListener('keyup', this._keyListener);
   },
 
   /**
    * Remove global event listeners
    */
   componentWillUnmount: function() {
-    document.removeEventListener('mousedown', this._mouseDown);
-    document.removeEventListener('keydown', this._keyListener);
-    document.removeEventListener('keyup', this._keyListener);
+    var node = this.getDOMNode();
+    node.removeEventListener('mousedown', this._mouseDown);
+    node.removeEventListener('keydown', this._keyListener);
+    node.removeEventListener('keyup', this._keyListener);
   },
 
   /**
