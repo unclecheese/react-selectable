@@ -139,18 +139,17 @@ var Selectable = React.createClass({
 
     return (
       <this.props.component {...this.props}>
-    {this.state.isBoxSelecting &&
-    <div style={boxStyle} ref="selectbox"><span style={spanStyle}></span></div>
-    }
-    {React.Children.map(this.props.children, function (child, i) {
-      return cloneWithProps(child, {
-        key: child.key || i,
-        ref: 'selectable_'+child.key,
-        selected: this.state.selectedItems.indexOf(child.key) > -1
-      })
-    }.bind(this))}
-    </this.props.component>
-
+        {this.state.isBoxSelecting &&
+          <div style={boxStyle} ref="selectbox"><span style={spanStyle}></span></div>
+        }
+        {React.Children.map(this.props.children, function (child, i) {
+          return cloneWithProps(child, {
+            key: child.key || i,
+            ref: 'selectable_'+child.key,
+            selected: this.state.selectedItems.indexOf(child.key) > -1
+          })
+        }.bind(this))}
+      </this.props.component>
     );
   },
 

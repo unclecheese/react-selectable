@@ -1,15 +1,11 @@
 module.exports = {
-  entry: './src/react-selectable.js',
+  entry: './src/example.js',
   output: {
-    path: './dist', // This is where images AND js will go
+    path: './example', // This is where images AND js will go
     publicPath: '', // This is used to generate URLs to e.g. images
-    filename: 'react-selectable.js',
-    library: 'Selectable',
-    libraryTarget: 'var'
+    filename: 'bundle.js'
   },
-  externals: {
-    'react/addons': 'React'
-  },
+
   module: {
     loaders: [,
       {
@@ -21,4 +17,5 @@ module.exports = {
   resolve: {
       modulesDirectories: ["node_modules"]
   }
+
 };

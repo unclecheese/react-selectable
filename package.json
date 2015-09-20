@@ -9,7 +9,11 @@
   },
   "scripts": {
     "build": "webpack",
+    "example": "webpack --config webpack.config.example.js",
     "watch": "webpack --watch"
+  },
+  "bin": {
+    "webpack": "node_modules/webpack/bin/webpack"
   },
   "homepage": "http://unclecheese.github.io/react-selectable",
   "keywords": [
