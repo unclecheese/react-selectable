@@ -34,7 +34,7 @@ var MyItem = React.createClass({
   
   render: function () {
     return (
-      <div className={this.props.selected ? 'selected' : ''>
+      <div className={this.props.selected ? 'selected' : ''}>
         {this.props.children}
       </div>
     );
