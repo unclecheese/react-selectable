@@ -25,6 +25,11 @@ var Selectable = React.createClass({
     onSelection: React.PropTypes.func,
 
     /**
+     * Don't clear current selected items before next selection
+     */
+    dontClearSelection: React.PropTypes.bool,
+
+    /**
      * The component that will represent the Selectable DOM node
      */
     component: React.PropTypes.oneOfType([
@@ -74,7 +79,7 @@ var Selectable = React.createClass({
   getInitialState: function() {
     return {
       isBoxSelecting: false,
-      persist: false,
+      persist: this.props.dontClearSelection,
       boxWidth: 0,
       boxHeight: 0,
       selectedItems: []
@@ -87,6 +92,7 @@ var Selectable = React.createClass({
   getDefaultProps: function() {
     return {
       onSelection: function () {},
+      dontClearSelection: false,
       component: 'div',
       distance: 0,
       tolerance: 0,
@@ -213,7 +219,9 @@ var Selectable = React.createClass({
 
     e.preventDefault();
 
-    this.setState({selectedItems: []});
+    if (!this.props.dontClearSelection) {
+      this.setState({selectedItems: []});
+    }
     document.addEventListener('mousemove', this._openSelector);
   },
 
@@ -306,7 +314,8 @@ var Selectable = React.createClass({
    * Selects multiple children given x/y coords of the mouse
    */
   _selectElements: function (e) {
-    var currentItems = this.state.selectedItems;
+    var currentItems = this.state.selectedItems,
+      index;
 
     this._mouseDownData = null;
 
@@ -317,7 +326,18 @@ var Selectable = React.createClass({
         this.props.tolerance
       );
       if(collision) {
-        currentItems.push(child.key);
+        index = currentItems.indexOf(child.key);
+        if(this.state.persist) {
+          if(index > -1) {
+            currentItems.splice(index, 1);
+          }
+          else {
+            currentItems.push(child.key);
+          }
+        }
+        else {
+          currentItems.push(child.key);
+        }
       }
 
     }.bind(this));

@@ -48,5 +48,6 @@ Selected items receive the property `selected`.
 
 The component accepts a few optional props:
 * `onSelection` (Function) Fired after user completes selection
+* 'dontClearSelection' (Boolean) Leave existing selection (also enables inverting selection on area selection)
 * `tolerance` (Number|Object) The amount of buffer to add around your `<Selectable />` container, in pixels. To set custom tolerances for each border of the container, pass an object containing values for `top`, `left`, `bottom`, and `right`, e.g. `{ top: 30, left: 40, bottom: 100, right: 0 }`.
 * `component` (string) The component to render. Defaults to `div`.
