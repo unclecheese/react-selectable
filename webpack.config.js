@@ -1,5 +1,5 @@
 module.exports = {
-  entry: './src/react-selectable.js',
+  entry: './src/index.js',
   output: {
     path: './dist', // This is where images AND js will go
     publicPath: '', // This is used to generate URLs to e.g. images
@@ -8,7 +8,8 @@ module.exports = {
     libraryTarget: 'var'
   },
   externals: {
-    'react/addons': 'React'
+    'react': 'React',
+    'react-dom': 'ReactDOM'
   },
   module: {
     loaders: [,
