@@ -16,43 +16,43 @@ npm install react-selectable
 import React from 'react';
 import { render } from 'react-dom';
 import { SelectableGroup, createSelectable } from 'react-selectable';
+import SomeComponent from './some-component';
+
+const SelectableComponent = createSelectable(SomeComponent);
 
 class App extends React.Component {
+  
+  constructor (props) {
+  	super(props);
+  	this.state = {
+  		selectedKeys: []
+  	};
+  }
+
   render () {
     return (
       <SelectableGroup onSelection={this.handleSelection}>
-        {this.props.items.map((item, i) => (
-          return <MySelectableItem key={i} selectableKey={item.id}>{item.title}</MySelectableItem>;
-        ))}
+        {this.props.items.map((item, i) => {
+          	let selected = this.state.selectedKeys.indexOf(item.id) > -1;
+          	return (
+          		<SelectableComponent key={i} selected={selected} selectableKey={item.id}>
+          			{item.title}
+          		</SelectableComponent>
+          	);
+        })}
       </SelectableGroup>
     );
   },
   
-  handleSelection (keys) {
-    console.log('you selected the following keys', keys);
+  handleSelection (selectedKeys) {
+  	this.setState({ selectedKeys });
   }
 	
 }
-
-const MyItem = ({
-	children,
-	selected
-}) => (
-  <div className={selected ? 'selected' : ''}>
-    {children}
-  </div>
-);
-
-// Compose the MyItem component to be selectable by the SelectableGroup.
-const MySelectableItem = createSelectable(MyItem);
-
 ```
-
-Selected items receive the property `selected`.
-
 ## Configuration
 
 The component accepts a few optional props:
 * `onSelection` (Function) Fired after user completes selection
-* `tolerance` (Number|Object) The amount of buffer to add around your `<SelectableGroup />` container, in pixels. To set custom tolerances for each border of the container, pass an object containing values for `top`, `left`, `bottom`, and `right`, e.g. `{ top: 30, left: 40, bottom: 100, right: 0 }`.
+* `tolerance` (Number) The amount of buffer to add around your `<SelectableGroup />` container, in pixels.
 * `component` (string) The component to render. Defaults to `div`.
