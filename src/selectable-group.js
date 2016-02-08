@@ -34,7 +34,7 @@ class SelectableGroup extends React.Component {
 				register: this._registerSelectable,
 				unregister: this._unregisterSelectable
 			}
-		}
+		};
 	}
 
 
