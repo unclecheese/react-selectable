@@ -4,36 +4,39 @@
 <p><a href="http://unclecheese.github.io/react-selectable/example">Try it out</a></p>
 <h2 id="getting-started">Getting started</h2>
 <pre><code>npm install react-selectable
-</code></pre><pre><code class="lang-js">var React = require(&#39;react&#39;);
-var Selectable = require(&#39;react-selectable&#39;);
+</code></pre><pre><code class="lang-js">
+import React from 'react';
+import { render } from 'react-dom';
+import { SelectableGroup, createSelectable } from 'react-selectable';
 
-var App = React.createClass({
-
-  render: function () {
+class App extends React.Component {
+  render () {
     return (
-      &lt;Selectable onSelection={this.handleSelection}&gt;
-        {this.props.items.map.function(item, i) {
-          return &lt;MyItem key={i}&gt;{item.title}&lt;/MyItem&gt;;
-        })}
-      &lt;/Selectable&gt;
+      <SelectableGroup onSelection={this.handleSelection}>
+        {this.props.items.map((item, i) => (
+          return <MySelectableItem key={i} selectableKey={item.id}>{item.title}</MySelectableItem>;
+        ))}
+      </SelectableGroup>
     );
   },
-
-  handleSelection: function (keys) {
-    console.log(&#39;you selected the following keys&#39;, keys);
+  
+  handleSelection (keys) {
+    console.log('you selected the following keys', keys);
   }
-});
+	
+}
 
-var MyItem = React.createClass({
+const MyItem = ({
+	children,
+	selected
+}) => (
+  <div className={selected ? 'selected' : ''}>
+    {children}
+  </div>
+);
 
-  render: function () {
-    return (
-      &lt;div className={this.props.selected ? &#39;selected&#39; : &#39;&#39;&gt;
-        {this.props.children}
-      &lt;/div&gt;
-    );
-  }
-});
+// Compose the MyItem component to be selectable by the SelectableGroup.
+const MySelectableItem = createSelectable(MyItem);
 </code></pre>
 <p>Selected items receive the property <code>selected</code>.</p>
 <h2 id="configuration">Configuration</h2>
