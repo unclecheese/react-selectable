@@ -15,7 +15,11 @@ const createSelectable = (WrappedComponent) => {
 
 
 		render () {
-			return React.createElement(WrappedComponent, this.props);
+			return React.createElement(
+				WrappedComponent,
+				this.props,
+				this.props.children
+			);
 		}
 	}
 
