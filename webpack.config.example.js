@@ -1,16 +1,12 @@
+const path = require('path');
 module.exports = {
-  entry: './src/index.js',
+  entry: './example/example.js',
   output: {
-    path: './dist', // This is where images AND js will go
+    path: './example', // This is where images AND js will go
     publicPath: '', // This is used to generate URLs to e.g. images
-    filename: 'react-selectable.js',
-    library: 'Selectable',
-    libraryTarget: 'var'
+    filename: 'bundle.js'
   },
-  externals: {
-    'react': 'React',
-    'react-dom': 'ReactDOM'
-  },
+
   module: {
     loaders: [,
       {
@@ -20,6 +16,8 @@ module.exports = {
     ]
   },
   resolve: {
+	  root: path.resolve(__dirname),
       modulesDirectories: ["node_modules"]
   }
+
 };

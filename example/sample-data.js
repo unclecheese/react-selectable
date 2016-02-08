@@ -1,4 +1,4 @@
-module.exports = [
+const data = [
   { title: 'My Aim is True', year: '1977' },
     { title: "This Year's Model", year: '1978' },
     { title: 'Armed Forces', year: '1979' },
@@ -26,3 +26,5 @@ module.exports = [
     { title: 'National Ransom', year: '2009' },
     { title: 'Wise Up Ghost', year: '2013' }
 ];
+
+export default data;
