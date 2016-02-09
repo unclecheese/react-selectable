@@ -1,3 +1,5 @@
+var webpack  = require('webpack');
+
 module.exports = {
   entry: './src/index.js',
   output: {
@@ -5,11 +7,21 @@ module.exports = {
     publicPath: '', // This is used to generate URLs to e.g. images
     filename: 'react-selectable.js',
     library: 'Selectable',
-    libraryTarget: 'var'
+    libraryTarget: 'umd'
   },
   externals: {
-    'react': 'React',
-    'react-dom': 'ReactDOM'
+    'react': {
+		root: 'React',
+		commonjs2: 'react',
+		commonjs: 'react',
+		amd: 'react',    	
+    },
+    'react-dom': {
+		root: 'ReactDOM',
+		commonjs2: 'react-dom',
+		commonjs: 'react-dom',
+		amd: 'react-dom'
+  	}
   },
   module: {
     loaders: [,
@@ -20,6 +32,6 @@ module.exports = {
     ]
   },
   resolve: {
-      modulesDirectories: ["node_modules"]
+      modulesDirectories: ["node_modules"],
   }
 };

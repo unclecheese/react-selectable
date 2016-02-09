@@ -1,6 +1,6 @@
+import React from 'react';
+import { SelectableGroup, createSelectable } from 'react-selectable';
 import Album from './Album';
-
-const { SelectableGroup, createSelectable } = Selectable;
 
 const isNodeInRoot = (node, root) => {
   while (node) {
