@@ -2,7 +2,7 @@
   "name": "react-selectable",
   "version": "0.2.0",
   "description": "",
-  "main": "src/react-selectable.js",
+  "main": "src/index.js",
   "repository": {
     "type": "git",
     "url": "git://github.com/unclecheese/react-selectable.git"
