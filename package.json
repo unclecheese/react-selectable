@@ -1,6 +1,6 @@
 {
   "name": "react-selectable",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "",
   "main": "src/index.js",
   "repository": {
@@ -8,12 +8,9 @@
     "url": "git://github.com/unclecheese/react-selectable.git"
   },
   "scripts": {
-    "build": "webpack",
-    "example": "webpack --config webpack.config.example.js",
-    "watch": "webpack --watch"
-  },
-  "bin": {
-    "webpack": "node_modules/webpack/bin/webpack"
+    "build": "node node_modules/webpack/bin/webpack",
+    "example": "node node_modules/webpack/bin/webpack --config webpack.config.example.js",
+    "watch": "node node_modules/webpack/bin/webpack --watch"
   },
   "homepage": "http://unclecheese.github.io/react-selectable",
   "keywords": [
