@@ -1,5 +1,14 @@
-var Selectable =
-/******/ (function(modules) { // webpackBootstrap
+(function webpackUniversalModuleDefinition(root, factory) {
+	if(typeof exports === 'object' && typeof module === 'object')
+		module.exports = factory(require("react"), require("react-dom"));
+	else if(typeof define === 'function' && define.amd)
+		define(["react", "react-dom"], factory);
+	else if(typeof exports === 'object')
+		exports["Selectable"] = factory(require("react"), require("react-dom"));
+	else
+		root["Selectable"] = factory(root["React"], root["ReactDOM"]);
+})(this, function(__WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_3__) {
+return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 
@@ -366,13 +375,13 @@ var Selectable =
 /* 2 */
 /***/ function(module, exports) {
 
-	module.exports = React;
+	module.exports = __WEBPACK_EXTERNAL_MODULE_2__;
 
 /***/ },
 /* 3 */
 /***/ function(module, exports) {
 
-	module.exports = ReactDOM;
+	module.exports = __WEBPACK_EXTERNAL_MODULE_3__;
 
 /***/ },
 /* 4 */
@@ -532,7 +541,7 @@ var Selectable =
 			}, {
 				key: 'render',
 				value: function render() {
-					return _react2.default.createElement(WrappedComponent, this.props);
+					return _react2.default.createElement(WrappedComponent, this.props, this.props.children);
 				}
 			}]);
 
@@ -553,4 +562,6 @@ var Selectable =
 	exports.default = createSelectable;
 
 /***/ }
-/******/ ]);
+/******/ ])
+});
+;
