@@ -45,345 +45,387 @@ var Selectable =
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	"use strict";
 
+	var _interopRequire = function (obj) { return obj && obj.__esModule ? obj["default"] : obj; };
+
+	var SelectableGroup = _interopRequire(__webpack_require__(1));
+
+	var createSelectable = _interopRequire(__webpack_require__(2));
+
+	exports.SelectableGroup = SelectableGroup;
+	exports.createSelectable = createSelectable;
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
-	exports.createSelectable = exports.SelectableGroup = undefined;
-
-	var _selectableGroup = __webpack_require__(1);
-
-	var _selectableGroup2 = _interopRequireDefault(_selectableGroup);
-
-	var _createSelectable = __webpack_require__(7);
-
-	var _createSelectable2 = _interopRequireDefault(_createSelectable);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	exports.SelectableGroup = _selectableGroup2.default;
-	exports.createSelectable = _createSelectable2.default;
 
 /***/ },
 /* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	"use strict";
 
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	var _interopRequire = function (obj) { return obj && obj.__esModule ? obj["default"] : obj; };
 
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
+	var _createClass = (function () { function defineProperties(target, props) { for (var key in props) { var prop = props[key]; prop.configurable = true; if (prop.value) prop.writable = true; } Object.defineProperties(target, props); } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-	var _react = __webpack_require__(2);
+	var _get = function get(object, property, receiver) { var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc && desc.writable) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
 
-	var _react2 = _interopRequireDefault(_react);
+	var _inherits = function (subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; };
 
-	var _reactDom = __webpack_require__(3);
+	var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } };
 
-	var _reactDom2 = _interopRequireDefault(_reactDom);
+	var React = _interopRequire(__webpack_require__(3));
 
-	var _nodeInRoot = __webpack_require__(4);
+	var ReactDOM = _interopRequire(__webpack_require__(4));
 
-	var _nodeInRoot2 = _interopRequireDefault(_nodeInRoot);
+	var isNodeInRoot = _interopRequire(__webpack_require__(5));
 
-	var _getBoundsForNode = __webpack_require__(5);
+	var getBoundsForNode = _interopRequire(__webpack_require__(6));
 
-	var _getBoundsForNode2 = _interopRequireDefault(_getBoundsForNode);
+	var doObjectsCollide = _interopRequire(__webpack_require__(7));
 
-	var _doObjectsCollide = __webpack_require__(6);
-
-	var _doObjectsCollide2 = _interopRequireDefault(_doObjectsCollide);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var SelectableGroup = function (_React$Component) {
-		_inherits(SelectableGroup, _React$Component);
-
+	var SelectableGroup = (function (_React$Component) {
 		function SelectableGroup(props) {
 			_classCallCheck(this, SelectableGroup);
 
-			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(SelectableGroup).call(this, props));
+			_get(Object.getPrototypeOf(SelectableGroup.prototype), "constructor", this).call(this, props);
 
-			_this.state = {
+			this.state = {
 				isBoxSelecting: false,
 				boxWidth: 0,
 				boxHeight: 0
 			};
 
-			_this._mouseDownData = null;
-			_this._registry = [];
+			this._mouseDownData = null;
+			this._registry = [];
 
-			_this._openSelector = _this._openSelector.bind(_this);
-			_this._mouseDown = _this._mouseDown.bind(_this);
-			_this._mouseUp = _this._mouseUp.bind(_this);
-			_this._selectElements = _this._selectElements.bind(_this);
-			_this._registerSelectable = _this._registerSelectable.bind(_this);
-			_this._unregisterSelectable = _this._unregisterSelectable.bind(_this);
-			return _this;
+			this._openSelector = this._openSelector.bind(this);
+			this._mouseDown = this._mouseDown.bind(this);
+			this._mouseUp = this._mouseUp.bind(this);
+			this._selectElements = this._selectElements.bind(this);
+			this._registerSelectable = this._registerSelectable.bind(this);
+			this._unregisterSelectable = this._unregisterSelectable.bind(this);
 		}
 
-		_createClass(SelectableGroup, [{
-			key: 'getChildContext',
-			value: function getChildContext() {
-				return {
-					selectable: {
-						register: this._registerSelectable,
-						unregister: this._unregisterSelectable
-					}
-				};
-			}
-		}, {
-			key: 'componentDidMount',
-			value: function componentDidMount() {
-				_reactDom2.default.findDOMNode(this).addEventListener('mousedown', this._mouseDown);
-			}
+		_inherits(SelectableGroup, _React$Component);
 
-			/**	 
-	   * Remove global event listeners
-	   */
-
-		}, {
-			key: 'componentWillUnmount',
-			value: function componentWillUnmount() {
-				_reactDom2.default.findDOMNode(this).removeEventListener('mousedown', this._mouseDown);
-			}
-		}, {
-			key: '_registerSelectable',
-			value: function _registerSelectable(key, domNode) {
-				this._registry.push({ key: key, domNode: domNode });
-			}
-		}, {
-			key: '_unregisterSelectable',
-			value: function _unregisterSelectable(key) {
-				this._registry = this._registry.filter(function (data) {
-					return data.key !== key;
-				});
-			}
-
-			/**
-	   * Called while moving the mouse with the button down. Changes the boundaries
-	   * of the selection box
-	   */
-
-		}, {
-			key: '_openSelector',
-			value: function _openSelector(e) {
-				var w = Math.abs(this._mouseDownData.initialW - e.pageX);
-				var h = Math.abs(this._mouseDownData.initialH - e.pageY);
-
-				this.setState({
-					isBoxSelecting: true,
-					boxWidth: w,
-					boxHeight: h,
-					boxLeft: Math.min(e.pageX, this._mouseDownData.initialW),
-					boxTop: Math.min(e.pageY, this._mouseDownData.initialH)
-				});
-			}
-
-			/**
-	   * Called when a user presses the mouse button. Determines if a select box should
-	   * be added, and if so, attach event listeners
-	   */
-
-		}, {
-			key: '_mouseDown',
-			value: function _mouseDown(e) {
-				var node = _reactDom2.default.findDOMNode(this);
-				var collides = undefined,
-				    offsetData = undefined,
-				    distanceData = undefined;
-				_reactDom2.default.findDOMNode(this).addEventListener('mouseup', this._mouseUp);
-
-				// Right clicks
-				if (e.which === 3 || e.button === 2) return;
-
-				if (!(0, _nodeInRoot2.default)(e.target, node)) {
-					offsetData = (0, _getBoundsForNode2.default)(node);
-					collides = (0, _doObjectsCollide2.default)({
-						top: offsetData.top,
-						left: offsetData.left,
-						bottom: offsetData.offsetHeight,
-						right: offsetData.offsetWidth
-					}, {
-						top: e.pageY,
-						left: e.pageX,
-						offsetWidth: 0,
-						offsetHeight: 0
-					});
-					if (!collides) return;
+		_createClass(SelectableGroup, {
+			getChildContext: {
+				value: function getChildContext() {
+					return {
+						selectable: {
+							register: this._registerSelectable,
+							unregister: this._unregisterSelectable
+						}
+					};
 				}
+			},
+			componentDidMount: {
+				value: function componentDidMount() {
+					ReactDOM.findDOMNode(this).addEventListener("mousedown", this._mouseDown);
+				}
+			},
+			componentWillUnmount: {
 
-				this._mouseDownData = {
-					boxLeft: e.pageX,
-					boxTop: e.pageY,
-					initialW: e.pageX,
-					initialH: e.pageY
-				};
+				/**	 
+	    * Remove global event listeners
+	    */
 
-				e.preventDefault();
+				value: function componentWillUnmount() {
+					ReactDOM.findDOMNode(this).removeEventListener("mousedown", this._mouseDown);
+				}
+			},
+			_registerSelectable: {
+				value: function _registerSelectable(key, domNode) {
+					this._registry.push({ key: key, domNode: domNode });
+				}
+			},
+			_unregisterSelectable: {
+				value: function _unregisterSelectable(key) {
+					this._registry = this._registry.filter(function (data) {
+						return data.key !== key;
+					});
+				}
+			},
+			_openSelector: {
 
-				_reactDom2.default.findDOMNode(this).addEventListener('mousemove', this._openSelector);
-			}
+				/**
+	    * Called while moving the mouse with the button down. Changes the boundaries
+	    * of the selection box
+	    */
 
-			/**
-	   * Called when the user has completed selection
-	   */
+				value: function _openSelector(e) {
+					var w = Math.abs(this._mouseDownData.initialW - e.pageX);
+					var h = Math.abs(this._mouseDownData.initialH - e.pageY);
 
-		}, {
-			key: '_mouseUp',
-			value: function _mouseUp(e) {
-				_reactDom2.default.findDOMNode(this).removeEventListener('mousemove', this._openSelector);
-				_reactDom2.default.findDOMNode(this).removeEventListener('mouseup', this._mouseUp);
+					this.setState({
+						isBoxSelecting: true,
+						boxWidth: w,
+						boxHeight: h,
+						boxLeft: Math.min(e.pageX, this._mouseDownData.initialW),
+						boxTop: Math.min(e.pageY, this._mouseDownData.initialH)
+					});
+				}
+			},
+			_mouseDown: {
 
-				if (!this._mouseDownData) return;
+				/**
+	    * Called when a user presses the mouse button. Determines if a select box should
+	    * be added, and if so, attach event listeners
+	    */
 
-				return this._selectElements(e);
-			}
+				value: function _mouseDown(e) {
+					var node = ReactDOM.findDOMNode(this);
+					var collides = undefined,
+					    offsetData = undefined,
+					    distanceData = undefined;
+					ReactDOM.findDOMNode(this).addEventListener("mouseup", this._mouseUp);
 
-			/**
-	   * Selects multiple children given x/y coords of the mouse
-	   */
-
-		}, {
-			key: '_selectElements',
-			value: function _selectElements(e) {
-				this._mouseDownData = null;
-				var currentItems = [];
-				var selectbox = _reactDom2.default.findDOMNode(this.refs.selectbox);
-				var tolerance = this.props.tolerance;
-
-				if (!selectbox) return;
-
-				this._registry.forEach(function (itemData) {
-					if (itemData.domNode && (0, _doObjectsCollide2.default)(selectbox, itemData.domNode, tolerance)) {
-						currentItems.push(itemData.key);
+					// Right clicks
+					if (e.which === 3 || e.button === 2) {
+						return;
+					}if (!isNodeInRoot(e.target, node)) {
+						offsetData = getBoundsForNode(node);
+						collides = doObjectsCollide({
+							top: offsetData.top,
+							left: offsetData.left,
+							bottom: offsetData.offsetHeight,
+							right: offsetData.offsetWidth
+						}, {
+							top: e.pageY,
+							left: e.pageX,
+							offsetWidth: 0,
+							offsetHeight: 0
+						});
+						if (!collides) {
+							return;
+						}
 					}
-				});
 
-				this.setState({
-					isBoxSelecting: false,
-					boxWidth: 0,
-					boxHeight: 0
-				});
+					this._mouseDownData = {
+						boxLeft: e.pageX,
+						boxTop: e.pageY,
+						initialW: e.pageX,
+						initialH: e.pageY
+					};
 
-				this.props.onSelection(currentItems);
+					e.preventDefault();
+
+					ReactDOM.findDOMNode(this).addEventListener("mousemove", this._openSelector);
+				}
+			},
+			_mouseUp: {
+
+				/**
+	    * Called when the user has completed selection
+	    */
+
+				value: function _mouseUp(e) {
+					ReactDOM.findDOMNode(this).removeEventListener("mousemove", this._openSelector);
+					ReactDOM.findDOMNode(this).removeEventListener("mouseup", this._mouseUp);
+
+					if (!this._mouseDownData) {
+						return;
+					}return this._selectElements(e);
+				}
+			},
+			_selectElements: {
+
+				/**
+	    * Selects multiple children given x/y coords of the mouse
+	    */
+
+				value: function _selectElements(e) {
+					this._mouseDownData = null;
+					var currentItems = [];
+					var selectbox = ReactDOM.findDOMNode(this.refs.selectbox);var tolerance = this.props.tolerance;
+
+					if (!selectbox) {
+						return;
+					}this._registry.forEach(function (itemData) {
+						if (itemData.domNode && doObjectsCollide(selectbox, itemData.domNode, tolerance)) {
+							currentItems.push(itemData.key);
+						}
+					});
+
+					this.setState({
+						isBoxSelecting: false,
+						boxWidth: 0,
+						boxHeight: 0
+					});
+
+					this.props.onSelection(currentItems);
+				}
+			},
+			render: {
+
+				/**
+	    * Renders the component
+	    * @return {ReactComponent}
+	    */
+
+				value: function render() {
+
+					var boxStyle = {
+						left: this.state.boxLeft,
+						top: this.state.boxTop,
+						width: this.state.boxWidth,
+						height: this.state.boxHeight,
+						zIndex: 9000,
+						position: this.props.fixedPosition ? "fixed" : "absolute",
+						cursor: "default"
+					};
+
+					var spanStyle = {
+						backgroundColor: "transparent",
+						border: "1px dashed #999",
+						width: "100%",
+						height: "100%",
+						float: "left"
+					};
+
+					return React.createElement(
+						this.props.component,
+						this.props,
+						this.state.isBoxSelecting && React.createElement(
+							"div",
+							{ style: boxStyle, ref: "selectbox" },
+							React.createElement("span", { style: spanStyle })
+						),
+						this.props.children
+					);
+				}
 			}
-
-			/**
-	   * Renders the component
-	   * @return {ReactComponent}
-	   */
-
-		}, {
-			key: 'render',
-			value: function render() {
-
-				var boxStyle = {
-					left: this.state.boxLeft,
-					top: this.state.boxTop,
-					width: this.state.boxWidth,
-					height: this.state.boxHeight,
-					zIndex: 9000,
-					position: this.props.fixedPosition ? 'fixed' : 'absolute',
-					cursor: 'default'
-				};
-
-				var spanStyle = {
-					backgroundColor: 'transparent',
-					border: '1px dashed #999',
-					width: '100%',
-					height: '100%',
-					float: 'left'
-				};
-
-				return _react2.default.createElement(
-					this.props.component,
-					this.props,
-					this.state.isBoxSelecting && _react2.default.createElement(
-						'div',
-						{ style: boxStyle, ref: 'selectbox' },
-						_react2.default.createElement('span', { style: spanStyle })
-					),
-					this.props.children
-				);
-			}
-		}]);
+		});
 
 		return SelectableGroup;
-	}(_react2.default.Component);
+	})(React.Component);
 
 	SelectableGroup.propTypes = {
 
 		/**
 	  * Event that will fire when items are selected. Passes an array of keys		 
 	  */
-		onSelection: _react2.default.PropTypes.func,
+		onSelection: React.PropTypes.func,
 
 		/**
 	  * The component that will represent the Selectable DOM node		 
 	  */
-		component: _react2.default.PropTypes.node,
+		component: React.PropTypes.node,
 
 		/**
 	  * Amount of forgiveness an item will offer to the selectbox before registering
 	  * a selection, i.e. if only 1px of the item is in the selection, it shouldn't be 
 	  * included.		 
 	  */
-		tolerance: _react2.default.PropTypes.number,
+		tolerance: React.PropTypes.number,
 
 		/**
 	  * In some cases, it the bounding box may need fixed positioning, if your layout
 	  * is relying on fixed positioned elements, for instance.
 	  * @type boolean
 	  */
-		fixedPosition: _react2.default.PropTypes.bool
+		fixedPosition: React.PropTypes.bool
 
 	};
 
 	SelectableGroup.defaultProps = {
-		onSelection: function onSelection() {},
-		component: 'div',
+		onSelection: function () {},
+		component: "div",
 		tolerance: 0,
 		fixedPosition: false
 	};
 
 	SelectableGroup.childContextTypes = {
-		selectable: _react2.default.PropTypes.object
+		selectable: React.PropTypes.object
 	};
 
-	exports.default = SelectableGroup;
+	module.exports = SelectableGroup;
 
 /***/ },
 /* 2 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var _interopRequire = function (obj) { return obj && obj.__esModule ? obj["default"] : obj; };
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var key in props) { var prop = props[key]; prop.configurable = true; if (prop.value) prop.writable = true; } Object.defineProperties(target, props); } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	var _inherits = function (subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; };
+
+	var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } };
+
+	var React = _interopRequire(__webpack_require__(3));
+
+	var ReactDOM = _interopRequire(__webpack_require__(4));
+
+	var createSelectable = function (WrappedComponent) {
+		var SelectableItem = (function (_React$Component) {
+			function SelectableItem() {
+				_classCallCheck(this, SelectableItem);
+
+				if (_React$Component != null) {
+					_React$Component.apply(this, arguments);
+				}
+			}
+
+			_inherits(SelectableItem, _React$Component);
+
+			_createClass(SelectableItem, {
+				componentDidMount: {
+					value: function componentDidMount() {
+						this.context.selectable.register(this.props.selectableKey, ReactDOM.findDOMNode(this));
+					}
+				},
+				componentWillUnmount: {
+					value: function componentWillUnmount() {
+						this.context.selectable.unregister(this.props.selectableKey);
+					}
+				},
+				render: {
+					value: function render() {
+						return React.createElement(WrappedComponent, this.props, this.props.children);
+					}
+				}
+			});
+
+			return SelectableItem;
+		})(React.Component);
+
+		SelectableItem.contextTypes = {
+			selectable: React.PropTypes.object
+		};
+
+		SelectableItem.propTypes = {
+			selectableKey: React.PropTypes.any.isRequired
+		};
+
+		return SelectableItem;
+	};
+
+	module.exports = createSelectable;
+
+/***/ },
+/* 3 */
+/***/ function(module, exports, __webpack_require__) {
 
 	module.exports = React;
 
 /***/ },
-/* 3 */
-/***/ function(module, exports) {
+/* 4 */
+/***/ function(module, exports, __webpack_require__) {
 
 	module.exports = ReactDOM;
 
 /***/ },
-/* 4 */
-/***/ function(module, exports) {
+/* 5 */
+/***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	var isNodeInRoot = function isNodeInRoot(node, root) {
+	var isNodeInRoot = function (node, root) {
 	  while (node) {
 	    if (node === root) {
 	      return true;
@@ -394,24 +436,21 @@ var Selectable =
 	  return false;
 	};
 
-	exports.default = isNodeInRoot;
+	module.exports = isNodeInRoot;
 
 /***/ },
-/* 5 */
-/***/ function(module, exports) {
+/* 6 */
+/***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
 	/**
 	 * Given a node, get everything needed to calculate its boundaries
 	 * @param  {HTMLElement} node 
 	 * @return {Object}
 	 */
 
-	exports.default = function (node) {
+	module.exports = function (node) {
 		var rect = node.getBoundingClientRect();
 
 		return {
@@ -423,20 +462,14 @@ var Selectable =
 	};
 
 /***/ },
-/* 6 */
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	"use strict";
 
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
+	var _interopRequire = function (obj) { return obj && obj.__esModule ? obj["default"] : obj; };
 
-	var _getBoundsForNode = __webpack_require__(5);
-
-	var _getBoundsForNode2 = _interopRequireDefault(_getBoundsForNode);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	var getBoundsForNode = _interopRequire(__webpack_require__(6));
 
 	/**
 	 * Given offsets, widths, and heights of two objects, determine if they collide (overlap).
@@ -450,20 +483,14 @@ var Selectable =
 	 * @param  {int} bHeight The height of the second object
 	 * @return {bool}
 	 */
-	var coordsCollide = function coordsCollide(aTop, aLeft, bTop, bLeft, aWidth, aHeight, bWidth, bHeight, tolerance) {
-	  if (typeof tolerance === 'undefined') {
+	var coordsCollide = function (aTop, aLeft, bTop, bLeft, aWidth, aHeight, bWidth, bHeight, tolerance) {
+	  if (typeof tolerance === "undefined") {
 	    tolerance = 0;
 	  }
 
 	  return !(
 	  // 'a' bottom doesn't touch 'b' top
-	  aTop + aHeight - tolerance < bTop ||
-	  // 'a' top doesn't touch 'b' bottom
-	  aTop + tolerance > bTop + bHeight ||
-	  // 'a' right doesn't touch 'b' left
-	  aLeft + aWidth - tolerance < bLeft ||
-	  // 'a' left doesn't touch 'b' right
-	  aLeft + tolerance > bLeft + bWidth);
+	  aTop + aHeight - tolerance < bTop || aTop + tolerance > bTop + bHeight || aLeft + aWidth - tolerance < bLeft || aLeft + tolerance > bLeft + bWidth);
 	};
 
 	/**
@@ -474,83 +501,18 @@ var Selectable =
 	 * @return {bool}
 	 */
 
-	exports.default = function (a, b, tolerance) {
-	  var aObj = a instanceof HTMLElement ? (0, _getBoundsForNode2.default)(a) : a,
-	      bObj = b instanceof HTMLElement ? (0, _getBoundsForNode2.default)(b) : b;
+	module.exports = function (a, b, tolerance) {
+	  var aObj = a instanceof HTMLElement ? getBoundsForNode(a) : a,
+	      bObj = b instanceof HTMLElement ? getBoundsForNode(b) : b;
 
 	  return coordsCollide(aObj.top, aObj.left, bObj.top, bObj.left, aObj.offsetWidth, aObj.offsetHeight, bObj.offsetWidth, bObj.offsetHeight, tolerance);
 	};
 
-/***/ },
-/* 7 */
-/***/ function(module, exports, __webpack_require__) {
+	// 'a' top doesn't touch 'b' bottom
 
-	'use strict';
+	// 'a' right doesn't touch 'b' left
 
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _react = __webpack_require__(2);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactDom = __webpack_require__(3);
-
-	var _reactDom2 = _interopRequireDefault(_reactDom);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var createSelectable = function createSelectable(WrappedComponent) {
-		var SelectableItem = function (_React$Component) {
-			_inherits(SelectableItem, _React$Component);
-
-			function SelectableItem() {
-				_classCallCheck(this, SelectableItem);
-
-				return _possibleConstructorReturn(this, Object.getPrototypeOf(SelectableItem).apply(this, arguments));
-			}
-
-			_createClass(SelectableItem, [{
-				key: 'componentDidMount',
-				value: function componentDidMount() {
-					this.context.selectable.register(this.props.selectableKey, _reactDom2.default.findDOMNode(this));
-				}
-			}, {
-				key: 'componentWillUnmount',
-				value: function componentWillUnmount() {
-					this.context.selectable.unregister(this.props.selectableKey);
-				}
-			}, {
-				key: 'render',
-				value: function render() {
-					return _react2.default.createElement(WrappedComponent, this.props);
-				}
-			}]);
-
-			return SelectableItem;
-		}(_react2.default.Component);
-
-		SelectableItem.contextTypes = {
-			selectable: _react2.default.PropTypes.object
-		};
-
-		SelectableItem.propTypes = {
-			selectableKey: _react2.default.PropTypes.any.isRequired
-		};
-
-		return SelectableItem;
-	};
-
-	exports.default = createSelectable;
+	// 'a' left doesn't touch 'b' right
 
 /***/ }
 /******/ ]);
