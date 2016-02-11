@@ -3,10 +3,10 @@
 		module.exports = factory(require("react"), require("react-dom"));
 	else if(typeof define === 'function' && define.amd)
 		define(["react", "react-dom"], factory);
-	else if(typeof exports === 'object')
-		exports["Selectable"] = factory(require("react"), require("react-dom"));
-	else
-		root["Selectable"] = factory(root["React"], root["ReactDOM"]);
+	else {
+		var a = typeof exports === 'object' ? factory(require("react"), require("react-dom")) : factory(root["React"], root["ReactDOM"]);
+		for(var i in a) (typeof exports === 'object' ? exports : root)[i] = a[i];
+	}
 })(this, function(__WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_3__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
