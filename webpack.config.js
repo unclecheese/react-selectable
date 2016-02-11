@@ -6,7 +6,6 @@ module.exports = {
     path: './dist', // This is where images AND js will go
     publicPath: '', // This is used to generate URLs to e.g. images
     filename: 'react-selectable.js',
-    library: 'Selectable',
     libraryTarget: 'umd'
   },
   externals: {
