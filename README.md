@@ -52,7 +52,9 @@ class App extends React.Component {
 ```
 ## Configuration
 
-The component accepts a few optional props:
-* `onSelection` (Function) Fired after user completes selection
+The `<SelectableGroup />` component accepts a few optional props:
+* `onSelection` (Function) Callback fired after user completes selection
 * `tolerance` (Number) The amount of buffer to add around your `<SelectableGroup />` container, in pixels.
-* `component` (string) The component to render. Defaults to `div`.
+* `component` (String) The component to render. Defaults to `div`.
+* `fixedPosition` (Boolean) Whether the `<SelectableGroup />` container is a fixed/absolute position element or the grandchild of one. Note: if you get an error that `Value must be omitted for boolean attributes` when you try `<SelectableGroup fixedPosition={true} />`, simply use Javascript's boolean object function: `<SelectableGroup fixedPosition={Boolean(true)} />`.
+
