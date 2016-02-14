@@ -188,6 +188,9 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: '_openSelector',
 			value: function _openSelector(e) {
+				// Remove event listener for user clicking on a single item (without dragging)
+				_reactDom2.default.findDOMNode(this).removeEventListener('mouseup', this._openSelector);
+				
 				var w = Math.abs(this._mouseDownData.initialW - e.pageX);
 				var h = Math.abs(this._mouseDownData.initialH - e.pageY);
 
@@ -212,7 +215,6 @@ return /******/ (function(modules) { // webpackBootstrap
 				var collides = undefined,
 				    offsetData = undefined,
 				    distanceData = undefined;
-				_reactDom2.default.findDOMNode(this).addEventListener('mouseup', this._mouseUp);
 
 				// Right clicks
 				if (e.which === 3 || e.button === 2) return;
@@ -242,6 +244,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				e.preventDefault();
 
+				// In order to allow clicking on a single item (without dragging)
+				_reactDom2.default.findDOMNode(this).addEventListener('mouseup', this._openSelector);
+				// Fires once the drag is complete
+				_reactDom2.default.findDOMNode(this).addEventListener('mouseup', this._mouseUp);
+				// Fires throughout dragging
 				_reactDom2.default.findDOMNode(this).addEventListener('mousemove', this._openSelector);
 			}
 
