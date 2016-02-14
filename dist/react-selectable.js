@@ -106,6 +106,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _doObjectsCollide2 = _interopRequireDefault(_doObjectsCollide);
 
+	var _currentItems = [];
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -266,17 +268,35 @@ return /******/ (function(modules) { // webpackBootstrap
 			key: '_selectElements',
 			value: function _selectElements(e) {
 				this._mouseDownData = null;
-				var currentItems = [];
+				
+				var dontClearSelection = this.props.dontClearSelection;
+				
+				if(!dontClearSelection){ // Clear old selection if feature is not enabled
+					_currentItems = [];
+				}
 				var selectbox = _reactDom2.default.findDOMNode(this.refs.selectbox);
 				var tolerance = this.props.tolerance;
 
 				if (!selectbox) return;
 
+				var newItems = [];
+				var allNewItemsAlreadySelected = true; // Book keeping for dontClearSelection feature
+
 				this._registry.forEach(function (itemData) {
 					if (itemData.domNode && (0, _doObjectsCollide2.default)(selectbox, itemData.domNode, tolerance)) {
-						currentItems.push(itemData.key);
+						newItems.push(itemData.key);
+						if(_currentItems.indexOf(itemData.key) == -1 && dontClearSelection){
+							allNewItemsAlreadySelected = false;
+						}
 					}
 				});
+				
+				if(!dontClearSelection||!allNewItemsAlreadySelected){ // dontClearSelection is not enabled or (it is) 
+																	  // and newItems should be added to the selection
+					_currentItems = _currentItems.concat(newItems);
+				}else{
+					_currentItems = _currentItems.filter(function(i) {return newItems.indexOf(i) < 0;}); // Delete newItems from _currentItems
+				}
 
 				this.setState({
 					isBoxSelecting: false,
@@ -284,7 +304,7 @@ return /******/ (function(modules) { // webpackBootstrap
 					boxHeight: 0
 				});
 
-				this.props.onSelection(currentItems);
+				this.props.onSelection(_currentItems);
 			}
 
 			/**
@@ -354,7 +374,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	  * is relying on fixed positioned elements, for instance.
 	  * @type boolean
 	  */
-		fixedPosition: _react2.default.PropTypes.bool
+		fixedPosition: _react2.default.PropTypes.bool,
+		/**
+	  * Don't clear current selected items before next selection
+	  */
+		dontClearSelection: _react2.default.PropTypes.bool
 
 	};
 
@@ -362,7 +386,8 @@ return /******/ (function(modules) { // webpackBootstrap
 		onSelection: function onSelection() {},
 		component: 'div',
 		tolerance: 0,
-		fixedPosition: false
+		fixedPosition: false,
+		dontClearSelection: false
 	};
 
 	SelectableGroup.childContextTypes = {
