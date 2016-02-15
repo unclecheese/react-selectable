@@ -80,11 +80,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	var _react = __webpack_require__(2);
 
@@ -106,8 +106,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _doObjectsCollide2 = _interopRequireDefault(_doObjectsCollide);
 
-	var _currentItems = [];
-
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -127,13 +125,15 @@ return /******/ (function(modules) { // webpackBootstrap
 			_this.state = {
 				isBoxSelecting: false,
 				boxWidth: 0,
-				boxHeight: 0
+				boxHeight: 0,
+				currentItems: []
 			};
 
 			_this._mouseDownData = null;
 			_this._registry = [];
 
 			_this._openSelector = _this._openSelector.bind(_this);
+			_this._click = _this._click.bind(_this);
 			_this._mouseDown = _this._mouseDown.bind(_this);
 			_this._mouseUp = _this._mouseUp.bind(_this);
 			_this._selectElements = _this._selectElements.bind(_this);
@@ -155,6 +155,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'componentDidMount',
 			value: function componentDidMount() {
+				_reactDom2.default.findDOMNode(this).addEventListener('click', this._click);
 				_reactDom2.default.findDOMNode(this).addEventListener('mousedown', this._mouseDown);
 			}
 
@@ -165,6 +166,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'componentWillUnmount',
 			value: function componentWillUnmount() {
+				_reactDom2.default.findDOMNode(this).removeEventListener('click', this._click);
 				_reactDom2.default.findDOMNode(this).removeEventListener('mousedown', this._mouseDown);
 			}
 		}, {
@@ -188,9 +190,6 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: '_openSelector',
 			value: function _openSelector(e) {
-				// Remove event listener for user clicking on a single item (without dragging)
-				_reactDom2.default.findDOMNode(this).removeEventListener('mouseup', this._openSelector);
-				
 				var w = Math.abs(this._mouseDownData.initialW - e.pageX);
 				var h = Math.abs(this._mouseDownData.initialH - e.pageY);
 
@@ -201,6 +200,73 @@ return /******/ (function(modules) { // webpackBootstrap
 					boxLeft: Math.min(e.pageX, this._mouseDownData.initialW),
 					boxTop: Math.min(e.pageY, this._mouseDownData.initialH)
 				});
+			}
+
+			/**
+	   * Called when a user clicks on an item. Selects the clicked item.
+	   */
+
+		}, {
+			key: '_click',
+			value: function _click(e) {
+
+				// We breifly open the selector to capture the position of the clicked item
+				this._mouseDownData = {
+					boxLeft: e.pageX,
+					boxTop: e.pageY,
+					initialW: e.pageX,
+					initialH: e.pageY
+				};
+				this._openSelector(e);
+
+				var node = _reactDom2.default.findDOMNode(this);
+
+				var _props = this.props;
+				var tolerance = _props.tolerance;
+				var dontClearSelection = _props.dontClearSelection;
+				var selectbox = _reactDom2.default.findDOMNode(this.refs.selectbox);
+
+				// Right clicks
+				if (e.which === 3 || e.button === 2) return;
+
+				var newItems = []; // For holding the clicked item
+
+				if (!dontClearSelection) {
+					// Clear exisiting selections
+					this._clearSelections();
+				} else {
+					newItems = this.state.currentItems;
+				}
+
+				this._registry.forEach(function (itemData) {
+					if (itemData.domNode && (0, _doObjectsCollide2.default)(selectbox, itemData.domNode, tolerance)) {
+						if (!dontClearSelection) {
+							newItems.push(itemData.key); // Only clicked item will be selected now
+						} else {
+								// Toggle item selection
+								if (newItems.indexOf(itemData.key) == -1) {
+									// Not selected currently, mark item as selected
+									newItems.push(itemData.key);
+								} else {
+									// Selected currently, mark item as unselected
+									var index = newItems.indexOf(itemData.key);
+									newItems.splice(index, 1);
+								}
+							}
+					}
+				});
+
+				// Close selector and update currently selected items
+				this.setState({
+					isBoxSelecting: false,
+					boxWidth: 0,
+					boxHeight: 0,
+					currentItems: newItems
+				});
+
+				this.props.onSelection(this.state.currentItems);
+
+				e.preventDefault();
 			}
 
 			/**
@@ -215,6 +281,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				var collides = undefined,
 				    offsetData = undefined,
 				    distanceData = undefined;
+				_reactDom2.default.findDOMNode(this).addEventListener('mouseup', this._mouseUp);
 
 				// Right clicks
 				if (e.which === 3 || e.button === 2) return;
@@ -244,11 +311,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				e.preventDefault();
 
-				// In order to allow clicking on a single item (without dragging)
-				_reactDom2.default.findDOMNode(this).addEventListener('mouseup', this._openSelector);
-				// Fires once the drag is complete
-				_reactDom2.default.findDOMNode(this).addEventListener('mouseup', this._mouseUp);
-				// Fires throughout dragging
 				_reactDom2.default.findDOMNode(this).addEventListener('mousemove', this._openSelector);
 			}
 
@@ -274,15 +336,19 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: '_selectElements',
 			value: function _selectElements(e) {
+				var _this2 = this;
+
 				this._mouseDownData = null;
-				
-				var dontClearSelection = this.props.dontClearSelection;
-				
-				if(!dontClearSelection){ // Clear old selection if feature is not enabled
-					_currentItems = [];
-				}
+
+				var _props2 = this.props;
+				var tolerance = _props2.tolerance;
+				var dontClearSelection = _props2.dontClearSelection;
 				var selectbox = _reactDom2.default.findDOMNode(this.refs.selectbox);
-				var tolerance = this.props.tolerance;
+
+				if (!dontClearSelection) {
+					// Clear old selection if feature is not enabled
+					this._clearSelections();
+				}
 
 				if (!selectbox) return;
 
@@ -292,26 +358,41 @@ return /******/ (function(modules) { // webpackBootstrap
 				this._registry.forEach(function (itemData) {
 					if (itemData.domNode && (0, _doObjectsCollide2.default)(selectbox, itemData.domNode, tolerance)) {
 						newItems.push(itemData.key);
-						if(_currentItems.indexOf(itemData.key) == -1 && dontClearSelection){
+						if (_this2.state.currentItems.indexOf(itemData.key) == -1 && dontClearSelection) {
 							allNewItemsAlreadySelected = false;
 						}
 					}
 				});
-				
-				if(!dontClearSelection||!allNewItemsAlreadySelected){ // dontClearSelection is not enabled or (it is) 
-																	  // and newItems should be added to the selection
-					_currentItems = _currentItems.concat(newItems);
-				}else{
-					_currentItems = _currentItems.filter(function(i) {return newItems.indexOf(i) < 0;}); // Delete newItems from _currentItems
+
+				var newCurrentItems = [];
+				if (!dontClearSelection || !allNewItemsAlreadySelected) {
+					// dontClearSelection is not enabled or (it is)
+					// and newItems should be added to the selection
+					newCurrentItems = this.state.currentItems.concat(newItems);
+				} else {
+					newCurrentItems = this.state.currentItems.filter(function (i) {
+						return newItems.indexOf(i) < 0;
+					}); // Delete newItems from _currentItems
 				}
 
 				this.setState({
 					isBoxSelecting: false,
 					boxWidth: 0,
-					boxHeight: 0
+					boxHeight: 0,
+					currentItems: newCurrentItems
 				});
 
-				this.props.onSelection(_currentItems);
+				this.props.onSelection(this.state.currentItems);
+			}
+
+			/**
+	   * Unselects all items, clearing this.state.currentItems
+	   */
+
+		}, {
+			key: '_clearSelections',
+			value: function _clearSelections() {
+				this.state.currentItems = [];
 			}
 
 			/**
@@ -382,6 +463,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  * @type boolean
 	  */
 		fixedPosition: _react2.default.PropTypes.bool,
+
 		/**
 	  * Don't clear current selected items before next selection
 	  */
@@ -528,11 +610,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	var _react = __webpack_require__(2);
 

@@ -13,13 +13,15 @@ class SelectableGroup extends React.Component {
 		this.state = {
 			isBoxSelecting: false,
 			boxWidth: 0,
-			boxHeight: 0			
+			boxHeight: 0,
+			currentItems: []			
 		}
 
 		this._mouseDownData = null;
 		this._registry = [];
 
 		this._openSelector = this._openSelector.bind(this);
+		this._click = this._click.bind(this);
 		this._mouseDown = this._mouseDown.bind(this);
 		this._mouseUp = this._mouseUp.bind(this);
 		this._selectElements = this._selectElements.bind(this);
@@ -39,14 +41,16 @@ class SelectableGroup extends React.Component {
 
 
 	componentDidMount () {
-		ReactDOM.findDOMNode(this).addEventListener('mousedown', this._mouseDown);		
+		ReactDOM.findDOMNode(this).addEventListener('click', this._click);	
+		ReactDOM.findDOMNode(this).addEventListener('mousedown', this._mouseDown);	
 	}
 	
 
 	/**	 
 	 * Remove global event listeners
 	 */
-	componentWillUnmount () {		
+	componentWillUnmount () {
+		ReactDOM.findDOMNode(this).removeEventListener('click', this._click);
 		ReactDOM.findDOMNode(this).removeEventListener('mousedown', this._mouseDown);		
 	}
 
@@ -78,6 +82,63 @@ class SelectableGroup extends React.Component {
 	    });
 	}
 
+	/**
+	 * Called when a user clicks on an item. Selects the clicked item.
+	 */
+	_click (e) {
+		
+		// We breifly open the selector to capture the position of the clicked item
+		this._mouseDownData = {
+			boxLeft: e.pageX,
+			boxTop: e.pageY,
+			initialW: e.pageX,
+			initialH: e.pageY
+		};
+		this._openSelector(e);
+
+		const node = ReactDOM.findDOMNode(this);
+		
+		const {tolerance, dontClearSelection} = this.props,
+	    	  selectbox = ReactDOM.findDOMNode(this.refs.selectbox);
+
+		// Right clicks
+		if(e.which === 3 || e.button === 2) return;
+
+		var newItems = []; // For holding the clicked item
+
+		if(!dontClearSelection){ // Clear exisiting selections
+			this._clearSelections();
+		}else{
+			newItems = this.state.currentItems;
+		}
+
+		this._registry.forEach(itemData => {			
+			if(itemData.domNode && doObjectsCollide(selectbox, itemData.domNode, tolerance)) {
+				if(!dontClearSelection){
+					newItems.push(itemData.key); // Only clicked item will be selected now
+				}else{ // Toggle item selection
+					if(newItems.indexOf(itemData.key) == -1){ // Not selected currently, mark item as selected
+						newItems.push(itemData.key);
+					}else{ // Selected currently, mark item as unselected
+						var index = newItems.indexOf(itemData.key);
+						newItems.splice(index, 1);
+					}
+				}
+			}
+		});
+
+		// Close selector and update currently selected items
+		this.setState({
+	    	isBoxSelecting: false,
+	    	boxWidth: 0,
+	    	boxHeight: 0,
+	    	currentItems: newItems
+	    });
+
+	    this.props.onSelection(this.state.currentItems);
+
+		e.preventDefault();
+	}
 
 	/**
 	 * Called when a user presses the mouse button. Determines if a select box should
@@ -141,27 +202,52 @@ class SelectableGroup extends React.Component {
 	 */
 	_selectElements (e) {
 	    this._mouseDownData = null;
-	    const currentItems = [],
-		      selectbox = ReactDOM.findDOMNode(this.refs.selectbox),
-		      {tolerance} = this.props;
+	    
+	    const {tolerance, dontClearSelection} = this.props,
+	    	  selectbox = ReactDOM.findDOMNode(this.refs.selectbox);
+		
+		if(!dontClearSelection){ // Clear old selection if feature is not enabled
+			this._clearSelections();
+		}
 
 		if(!selectbox) return;
 		
+		var newItems = [];
+		var allNewItemsAlreadySelected = true; // Book keeping for dontClearSelection feature
+		
 		this._registry.forEach(itemData => {			
 			if(itemData.domNode && doObjectsCollide(selectbox, itemData.domNode, tolerance)) {
-				currentItems.push(itemData.key);
+				newItems.push(itemData.key);
+				if(this.state.currentItems.indexOf(itemData.key) == -1 && dontClearSelection){
+					allNewItemsAlreadySelected = false;
+				}
 			}
 		});
+
+		var newCurrentItems = [];
+		if(!dontClearSelection||!allNewItemsAlreadySelected){ // dontClearSelection is not enabled or (it is) 
+															  // and newItems should be added to the selection
+			newCurrentItems = this.state.currentItems.concat(newItems);
+		}else{
+			newCurrentItems = this.state.currentItems.filter(function(i) {return newItems.indexOf(i) < 0;}); // Delete newItems from _currentItems
+		}
 
 		this.setState({
 			isBoxSelecting: false,
 			boxWidth: 0,
-			boxHeight: 0
+			boxHeight: 0,
+			currentItems: newCurrentItems
 		});
 
-		this.props.onSelection(currentItems);
+		this.props.onSelection(this.state.currentItems);
 	}
-
+	
+	/**
+	 * Unselects all items, clearing this.state.currentItems
+	 */
+	_clearSelections (){
+		this.state.currentItems = [];
+	}
 
 	/**
 	 * Renders the component
@@ -222,15 +308,21 @@ SelectableGroup.propTypes = {
 	 * is relying on fixed positioned elements, for instance.
 	 * @type boolean
 	 */
-	fixedPosition: React.PropTypes.bool
-
+	fixedPosition: React.PropTypes.bool,
+	
+	/**
+	 * Don't clear current selected items before next selection
+	 */
+	dontClearSelection: React.PropTypes.bool
+ 
 };
 
 SelectableGroup.defaultProps = {
 	onSelection: () => {},
 	component: 'div',
 	tolerance: 0,
-	fixedPosition: false
+	fixedPosition: false,
+	dontClearSelection: false
 };
 
 SelectableGroup.childContextTypes = {
