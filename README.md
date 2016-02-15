@@ -56,5 +56,7 @@ The `<SelectableGroup />` component accepts a few optional props:
 * `onSelection` (Function) Callback fired after user completes selection
 * `tolerance` (Number) The amount of buffer to add around your `<SelectableGroup />` container, in pixels.
 * `component` (String) The component to render. Defaults to `div`.
-* `fixedPosition` (Boolean) Whether the `<SelectableGroup />` container is a fixed/absolute position element or the grandchild of one. Note: if you get an error that `Value must be omitted for boolean attributes` when you try `<SelectableGroup fixedPosition={true} />`, simply use Javascript's boolean object function: `<SelectableGroup fixedPosition={Boolean(true)} />`.
+* `fixedPosition` (Boolean) Whether the `<SelectableGroup />` container is a fixed/absolute position element or the grandchild of one.
+* `dontClearSelection` (Boolean) When enabled, makes all new selections add to the already selected items, except for selections that contain *only* previously selected items—in this case it unselects those items.
 
+*NOTE:* For both `fixedPosition` and `dontClearSelection`, if you get an error that `Value must be omitted for boolean attributes` when you try, for example, `<SelectableGroup fixedPosition={true} />`, simply use Javascript's boolean object function: `<SelectableGroup fixedPosition={Boolean(true)} />`.
