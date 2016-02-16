@@ -58,3 +58,6 @@ The `<SelectableGroup />` component accepts a few optional props:
 * `component` (String) The component to render. Defaults to `div`.
 * `fixedPosition` (Boolean) Whether the `<SelectableGroup />` container is a fixed/absolute position element or the grandchild of one. Note: if you get an error that `Value must be omitted for boolean attributes` when you try `<SelectableGroup fixedPosition={true} />`, simply use Javascript's boolean object function: `<SelectableGroup fixedPosition={Boolean(true)} />`.
 
+## Extended Features
+
+If you need extended features such as item click selection (without dragging), not clearing the previous selection at the start of a drag, or a function callback during selection, check out [react-selectable-extended](https://github.com/leopoldjoy/react-selectable-extended).
