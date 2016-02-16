@@ -80,11 +80,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	var _react = __webpack_require__(2);
 
@@ -125,7 +125,10 @@ return /******/ (function(modules) { // webpackBootstrap
 			_this.state = {
 				isBoxSelecting: false,
 				boxWidth: 0,
-				boxHeight: 0
+				boxHeight: 0,
+				mouseDownStarted: false,
+				mouseMoveStarted: false,
+				mouseUpStarted: false
 			};
 
 			_this._mouseDownData = null;
@@ -137,6 +140,8 @@ return /******/ (function(modules) { // webpackBootstrap
 			_this._selectElements = _this._selectElements.bind(_this);
 			_this._registerSelectable = _this._registerSelectable.bind(_this);
 			_this._unregisterSelectable = _this._unregisterSelectable.bind(_this);
+			_this._desktopEventCoords = _this._desktopEventCoords.bind(_this);
+
 			return _this;
 		}
 
@@ -154,6 +159,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			key: 'componentDidMount',
 			value: function componentDidMount() {
 				_reactDom2.default.findDOMNode(this).addEventListener('mousedown', this._mouseDown);
+				_reactDom2.default.findDOMNode(this).addEventListener('touchstart', this._mouseDown);
 			}
 
 			/**	 
@@ -164,6 +170,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			key: 'componentWillUnmount',
 			value: function componentWillUnmount() {
 				_reactDom2.default.findDOMNode(this).removeEventListener('mousedown', this._mouseDown);
+				_reactDom2.default.findDOMNode(this).removeEventListener('touchstart', this._mouseDown);
 			}
 		}, {
 			key: '_registerSelectable',
@@ -186,8 +193,15 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: '_openSelector',
 			value: function _openSelector(e) {
+				if (this.state.mouseMoveStarted) return;
+				this.state.mouseMoveStarted = true;
+
+				e = this._desktopEventCoords(e);
+
 				var w = Math.abs(this._mouseDownData.initialW - e.pageX);
 				var h = Math.abs(this._mouseDownData.initialH - e.pageY);
+
+				var component = this;
 
 				this.setState({
 					isBoxSelecting: true,
@@ -195,6 +209,8 @@ return /******/ (function(modules) { // webpackBootstrap
 					boxHeight: h,
 					boxLeft: Math.min(e.pageX, this._mouseDownData.initialW),
 					boxTop: Math.min(e.pageY, this._mouseDownData.initialH)
+				}, function () {
+					component.state.mouseMoveStarted = false;
 				});
 			}
 
@@ -206,11 +222,18 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: '_mouseDown',
 			value: function _mouseDown(e) {
+				if (this.state.mouseDownStarted) return;
+				this.state.mouseDownStarted = true;
+				this.state.mouseUpStarted = false;
+
+				e = this._desktopEventCoords(e);
+
 				var node = _reactDom2.default.findDOMNode(this);
 				var collides = undefined,
 				    offsetData = undefined,
 				    distanceData = undefined;
 				_reactDom2.default.findDOMNode(this).addEventListener('mouseup', this._mouseUp);
+				_reactDom2.default.findDOMNode(this).addEventListener('touchend', this._mouseUp);
 
 				// Right clicks
 				if (e.which === 3 || e.button === 2) return;
@@ -241,6 +264,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				e.preventDefault();
 
 				_reactDom2.default.findDOMNode(this).addEventListener('mousemove', this._openSelector);
+				_reactDom2.default.findDOMNode(this).addEventListener('touchmove', this._openSelector);
 			}
 
 			/**
@@ -250,8 +274,14 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: '_mouseUp',
 			value: function _mouseUp(e) {
+				if (this.state.mouseUpStarted) return;
+				this.state.mouseUpStarted = true;
+				this.state.mouseDownStarted = false;
+
 				_reactDom2.default.findDOMNode(this).removeEventListener('mousemove', this._openSelector);
 				_reactDom2.default.findDOMNode(this).removeEventListener('mouseup', this._mouseUp);
+				_reactDom2.default.findDOMNode(this).removeEventListener('touchmove', this._openSelector);
+				_reactDom2.default.findDOMNode(this).removeEventListener('touchend', this._mouseUp);
 
 				if (!this._mouseDownData) return;
 
@@ -270,6 +300,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				var selectbox = _reactDom2.default.findDOMNode(this.refs.selectbox);
 				var tolerance = this.props.tolerance;
 
+
 				if (!selectbox) return;
 
 				this._registry.forEach(function (itemData) {
@@ -285,6 +316,22 @@ return /******/ (function(modules) { // webpackBootstrap
 				});
 
 				this.props.onSelection(currentItems);
+			}
+
+			/**
+	   * Used to return event object with desktop (non-touch) format of event 
+	   * coordinates, regardless of whether the action is from mobile or desktop.
+	   */
+
+		}, {
+			key: '_desktopEventCoords',
+			value: function _desktopEventCoords(e) {
+				if (e.pageX == undefined || e.pageY == undefined) {
+					// Touch-device
+					e.pageX = e.targetTouches[0].pageX;
+					e.pageY = e.targetTouches[0].pageY;
+				}
+				return e;
 			}
 
 			/**
@@ -496,11 +543,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	var _react = __webpack_require__(2);
 

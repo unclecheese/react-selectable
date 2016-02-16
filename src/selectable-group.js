@@ -13,7 +13,10 @@ class SelectableGroup extends React.Component {
 		this.state = {
 			isBoxSelecting: false,
 			boxWidth: 0,
-			boxHeight: 0			
+			boxHeight: 0,
+			mouseDownStarted: false,
+			mouseMoveStarted: false,
+			mouseUpStarted: false
 		}
 
 		this._mouseDownData = null;
@@ -25,6 +28,8 @@ class SelectableGroup extends React.Component {
 		this._selectElements = this._selectElements.bind(this);
 		this._registerSelectable = this._registerSelectable.bind(this);
 		this._unregisterSelectable = this._unregisterSelectable.bind(this);
+		this._desktopEventCoords = this._desktopEventCoords.bind(this);
+
 	}
 
 
@@ -39,7 +44,8 @@ class SelectableGroup extends React.Component {
 
 
 	componentDidMount () {
-		ReactDOM.findDOMNode(this).addEventListener('mousedown', this._mouseDown);		
+		ReactDOM.findDOMNode(this).addEventListener('mousedown', this._mouseDown);
+		ReactDOM.findDOMNode(this).addEventListener('touchstart', this._mouseDown);		
 	}
 	
 
@@ -47,7 +53,8 @@ class SelectableGroup extends React.Component {
 	 * Remove global event listeners
 	 */
 	componentWillUnmount () {		
-		ReactDOM.findDOMNode(this).removeEventListener('mousedown', this._mouseDown);		
+		ReactDOM.findDOMNode(this).removeEventListener('mousedown', this._mouseDown);
+		ReactDOM.findDOMNode(this).removeEventListener('touchstart', this._mouseDown);		
 	}
 
 
@@ -65,9 +72,16 @@ class SelectableGroup extends React.Component {
 	 * Called while moving the mouse with the button down. Changes the boundaries
 	 * of the selection box
 	 */
-	_openSelector (e) {		
+	_openSelector (e) {	
+		if(this.state.mouseMoveStarted) return;
+		this.state.mouseMoveStarted = true;
+
+		e = this._desktopEventCoords(e);
+
 	    const w = Math.abs(this._mouseDownData.initialW - e.pageX);
 	    const h = Math.abs(this._mouseDownData.initialH - e.pageY);
+
+	    var component = this;
 
 	    this.setState({
 	    	isBoxSelecting: true,
@@ -75,6 +89,8 @@ class SelectableGroup extends React.Component {
 	    	boxHeight: h,
 	    	boxLeft: Math.min(e.pageX, this._mouseDownData.initialW),
 	    	boxTop: Math.min(e.pageY, this._mouseDownData.initialH)
+	    }, function(){
+	    	component.state.mouseMoveStarted = false;
 	    });
 	}
 
@@ -84,9 +100,16 @@ class SelectableGroup extends React.Component {
 	 * be added, and if so, attach event listeners
 	 */
 	_mouseDown (e) {
+		if(this.state.mouseDownStarted) return;
+		this.state.mouseDownStarted = true; 
+		this.state.mouseUpStarted = false;
+
+		e = this._desktopEventCoords(e);
+
 		const node = ReactDOM.findDOMNode(this);
 		let collides, offsetData, distanceData;		
 		ReactDOM.findDOMNode(this).addEventListener('mouseup', this._mouseUp);
+		ReactDOM.findDOMNode(this).addEventListener('touchend', this._mouseUp);
 		
 		// Right clicks
 		if(e.which === 3 || e.button === 2) return;
@@ -120,6 +143,7 @@ class SelectableGroup extends React.Component {
 		e.preventDefault();
 
 		ReactDOM.findDOMNode(this).addEventListener('mousemove', this._openSelector);
+		ReactDOM.findDOMNode(this).addEventListener('touchmove', this._openSelector);
 	}
 
 
@@ -127,8 +151,14 @@ class SelectableGroup extends React.Component {
 	 * Called when the user has completed selection
 	 */
 	_mouseUp (e) {
+		if(this.state.mouseUpStarted) return;
+		this.state.mouseUpStarted = true;
+		this.state.mouseDownStarted = false;
+
 	    ReactDOM.findDOMNode(this).removeEventListener('mousemove', this._openSelector);
 	    ReactDOM.findDOMNode(this).removeEventListener('mouseup', this._mouseUp);
+	    ReactDOM.findDOMNode(this).removeEventListener('touchmove', this._openSelector);
+	    ReactDOM.findDOMNode(this).removeEventListener('touchend', this._mouseUp);
 
 	    if(!this._mouseDownData) return;
 	    
@@ -162,6 +192,17 @@ class SelectableGroup extends React.Component {
 		this.props.onSelection(currentItems);
 	}
 
+	/**
+	 * Used to return event object with desktop (non-touch) format of event 
+	 * coordinates, regardless of whether the action is from mobile or desktop.
+	 */
+	_desktopEventCoords (e){
+		if(e.pageX==undefined || e.pageY==undefined){ // Touch-device
+			e.pageX = e.targetTouches[0].pageX;
+			e.pageY = e.targetTouches[0].pageY;
+		}
+		return e;
+	}
 
 	/**
 	 * Renders the component
