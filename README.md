@@ -1,6 +1,6 @@
 # Selectable items for React
 
-Allows individual or group selection of items using the mouse.
+Allows individual or group selection of items using the mouse or touch.
 
 ## Demo
 [Try it out](http://unclecheese.github.io/react-selectable/example)
