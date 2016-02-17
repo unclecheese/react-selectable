@@ -13,14 +13,16 @@ class SelectableGroup extends React.Component {
 		this.state = {
 			isBoxSelecting: false,
 			boxWidth: 0,
-			boxHeight: 0,
-			mouseDownStarted: false,
-			mouseMoveStarted: false,
-			mouseUpStarted: false
+			boxHeight: 0
 		}
 
 		this._mouseDownData = null;
 		this._registry = [];
+
+		// Used to prevent actions from firing twice on devices that are both click and touch enabled
+		this._mouseDownStarted = false;
+		this._mouseMoveStarted = false;
+		this._mouseUpStarted = false;
 
 		this._openSelector = this._openSelector.bind(this);
 		this._mouseDown = this._mouseDown.bind(this);
@@ -73,15 +75,13 @@ class SelectableGroup extends React.Component {
 	 * of the selection box
 	 */
 	_openSelector (e) {	
-		if(this.state.mouseMoveStarted) return;
-		this.state.mouseMoveStarted = true;
+		if(this._mouseMoveStarted) return;
+		this._mouseMoveStarted = true;
 
 		e = this._desktopEventCoords(e);
 
 	    const w = Math.abs(this._mouseDownData.initialW - e.pageX);
 	    const h = Math.abs(this._mouseDownData.initialH - e.pageY);
-
-	    var component = this;
 
 	    this.setState({
 	    	isBoxSelecting: true,
@@ -89,8 +89,8 @@ class SelectableGroup extends React.Component {
 	    	boxHeight: h,
 	    	boxLeft: Math.min(e.pageX, this._mouseDownData.initialW),
 	    	boxTop: Math.min(e.pageY, this._mouseDownData.initialH)
-	    }, function(){
-	    	component.state.mouseMoveStarted = false;
+	    }, () => {
+	    	this._mouseMoveStarted = false;
 	    });
 	}
 
@@ -100,9 +100,9 @@ class SelectableGroup extends React.Component {
 	 * be added, and if so, attach event listeners
 	 */
 	_mouseDown (e) {
-		if(this.state.mouseDownStarted) return;
-		this.state.mouseDownStarted = true; 
-		this.state.mouseUpStarted = false;
+		if(this._mouseDownStarted) return;
+		this._mouseDownStarted = true; 
+		this._mouseUpStarted = false;
 
 		e = this._desktopEventCoords(e);
 
@@ -151,9 +151,9 @@ class SelectableGroup extends React.Component {
 	 * Called when the user has completed selection
 	 */
 	_mouseUp (e) {
-		if(this.state.mouseUpStarted) return;
-		this.state.mouseUpStarted = true;
-		this.state.mouseDownStarted = false;
+		if(this._mouseUpStarted) return;
+		this._mouseUpStarted = true;
+		this._mouseDownStarted = false;
 
 	    ReactDOM.findDOMNode(this).removeEventListener('mousemove', this._openSelector);
 	    ReactDOM.findDOMNode(this).removeEventListener('mouseup', this._mouseUp);
