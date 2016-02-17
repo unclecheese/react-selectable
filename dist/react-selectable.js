@@ -125,14 +125,16 @@ return /******/ (function(modules) { // webpackBootstrap
 			_this.state = {
 				isBoxSelecting: false,
 				boxWidth: 0,
-				boxHeight: 0,
-				mouseDownStarted: false,
-				mouseMoveStarted: false,
-				mouseUpStarted: false
+				boxHeight: 0
 			};
 
 			_this._mouseDownData = null;
 			_this._registry = [];
+
+			// Used to prevent actions from firing twice on devices that are both click and touch enabled
+			_this._mouseDownStarted = false;
+			_this._mouseMoveStarted = false;
+			_this._mouseUpStarted = false;
 
 			_this._openSelector = _this._openSelector.bind(_this);
 			_this._mouseDown = _this._mouseDown.bind(_this);
@@ -193,15 +195,15 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: '_openSelector',
 			value: function _openSelector(e) {
-				if (this.state.mouseMoveStarted) return;
-				this.state.mouseMoveStarted = true;
+				var _this2 = this;
+
+				if (this._mouseMoveStarted) return;
+				this._mouseMoveStarted = true;
 
 				e = this._desktopEventCoords(e);
 
 				var w = Math.abs(this._mouseDownData.initialW - e.pageX);
 				var h = Math.abs(this._mouseDownData.initialH - e.pageY);
-
-				var component = this;
 
 				this.setState({
 					isBoxSelecting: true,
@@ -210,7 +212,7 @@ return /******/ (function(modules) { // webpackBootstrap
 					boxLeft: Math.min(e.pageX, this._mouseDownData.initialW),
 					boxTop: Math.min(e.pageY, this._mouseDownData.initialH)
 				}, function () {
-					component.state.mouseMoveStarted = false;
+					_this2._mouseMoveStarted = false;
 				});
 			}
 
@@ -222,9 +224,9 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: '_mouseDown',
 			value: function _mouseDown(e) {
-				if (this.state.mouseDownStarted) return;
-				this.state.mouseDownStarted = true;
-				this.state.mouseUpStarted = false;
+				if (this._mouseDownStarted) return;
+				this._mouseDownStarted = true;
+				this._mouseUpStarted = false;
 
 				e = this._desktopEventCoords(e);
 
@@ -274,9 +276,9 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: '_mouseUp',
 			value: function _mouseUp(e) {
-				if (this.state.mouseUpStarted) return;
-				this.state.mouseUpStarted = true;
-				this.state.mouseDownStarted = false;
+				if (this._mouseUpStarted) return;
+				this._mouseUpStarted = true;
+				this._mouseDownStarted = false;
 
 				_reactDom2.default.findDOMNode(this).removeEventListener('mousemove', this._openSelector);
 				_reactDom2.default.findDOMNode(this).removeEventListener('mouseup', this._mouseUp);
