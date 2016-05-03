@@ -80,7 +80,7 @@ class SelectableGroup extends React.Component {
 	    	boxTop: Math.min(e.pageY, this._mouseDownData.initialH)
 	    });
 
-		this._throttledSelect();
+		if (this.props.selectOnMouseMove) this._throttledSelect();
 	}
 
 
@@ -227,7 +227,14 @@ SelectableGroup.propTypes = {
 	 * is relying on fixed positioned elements, for instance.
 	 * @type boolean
 	 */
-	fixedPosition: React.PropTypes.bool
+	fixedPosition: React.PropTypes.bool,
+
+	/**
+	 * Enable to fire the onSelection callback while the mouse is moving. Throttled to 50ms
+	 * for performance in IE/Edge
+	 * @type boolean
+	 */
+	selectOnMouseMove: React.PropTypes.bool
 
 };
 
@@ -235,7 +242,8 @@ SelectableGroup.defaultProps = {
 	onSelection: () => {},
 	component: 'div',
 	tolerance: 0,
-	fixedPosition: false
+	fixedPosition: false,
+	selectOnMouseMove: false
 };
 
 SelectableGroup.childContextTypes = {
