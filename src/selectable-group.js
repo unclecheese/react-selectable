@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import isNodeInRoot from './nodeInRoot';
 import getBoundsForNode from './getBoundsForNode';
 import doObjectsCollide from './doObjectsCollide';
+import throttle from 'lodash.throttle';
 
 class SelectableGroup extends React.Component {
 
@@ -25,6 +26,8 @@ class SelectableGroup extends React.Component {
 		this._selectElements = this._selectElements.bind(this);
 		this._registerSelectable = this._registerSelectable.bind(this);
 		this._unregisterSelectable = this._unregisterSelectable.bind(this);
+
+		this._throttledSelect = throttle(this._selectElements, 50);
 	}
 
 
@@ -76,6 +79,8 @@ class SelectableGroup extends React.Component {
 	    	boxLeft: Math.min(e.pageX, this._mouseDownData.initialW),
 	    	boxTop: Math.min(e.pageY, this._mouseDownData.initialH)
 	    });
+
+		this._throttledSelect();
 	}
 
 
