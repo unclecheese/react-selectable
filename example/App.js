@@ -23,7 +23,7 @@ class App extends React.Component {
 		this.state = {
 			selectedItems: [],
 			tolerance: 0,
-			distance: 0,
+			selectOnMouseMove: false,
 		}
 
 		this.handleSelection = this.handleSelection.bind(this);
@@ -104,8 +104,6 @@ class App extends React.Component {
 					ref="selectable"
 					onSelection={this.handleSelection} 
 					tolerance={this.state.tolerance}
-					globalMouse={this.state.isGlobal}
-					distance={this.state.distance}
 					selectOnMouseMove={this.state.selectOnMouseMove}>
 				
 				{this.props.items.map((item, i) => {
