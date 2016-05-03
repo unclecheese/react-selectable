@@ -132,7 +132,14 @@ class SelectableGroup extends React.Component {
 
 	    if(!this._mouseDownData) return;
 	    
-		return this._selectElements(e);			
+		this._selectElements(e);
+
+		this._mouseDownData = null;
+		this.setState({
+			isBoxSelecting: false,
+			boxWidth: 0,
+			boxHeight: 0
+		});
 	}
 
 
@@ -140,7 +147,6 @@ class SelectableGroup extends React.Component {
 	 * Selects multiple children given x/y coords of the mouse
 	 */
 	_selectElements (e) {
-	    this._mouseDownData = null;
 	    const currentItems = [],
 		      selectbox = ReactDOM.findDOMNode(this.refs.selectbox),
 		      {tolerance} = this.props;
@@ -151,12 +157,6 @@ class SelectableGroup extends React.Component {
 			if(itemData.domNode && doObjectsCollide(selectbox, itemData.domNode, tolerance)) {
 				currentItems.push(itemData.key);
 			}
-		});
-
-		this.setState({
-			isBoxSelecting: false,
-			boxWidth: 0,
-			boxHeight: 0
 		});
 
 		this.props.onSelection(currentItems);
