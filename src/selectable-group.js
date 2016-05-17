@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import isNodeInRoot from './nodeInRoot';
 import getBoundsForNode from './getBoundsForNode';
 import doObjectsCollide from './doObjectsCollide';
+import throttle from 'lodash.throttle';
 
 class SelectableGroup extends React.Component {
 
@@ -25,6 +26,8 @@ class SelectableGroup extends React.Component {
 		this._selectElements = this._selectElements.bind(this);
 		this._registerSelectable = this._registerSelectable.bind(this);
 		this._unregisterSelectable = this._unregisterSelectable.bind(this);
+
+		this._throttledSelect = throttle(this._selectElements, 50);
 	}
 
 
@@ -76,6 +79,8 @@ class SelectableGroup extends React.Component {
 	    	boxLeft: Math.min(e.pageX, this._mouseDownData.initialW),
 	    	boxTop: Math.min(e.pageY, this._mouseDownData.initialH)
 	    });
+
+		if (this.props.selectOnMouseMove) this._throttledSelect();
 	}
 
 
@@ -132,7 +137,14 @@ class SelectableGroup extends React.Component {
 
 	    if(!this._mouseDownData) return;
 	    
-		return this._selectElements(e);			
+		this._selectElements(e);
+
+		this._mouseDownData = null;
+		this.setState({
+			isBoxSelecting: false,
+			boxWidth: 0,
+			boxHeight: 0
+		});
 	}
 
 
@@ -140,7 +152,6 @@ class SelectableGroup extends React.Component {
 	 * Selects multiple children given x/y coords of the mouse
 	 */
 	_selectElements (e) {
-	    this._mouseDownData = null;
 	    const currentItems = [],
 		      selectbox = ReactDOM.findDOMNode(this.refs.selectbox),
 		      {tolerance} = this.props;
@@ -151,12 +162,6 @@ class SelectableGroup extends React.Component {
 			if(itemData.domNode && doObjectsCollide(selectbox, itemData.domNode, tolerance)) {
 				currentItems.push(itemData.key);
 			}
-		});
-
-		this.setState({
-			isBoxSelecting: false,
-			boxWidth: 0,
-			boxHeight: 0
 		});
 
 		this.props.onSelection(currentItems);
@@ -222,7 +227,14 @@ SelectableGroup.propTypes = {
 	 * is relying on fixed positioned elements, for instance.
 	 * @type boolean
 	 */
-	fixedPosition: React.PropTypes.bool
+	fixedPosition: React.PropTypes.bool,
+
+	/**
+	 * Enable to fire the onSelection callback while the mouse is moving. Throttled to 50ms
+	 * for performance in IE/Edge
+	 * @type boolean
+	 */
+	selectOnMouseMove: React.PropTypes.bool
 
 };
 
@@ -230,7 +242,8 @@ SelectableGroup.defaultProps = {
 	onSelection: () => {},
 	component: 'div',
 	tolerance: 0,
-	fixedPosition: false
+	fixedPosition: false,
+	selectOnMouseMove: false
 };
 
 SelectableGroup.childContextTypes = {

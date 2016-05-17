@@ -23,12 +23,13 @@ class App extends React.Component {
 		this.state = {
 			selectedItems: [],
 			tolerance: 0,
-			distance: 0,
+			selectOnMouseMove: false,
 		}
 
 		this.handleSelection = this.handleSelection.bind(this);
 		this.clearItems = this.clearItems.bind(this);
 		this.handleToleranceChange = this.handleToleranceChange.bind(this);
+		this.toggleSelectOnMouseMove = this.toggleSelectOnMouseMove.bind(this);
 	}
 
 
@@ -64,6 +65,11 @@ class App extends React.Component {
 		});
 	}
 
+	toggleSelectOnMouseMove () {
+		this.setState({
+			selectOnMouseMove: !this.state.selectOnMouseMove
+		});
+	}
 
 	render () {
 		return (
@@ -74,6 +80,11 @@ class App extends React.Component {
 						<strong>Tolerance</strong>: <span>{this.state.tolerance}</span><br/>
 						<em>The number of pixels that must be in the bounding box in order for an item to be selected.</em>
 						<p><input type="range" min="0" max="50" step="1" onChange={this.handleToleranceChange} value={this.state.tolerance} /></p>
+
+						<label>
+							<input type="checkbox" value={this.state.selectOnMouseMove} onChange={this.toggleSelectOnMouseMove} />
+							Select on mouse move
+						</label>
 
 						{this.state.selectedItems.length > 0 &&
 							<h3>You have selected the following items:</h3>
@@ -93,8 +104,7 @@ class App extends React.Component {
 					ref="selectable"
 					onSelection={this.handleSelection} 
 					tolerance={this.state.tolerance}
-					globalMouse={this.state.isGlobal}
-					distance={this.state.distance}>
+					selectOnMouseMove={this.state.selectOnMouseMove}>
 				
 				{this.props.items.map((item, i) => {
 					const selected = this.state.selectedItems.indexOf(i) > -1;
