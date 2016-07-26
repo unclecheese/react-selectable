@@ -89,6 +89,9 @@ class SelectableGroup extends React.Component {
 	 * be added, and if so, attach event listeners
 	 */
 	_mouseDown (e) {
+		// Disable if target is control by react-dnd
+		if (!!e.target.draggable) return;
+
 		const node = ReactDOM.findDOMNode(this);
 		let collides, offsetData, distanceData;		
 		ReactDOM.findDOMNode(this).addEventListener('mouseup', this._mouseUp);
