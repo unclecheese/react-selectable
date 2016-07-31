@@ -65,7 +65,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _selectableGroup2 = _interopRequireDefault(_selectableGroup);
 
-	var _createSelectable = __webpack_require__(9);
+	var _createSelectable = __webpack_require__(8);
 
 	var _createSelectable2 = _interopRequireDefault(_createSelectable);
 
@@ -162,7 +162,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				_reactDom2.default.findDOMNode(this).addEventListener('mousedown', this._mouseDown);
 			}
 
-			/**	 
+			/**
 	   * Remove global event listeners
 	   */
 
@@ -214,6 +214,9 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: '_mouseDown',
 			value: function _mouseDown(e) {
+				// Disable if target is control by react-dnd
+				if (!!e.target.draggable) return;
+
 				var node = _reactDom2.default.findDOMNode(this);
 				var collides = void 0,
 				    offsetData = void 0,
@@ -323,9 +326,16 @@ return /******/ (function(modules) { // webpackBootstrap
 					float: 'left'
 				};
 
+				var filteredProps = Object.assign({}, this.props);
+				delete filteredProps.onSelection;
+				delete filteredProps.fixedPosition;
+				delete filteredProps.selectOnMouseMove;
+				delete filteredProps.component;
+				delete filteredProps.tolerance;
+
 				return _react2.default.createElement(
 					this.props.component,
-					this.props,
+					filteredProps,
 					this.state.isBoxSelecting && _react2.default.createElement(
 						'div',
 						{ style: boxStyle, ref: 'selectbox' },
@@ -342,19 +352,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	SelectableGroup.propTypes = {
 
 		/**
-	  * Event that will fire when items are selected. Passes an array of keys		 
+	  * Event that will fire when items are selected. Passes an array of keys
 	  */
 		onSelection: _react2.default.PropTypes.func,
 
 		/**
-	  * The component that will represent the Selectable DOM node		 
+	  * The component that will represent the Selectable DOM node
 	  */
 		component: _react2.default.PropTypes.node,
 
 		/**
 	  * Amount of forgiveness an item will offer to the selectbox before registering
-	  * a selection, i.e. if only 1px of the item is in the selection, it shouldn't be 
-	  * included.		 
+	  * a selection, i.e. if only 1px of the item is in the selection, it shouldn't be
+	  * included.
 	  */
 		tolerance: _react2.default.PropTypes.number,
 
@@ -431,12 +441,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
+
 	/**
 	 * Given a node, get everything needed to calculate its boundaries
 	 * @param  {HTMLElement} node 
 	 * @return {Object}
 	 */
-
 	exports.default = function (node) {
 		var rect = node.getBoundingClientRect();
 
@@ -509,115 +519,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 7 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
-
-	/**
-	 * lodash 4.0.1 (Custom Build) <https://lodash.com/>
-	 * Build: `lodash modularize exports="npm" -o ./`
-	 * Copyright 2012-2016 The Dojo Foundation <http://dojofoundation.org/>
-	 * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
-	 * Copyright 2009-2016 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
-	 * Available under MIT license <https://lodash.com/license>
-	 */
-	var debounce = __webpack_require__(8);
-
-	/** Used as the `TypeError` message for "Functions" methods. */
-	var FUNC_ERROR_TEXT = 'Expected a function';
-
-	/**
-	 * Creates a throttled function that only invokes `func` at most once per
-	 * every `wait` milliseconds. The throttled function comes with a `cancel`
-	 * method to cancel delayed `func` invocations and a `flush` method to
-	 * immediately invoke them. Provide an options object to indicate whether
-	 * `func` should be invoked on the leading and/or trailing edge of the `wait`
-	 * timeout. The `func` is invoked with the last arguments provided to the
-	 * throttled function. Subsequent calls to the throttled function return the
-	 * result of the last `func` invocation.
-	 *
-	 * **Note:** If `leading` and `trailing` options are `true`, `func` is invoked
-	 * on the trailing edge of the timeout only if the throttled function is
-	 * invoked more than once during the `wait` timeout.
-	 *
-	 * See [David Corbacho's article](http://drupalmotion.com/article/debounce-and-throttle-visual-explanation)
-	 * for details over the differences between `_.throttle` and `_.debounce`.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @category Function
-	 * @param {Function} func The function to throttle.
-	 * @param {number} [wait=0] The number of milliseconds to throttle invocations to.
-	 * @param {Object} [options] The options object.
-	 * @param {boolean} [options.leading=true] Specify invoking on the leading
-	 *  edge of the timeout.
-	 * @param {boolean} [options.trailing=true] Specify invoking on the trailing
-	 *  edge of the timeout.
-	 * @returns {Function} Returns the new throttled function.
-	 * @example
-	 *
-	 * // Avoid excessively updating the position while scrolling.
-	 * jQuery(window).on('scroll', _.throttle(updatePosition, 100));
-	 *
-	 * // Invoke `renewToken` when the click event is fired, but not more than once every 5 minutes.
-	 * var throttled = _.throttle(renewToken, 300000, { 'trailing': false });
-	 * jQuery(element).on('click', throttled);
-	 *
-	 * // Cancel the trailing throttled invocation.
-	 * jQuery(window).on('popstate', throttled.cancel);
-	 */
-	function throttle(func, wait, options) {
-	  var leading = true,
-	      trailing = true;
-
-	  if (typeof func != 'function') {
-	    throw new TypeError(FUNC_ERROR_TEXT);
-	  }
-	  if (isObject(options)) {
-	    leading = 'leading' in options ? !!options.leading : leading;
-	    trailing = 'trailing' in options ? !!options.trailing : trailing;
-	  }
-	  return debounce(func, wait, {
-	    'leading': leading,
-	    'maxWait': wait,
-	    'trailing': trailing
-	  });
-	}
-
-	/**
-	 * Checks if `value` is the [language type](https://es5.github.io/#x8) of `Object`.
-	 * (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
-	 *
-	 * @static
-	 * @memberOf _
-	 * @category Lang
-	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if `value` is an object, else `false`.
-	 * @example
-	 *
-	 * _.isObject({});
-	 * // => true
-	 *
-	 * _.isObject([1, 2, 3]);
-	 * // => true
-	 *
-	 * _.isObject(_.noop);
-	 * // => true
-	 *
-	 * _.isObject(null);
-	 * // => false
-	 */
-	function isObject(value) {
-	  var type = typeof value === 'undefined' ? 'undefined' : _typeof(value);
-	  return !!value && (type == 'object' || type == 'function');
-	}
-
-	module.exports = throttle;
-
-/***/ },
-/* 8 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -625,7 +526,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
 	/**
-	 * lodash 4.0.6 (Custom Build) <https://lodash.com/>
+	 * lodash (Custom Build) <https://lodash.com/>
 	 * Build: `lodash modularize exports="npm" -o ./`
 	 * Copyright jQuery Foundation and other contributors <https://jquery.org/>
 	 * Released under MIT license <https://lodash.com/license>
@@ -680,7 +581,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @static
 	 * @memberOf _
 	 * @since 2.4.0
-	 * @type {Function}
 	 * @category Date
 	 * @returns {number} Returns the timestamp.
 	 * @example
@@ -688,9 +588,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * _.defer(function(stamp) {
 	 *   console.log(_.now() - stamp);
 	 * }, _.now());
-	 * // => Logs the number of milliseconds it took for the deferred function to be invoked.
+	 * // => Logs the number of milliseconds it took for the deferred invocation.
 	 */
-	var now = Date.now;
+	function now() {
+	  return Date.now();
+	}
 
 	/**
 	 * Creates a debounced function that delays invoking `func` until after `wait`
@@ -748,7 +650,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      maxWait,
 	      result,
 	      timerId,
-	      lastCallTime = 0,
+	      lastCallTime,
 	      lastInvokeTime = 0,
 	      leading = false,
 	      maxing = false,
@@ -799,7 +701,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    // Either this is the first call, activity has stopped and we're at the
 	    // trailing edge, the system time has gone backwards and we're treating
 	    // it as the trailing edge, or we've hit the `maxWait` limit.
-	    return !lastCallTime || timeSinceLastCall >= wait || timeSinceLastCall < 0 || maxing && timeSinceLastInvoke >= maxWait;
+	    return lastCallTime === undefined || timeSinceLastCall >= wait || timeSinceLastCall < 0 || maxing && timeSinceLastInvoke >= maxWait;
 	  }
 
 	  function timerExpired() {
@@ -812,7 +714,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 
 	  function trailingEdge(time) {
-	    clearTimeout(timerId);
 	    timerId = undefined;
 
 	    // Only invoke if we have `lastArgs` which means `func` has been
@@ -828,8 +729,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    if (timerId !== undefined) {
 	      clearTimeout(timerId);
 	    }
-	    lastCallTime = lastInvokeTime = 0;
-	    lastArgs = lastThis = timerId = undefined;
+	    lastInvokeTime = 0;
+	    lastArgs = lastCallTime = lastThis = timerId = undefined;
 	  }
 
 	  function flush() {
@@ -850,7 +751,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	      if (maxing) {
 	        // Handle invocations in a tight loop.
-	        clearTimeout(timerId);
 	        timerId = setTimeout(timerExpired, wait);
 	        return invokeFunc(lastCallTime);
 	      }
@@ -866,6 +766,65 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 	/**
+	 * Creates a throttled function that only invokes `func` at most once per
+	 * every `wait` milliseconds. The throttled function comes with a `cancel`
+	 * method to cancel delayed `func` invocations and a `flush` method to
+	 * immediately invoke them. Provide an options object to indicate whether
+	 * `func` should be invoked on the leading and/or trailing edge of the `wait`
+	 * timeout. The `func` is invoked with the last arguments provided to the
+	 * throttled function. Subsequent calls to the throttled function return the
+	 * result of the last `func` invocation.
+	 *
+	 * **Note:** If `leading` and `trailing` options are `true`, `func` is
+	 * invoked on the trailing edge of the timeout only if the throttled function
+	 * is invoked more than once during the `wait` timeout.
+	 *
+	 * See [David Corbacho's article](https://css-tricks.com/debouncing-throttling-explained-examples/)
+	 * for details over the differences between `_.throttle` and `_.debounce`.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @since 0.1.0
+	 * @category Function
+	 * @param {Function} func The function to throttle.
+	 * @param {number} [wait=0] The number of milliseconds to throttle invocations to.
+	 * @param {Object} [options={}] The options object.
+	 * @param {boolean} [options.leading=true]
+	 *  Specify invoking on the leading edge of the timeout.
+	 * @param {boolean} [options.trailing=true]
+	 *  Specify invoking on the trailing edge of the timeout.
+	 * @returns {Function} Returns the new throttled function.
+	 * @example
+	 *
+	 * // Avoid excessively updating the position while scrolling.
+	 * jQuery(window).on('scroll', _.throttle(updatePosition, 100));
+	 *
+	 * // Invoke `renewToken` when the click event is fired, but not more than once every 5 minutes.
+	 * var throttled = _.throttle(renewToken, 300000, { 'trailing': false });
+	 * jQuery(element).on('click', throttled);
+	 *
+	 * // Cancel the trailing throttled invocation.
+	 * jQuery(window).on('popstate', throttled.cancel);
+	 */
+	function throttle(func, wait, options) {
+	  var leading = true,
+	      trailing = true;
+
+	  if (typeof func != 'function') {
+	    throw new TypeError(FUNC_ERROR_TEXT);
+	  }
+	  if (isObject(options)) {
+	    leading = 'leading' in options ? !!options.leading : leading;
+	    trailing = 'trailing' in options ? !!options.trailing : trailing;
+	  }
+	  return debounce(func, wait, {
+	    'leading': leading,
+	    'maxWait': wait,
+	    'trailing': trailing
+	  });
+	}
+
+	/**
 	 * Checks if `value` is classified as a `Function` object.
 	 *
 	 * @static
@@ -873,8 +832,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @since 0.1.0
 	 * @category Lang
 	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if `value` is correctly classified,
-	 *  else `false`.
+	 * @returns {boolean} Returns `true` if `value` is a function, else `false`.
 	 * @example
 	 *
 	 * _.isFunction(_);
@@ -957,8 +915,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @since 4.0.0
 	 * @category Lang
 	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if `value` is correctly classified,
-	 *  else `false`.
+	 * @returns {boolean} Returns `true` if `value` is a symbol, else `false`.
 	 * @example
 	 *
 	 * _.isSymbol(Symbol.iterator);
@@ -982,8 +939,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @returns {number} Returns the number.
 	 * @example
 	 *
-	 * _.toNumber(3);
-	 * // => 3
+	 * _.toNumber(3.2);
+	 * // => 3.2
 	 *
 	 * _.toNumber(Number.MIN_VALUE);
 	 * // => 5e-324
@@ -991,8 +948,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * _.toNumber(Infinity);
 	 * // => Infinity
 	 *
-	 * _.toNumber('3');
-	 * // => 3
+	 * _.toNumber('3.2');
+	 * // => 3.2
 	 */
 	function toNumber(value) {
 	  if (typeof value == 'number') {
@@ -1013,10 +970,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return isBinary || reIsOctal.test(value) ? freeParseInt(value.slice(2), isBinary ? 2 : 8) : reIsBadHex.test(value) ? NAN : +value;
 	}
 
-	module.exports = debounce;
+	module.exports = throttle;
 
 /***/ },
-/* 9 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
