@@ -5,7 +5,7 @@ Allows individual or group selection of items using the mouse.
 ## Demo
 [Try it out](http://unclecheese.github.io/react-selectable/example)
 
-## Upgrading from 0.1
+## Upgrading from 0.1 to 0.2
 There have been significant changes in the 0.2 release. Please [read about them here](UPGRADING.md).
 ## Getting started
 ```
