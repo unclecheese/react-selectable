@@ -14,7 +14,7 @@ class SelectableGroup extends React.Component {
 		this.state = {
 			isBoxSelecting: false,
 			boxWidth: 0,
-			boxHeight: 0			
+			boxHeight: 0
 		}
 
 		this._mouseDownData = null;
@@ -42,15 +42,15 @@ class SelectableGroup extends React.Component {
 
 
 	componentDidMount () {
-		ReactDOM.findDOMNode(this).addEventListener('mousedown', this._mouseDown);		
+		ReactDOM.findDOMNode(this).addEventListener('mousedown', this._mouseDown);
 	}
-	
 
-	/**	 
+
+	/**
 	 * Remove global event listeners
 	 */
-	componentWillUnmount () {		
-		ReactDOM.findDOMNode(this).removeEventListener('mousedown', this._mouseDown);		
+	componentWillUnmount () {
+		ReactDOM.findDOMNode(this).removeEventListener('mousedown', this._mouseDown);
 	}
 
 
@@ -68,7 +68,7 @@ class SelectableGroup extends React.Component {
 	 * Called while moving the mouse with the button down. Changes the boundaries
 	 * of the selection box
 	 */
-	_openSelector (e) {		
+	_openSelector (e) {
 	    const w = Math.abs(this._mouseDownData.initialW - e.pageX);
 	    const h = Math.abs(this._mouseDownData.initialH - e.pageY);
 
@@ -93,13 +93,13 @@ class SelectableGroup extends React.Component {
 		if (!!e.target.draggable) return;
 
 		const node = ReactDOM.findDOMNode(this);
-		let collides, offsetData, distanceData;		
+		let collides, offsetData, distanceData;
 		ReactDOM.findDOMNode(this).addEventListener('mouseup', this._mouseUp);
-		
+
 		// Right clicks
 		if(e.which === 3 || e.button === 2) return;
 
-		if(!isNodeInRoot(e.target, node)) {	
+		if(!isNodeInRoot(e.target, node)) {
 			offsetData = getBoundsForNode(node);
 			collides = doObjectsCollide(
 				{
@@ -116,14 +116,14 @@ class SelectableGroup extends React.Component {
 				}
 			);
 			if(!collides) return;
-		} 		
+		}
 
-		this._mouseDownData = {			
+		this._mouseDownData = {
 			boxLeft: e.pageX,
 			boxTop: e.pageY,
 	        initialW: e.pageX,
-        	initialH: e.pageY        	
-		};		
+        	initialH: e.pageY
+		};
 
 		e.preventDefault();
 
@@ -139,7 +139,7 @@ class SelectableGroup extends React.Component {
 	    ReactDOM.findDOMNode(this).removeEventListener('mouseup', this._mouseUp);
 
 	    if(!this._mouseDownData) return;
-	    
+
 		this._selectElements(e);
 
 		this._mouseDownData = null;
@@ -160,8 +160,8 @@ class SelectableGroup extends React.Component {
 		      {tolerance} = this.props;
 
 		if(!selectbox) return;
-		
-		this._registry.forEach(itemData => {			
+
+		this._registry.forEach(itemData => {
 			if(itemData.domNode && doObjectsCollide(selectbox, itemData.domNode, tolerance)) {
 				currentItems.push(itemData.key);
 			}
@@ -192,36 +192,43 @@ class SelectableGroup extends React.Component {
 			border: '1px dashed #999',
 			width: '100%',
 			height: '100%',
-			float: 'left'			
+			float: 'left'
 		};
 
-		return (
-			<this.props.component {...this.props}>				
-				{this.state.isBoxSelecting &&
-				  <div style={boxStyle} ref="selectbox"><span style={spanStyle}></span></div>
-				}
-				{this.props.children}
-			</this.props.component>
-		);
+		const filteredProps = Object.assign({}, this.props);
+        delete filteredProps.onSelection;
+        delete filteredProps.fixedPosition;
+        delete filteredProps.selectOnMouseMove;
+        delete filteredProps.component;
+        delete filteredProps.tolerance;
+
+        return (
+            <this.props.component {...filteredProps}>
+                {this.state.isBoxSelecting &&
+                  <div style={boxStyle} ref="selectbox"><span style={spanStyle}></span></div>
+                }
+                {this.props.children}
+            </this.props.component>
+        );
 	}
 }
 
 SelectableGroup.propTypes = {
 
 	/**
-	 * Event that will fire when items are selected. Passes an array of keys		 
+	 * Event that will fire when items are selected. Passes an array of keys
 	 */
 	onSelection: React.PropTypes.func,
-	
+
 	/**
-	 * The component that will represent the Selectable DOM node		 
+	 * The component that will represent the Selectable DOM node
 	 */
 	component: React.PropTypes.node,
-	
+
 	/**
 	 * Amount of forgiveness an item will offer to the selectbox before registering
-	 * a selection, i.e. if only 1px of the item is in the selection, it shouldn't be 
-	 * included.		 
+	 * a selection, i.e. if only 1px of the item is in the selection, it shouldn't be
+	 * included.
 	 */
 	tolerance: React.PropTypes.number,
 
