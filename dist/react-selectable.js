@@ -162,7 +162,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				_reactDom2.default.findDOMNode(this).addEventListener('mousedown', this._mouseDown);
 			}
 
-			/**	 
+			/**
 	   * Remove global event listeners
 	   */
 
@@ -325,9 +325,16 @@ return /******/ (function(modules) { // webpackBootstrap
 					float: 'left'
 				};
 
+				var filteredProps = Object.assign({}, this.props);
+				delete filteredProps.onSelection;
+				delete filteredProps.fixedPosition;
+				delete filteredProps.selectOnMouseMove;
+				delete filteredProps.component;
+				delete filteredProps.tolerance;
+
 				return _react2.default.createElement(
 					this.props.component,
-					this.props,
+					filteredProps,
 					this.state.isBoxSelecting && _react2.default.createElement(
 						'div',
 						{ style: boxStyle, ref: 'selectbox' },
@@ -344,19 +351,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	SelectableGroup.propTypes = {
 
 		/**
-	  * Event that will fire when items are selected. Passes an array of keys		 
+	  * Event that will fire when items are selected. Passes an array of keys
 	  */
 		onSelection: _react2.default.PropTypes.func,
 
 		/**
-	  * The component that will represent the Selectable DOM node		 
+	  * The component that will represent the Selectable DOM node
 	  */
 		component: _react2.default.PropTypes.node,
 
 		/**
 	  * Amount of forgiveness an item will offer to the selectbox before registering
-	  * a selection, i.e. if only 1px of the item is in the selection, it shouldn't be 
-	  * included.		 
+	  * a selection, i.e. if only 1px of the item is in the selection, it shouldn't be
+	  * included.
 	  */
 		tolerance: _react2.default.PropTypes.number,
 
