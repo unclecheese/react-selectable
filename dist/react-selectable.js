@@ -80,11 +80,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	var _react = __webpack_require__(2);
 
@@ -124,7 +124,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		function SelectableGroup(props) {
 			_classCallCheck(this, SelectableGroup);
 
-			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(SelectableGroup).call(this, props));
+			var _this = _possibleConstructorReturn(this, (SelectableGroup.__proto__ || Object.getPrototypeOf(SelectableGroup)).call(this, props));
 
 			_this.state = {
 				isBoxSelecting: false,
@@ -218,9 +218,9 @@ return /******/ (function(modules) { // webpackBootstrap
 				if (!!e.target.draggable) return;
 
 				var node = _reactDom2.default.findDOMNode(this);
-				var collides = undefined,
-				    offsetData = undefined,
-				    distanceData = undefined;
+				var collides = void 0,
+				    offsetData = void 0,
+				    distanceData = void 0;
 				_reactDom2.default.findDOMNode(this).addEventListener('mouseup', this._mouseUp);
 
 				// Right clicks
@@ -249,7 +249,7 @@ return /******/ (function(modules) { // webpackBootstrap
 					initialH: e.pageY
 				};
 
-				e.preventDefault();
+				if (this.props.preventDefault) e.preventDefault();
 
 				_reactDom2.default.findDOMNode(this).addEventListener('mousemove', this._openSelector);
 			}
@@ -286,6 +286,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				var currentItems = [];
 				var selectbox = _reactDom2.default.findDOMNode(this.refs.selectbox);
 				var tolerance = this.props.tolerance;
+
 
 				if (!selectbox) return;
 
@@ -331,6 +332,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				delete filteredProps.selectOnMouseMove;
 				delete filteredProps.component;
 				delete filteredProps.tolerance;
+				delete filteredProps.preventDefault;
 
 				return _react2.default.createElement(
 					this.props.component,
@@ -379,7 +381,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	  * for performance in IE/Edge
 	  * @type boolean
 	  */
-		selectOnMouseMove: _react2.default.PropTypes.bool
+		selectOnMouseMove: _react2.default.PropTypes.bool,
+
+		/**
+	 * Allows to enable/disable preventing the default action of the onmousedown event (with e.preventDefault).
+	  * True by default. Disable if your app needs to capture this event for other functionalities.
+	 * @type boolean
+	 */
+		preventDefault: _react2.default.PropTypes.bool
 
 	};
 
@@ -388,7 +397,8 @@ return /******/ (function(modules) { // webpackBootstrap
 		component: 'div',
 		tolerance: 0,
 		fixedPosition: false,
-		selectOnMouseMove: false
+		selectOnMouseMove: false,
+		preventDefault: true
 	};
 
 	SelectableGroup.childContextTypes = {
@@ -440,12 +450,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
+
 	/**
 	 * Given a node, get everything needed to calculate its boundaries
 	 * @param  {HTMLElement} node 
 	 * @return {Object}
 	 */
-
 	exports.default = function (node) {
 		var rect = node.getBoundingClientRect();
 
@@ -967,11 +977,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	var _react = __webpack_require__(2);
 
@@ -996,7 +1006,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			function SelectableItem() {
 				_classCallCheck(this, SelectableItem);
 
-				return _possibleConstructorReturn(this, Object.getPrototypeOf(SelectableItem).apply(this, arguments));
+				return _possibleConstructorReturn(this, (SelectableItem.__proto__ || Object.getPrototypeOf(SelectableItem)).apply(this, arguments));
 			}
 
 			_createClass(SelectableItem, [{
