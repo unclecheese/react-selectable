@@ -125,7 +125,7 @@ class SelectableGroup extends React.Component {
         	initialH: e.pageY
 		};
 
-		e.preventDefault();
+		if(this.props.preventDefault) e.preventDefault();
 
 		ReactDOM.findDOMNode(this).addEventListener('mousemove', this._openSelector);
 	}
@@ -201,6 +201,7 @@ class SelectableGroup extends React.Component {
         delete filteredProps.selectOnMouseMove;
         delete filteredProps.component;
         delete filteredProps.tolerance;
+        delete filteredProps.preventDefault;
 
         return (
             <this.props.component {...filteredProps}>
@@ -244,7 +245,14 @@ SelectableGroup.propTypes = {
 	 * for performance in IE/Edge
 	 * @type boolean
 	 */
-	selectOnMouseMove: React.PropTypes.bool
+	selectOnMouseMove: React.PropTypes.bool,
+
+    /**
+	 * Allows to enable/disable preventing the default action of the onmousedown event (with e.preventDefault).
+     * True by default. Disable if your app needs to capture this event for other functionalities.
+	 * @type boolean
+	 */
+    preventDefault: React.PropTypes.bool
 
 };
 
@@ -253,7 +261,8 @@ SelectableGroup.defaultProps = {
 	component: 'div',
 	tolerance: 0,
 	fixedPosition: false,
-	selectOnMouseMove: false
+	selectOnMouseMove: false,
+    preventDefault: true
 };
 
 SelectableGroup.childContextTypes = {
