@@ -80,7 +80,7 @@ class SelectableGroup extends React.Component {
 	    	boxTop: Math.min(e.pageY, this._mouseDownData.initialH)
 	    });
 
-		if (this.props.selectOnMouseMove) this._throttledSelect();
+		if (this.props.selectOnMouseMove) this._throttledSelect(e);
 	}
 
 
