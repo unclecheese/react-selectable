@@ -296,7 +296,7 @@ return /******/ (function(modules) { // webpackBootstrap
 					}
 				});
 
-				this.props.onSelection(currentItems);
+				this.props.onSelection(currentItems, e);
 			}
 
 			/**

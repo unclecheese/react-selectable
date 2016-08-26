@@ -167,7 +167,7 @@ class SelectableGroup extends React.Component {
 			}
 		});
 
-		this.props.onSelection(currentItems);
+		this.props.onSelection(currentItems, e);
 	}
 
 
