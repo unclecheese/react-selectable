@@ -84,6 +84,8 @@ return /******/ (function(modules) { // webpackBootstrap
 		value: true
 	});
 
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	var _react = __webpack_require__(2);
@@ -141,7 +143,8 @@ return /******/ (function(modules) { // webpackBootstrap
 			_this._selectElements = _this._selectElements.bind(_this);
 			_this._registerSelectable = _this._registerSelectable.bind(_this);
 			_this._unregisterSelectable = _this._unregisterSelectable.bind(_this);
-
+			_this._adjustOffset = _this._adjustOffset.bind(_this);
+			_this._adjustBox = _this._adjustBox.bind(_this);
 			_this._throttledSelect = (0, _lodash2.default)(_this._selectElements, 50);
 			return _this;
 		}
@@ -283,20 +286,50 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: '_selectElements',
 			value: function _selectElements(e) {
-				var currentItems = [];
-				var selectbox = _reactDom2.default.findDOMNode(this.refs.selectbox);
-				var tolerance = this.props.tolerance;
+				var _this2 = this;
+
+				var currentItems = [],
+				    tolerance = this.props.tolerance;
 
 
-				if (!selectbox) return;
+				if (!this.selectbox) return;
 
 				this._registry.forEach(function (itemData) {
-					if (itemData.domNode && (0, _doObjectsCollide2.default)(selectbox, itemData.domNode, tolerance)) {
+					if (itemData.domNode && (0, _doObjectsCollide2.default)(_this2.selectbox, itemData.domNode, tolerance)) {
 						currentItems.push(itemData.key);
 					}
 				});
 
 				this.props.onSelection(currentItems, e);
+			}
+
+			/**
+	   * Adjust the box position based on the wrapper div's position.
+	   */
+
+		}, {
+			key: '_adjustBox',
+			value: function _adjustBox(boxStyle, div) {
+				if (div) {
+					var rect = this._adjustOffset(div);
+					var adjustedLeft = boxStyle.left ? boxStyle.left - rect.left - window.scrollX : boxStyle.left;
+					var adjustedTop = boxStyle.top ? boxStyle.top - rect.top - window.scrollY : boxStyle.top;
+					this.adjustedBoxStyle = Object.assign({}, boxStyle, { left: adjustedLeft, top: adjustedTop });
+				}
+			}
+		}, {
+			key: '_adjustOffset',
+			value: function _adjustOffset(elem) {
+				var addjustedOffset = { left: 0, top: 0 };
+				do {
+					var elemPosition = getComputedStyle(elem).position;
+					if (elemPosition === 'absolute' || elemPosition === 'fixed') {
+						var rect = elem.getBoundingClientRect();
+						addjustedOffset.left += rect.left;
+						addjustedOffset.top += rect.top;
+					}
+				} while (elem = elem.offsetParent);
+				return addjustedOffset;
 			}
 
 			/**
@@ -307,6 +340,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'render',
 			value: function render() {
+				var _this3 = this;
 
 				var boxStyle = {
 					left: this.state.boxLeft,
@@ -336,10 +370,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				return _react2.default.createElement(
 					this.props.component,
-					filteredProps,
+					_extends({ ref: function ref(div) {
+							_this3._adjustBox(boxStyle, div);
+						} }, filteredProps),
 					this.state.isBoxSelecting && _react2.default.createElement(
 						'div',
-						{ style: boxStyle, ref: 'selectbox' },
+						{ style: this.adjustedBoxStyle, ref: function ref(selectbox) {
+								_this3.selectbox = selectbox;
+							} },
 						_react2.default.createElement('span', { style: spanStyle })
 					),
 					this.props.children
@@ -532,7 +570,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
 
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 	/**
 	 * lodash (Custom Build) <https://lodash.com/>
