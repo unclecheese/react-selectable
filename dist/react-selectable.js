@@ -323,10 +323,11 @@ return /******/ (function(modules) { // webpackBootstrap
 				var addjustedOffset = { left: 0, top: 0 };
 				do {
 					var elemPosition = getComputedStyle(elem).position;
-					if (elemPosition === 'absolute' || elemPosition === 'fixed') {
+					if (elemPosition !== 'static') {
 						var rect = elem.getBoundingClientRect();
 						addjustedOffset.left += rect.left;
 						addjustedOffset.top += rect.top;
+						break;
 					}
 				} while (elem = elem.offsetParent);
 				return addjustedOffset;
