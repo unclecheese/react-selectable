@@ -26,7 +26,8 @@ class SelectableGroup extends React.Component {
 		this._selectElements = this._selectElements.bind(this);
 		this._registerSelectable = this._registerSelectable.bind(this);
 		this._unregisterSelectable = this._unregisterSelectable.bind(this);
-
+		this._adjustOffset = this._adjustOffset.bind(this);
+		this._adjustBox = this._adjustBox.bind(this);
 		this._throttledSelect = throttle(this._selectElements, 50);
 	}
 
@@ -156,13 +157,12 @@ class SelectableGroup extends React.Component {
 	 */
 	_selectElements (e) {
 	    const currentItems = [],
-		      selectbox = ReactDOM.findDOMNode(this.refs.selectbox),
 		      {tolerance} = this.props;
 
-		if(!selectbox) return;
+		if(!this.selectbox) return;
 
 		this._registry.forEach(itemData => {
-			if(itemData.domNode && doObjectsCollide(selectbox, itemData.domNode, tolerance)) {
+			if(itemData.domNode && doObjectsCollide(this.selectbox, itemData.domNode, tolerance)) {
 				currentItems.push(itemData.key);
 			}
 		});
@@ -170,6 +170,30 @@ class SelectableGroup extends React.Component {
 		this.props.onSelection(currentItems, e);
 	}
 
+	/**
+	 * Adjust the box position based on the wrapper div's position.
+	 */
+	 _adjustBox (boxStyle, div) {
+			 if (div) {
+					 const rect = this._adjustOffset(div);
+					 const adjustedLeft = boxStyle.left ? boxStyle.left - rect.left - window.scrollX: boxStyle.left;
+					 const adjustedTop = boxStyle.top ? boxStyle.top - rect.top - window.scrollY: boxStyle.top;
+					 this.adjustedBoxStyle = Object.assign({}, boxStyle, {left: adjustedLeft, top: adjustedTop});
+		 	 }
+	 }
+
+	 _adjustOffset (elem) {
+			 const addjustedOffset = {left: 0, top: 0};
+			 do {
+				 	 var elemPosition = getComputedStyle(elem).position;
+					 if (elemPosition === 'absolute' || elemPosition === 'fixed') {
+							 const rect = elem.getBoundingClientRect();
+							 addjustedOffset.left += rect.left;
+							 addjustedOffset.top += rect.top;
+					 }
+			 } while (elem = elem.offsetParent);
+		 	 return addjustedOffset;
+	}
 
 	/**
 	 * Renders the component
@@ -204,9 +228,9 @@ class SelectableGroup extends React.Component {
         delete filteredProps.preventDefault;
 
         return (
-            <this.props.component {...filteredProps}>
+            <this.props.component ref={(div) => {this._adjustBox(boxStyle, div)}} {...filteredProps}>
                 {this.state.isBoxSelecting &&
-                  <div style={boxStyle} ref="selectbox"><span style={spanStyle}></span></div>
+                  <div style={this.adjustedBoxStyle} ref={(selectbox) => { this.selectbox = selectbox }}><span style={spanStyle}></span></div>
                 }
                 {this.props.children}
             </this.props.component>
@@ -262,7 +286,7 @@ SelectableGroup.defaultProps = {
 	tolerance: 0,
 	fixedPosition: false,
 	selectOnMouseMove: false,
-    preventDefault: true
+  preventDefault: true
 };
 
 SelectableGroup.childContextTypes = {
