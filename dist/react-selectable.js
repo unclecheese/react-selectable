@@ -52,7 +52,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
@@ -74,9 +74,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.SelectableGroup = _selectableGroup2.default;
 	exports.createSelectable = _createSelectable2.default;
 
-/***/ },
+/***/ }),
 /* 1 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
@@ -215,7 +215,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			key: '_mouseDown',
 			value: function _mouseDown(e) {
 				// Disable if target is control by react-dnd
-				if (!!e.target.draggable) return;
+				if (!!e.target.draggable || !!e.target.parentElement.draggable) return;
 
 				var node = _reactDom2.default.findDOMNode(this);
 				var collides = void 0,
@@ -283,9 +283,9 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: '_selectElements',
 			value: function _selectElements(e) {
-				var currentItems = [];
-				var selectbox = _reactDom2.default.findDOMNode(this.refs.selectbox);
-				var tolerance = this.props.tolerance;
+				var currentItems = [],
+				    selectbox = _reactDom2.default.findDOMNode(this.refs.selectbox),
+				    tolerance = this.props.tolerance;
 
 
 				if (!selectbox) return;
@@ -407,21 +407,21 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	exports.default = SelectableGroup;
 
-/***/ },
+/***/ }),
 /* 2 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	module.exports = __WEBPACK_EXTERNAL_MODULE_2__;
 
-/***/ },
+/***/ }),
 /* 3 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	module.exports = __WEBPACK_EXTERNAL_MODULE_3__;
 
-/***/ },
+/***/ }),
 /* 4 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	"use strict";
 
@@ -441,9 +441,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	exports.default = isNodeInRoot;
 
-/***/ },
+/***/ }),
 /* 5 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	"use strict";
 
@@ -467,9 +467,9 @@ return /******/ (function(modules) { // webpackBootstrap
 		};
 	};
 
-/***/ },
+/***/ }),
 /* 6 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
@@ -526,13 +526,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return coordsCollide(aObj.top, aObj.left, bObj.top, bObj.left, aObj.offsetWidth, aObj.offsetHeight, bObj.offsetWidth, bObj.offsetHeight, tolerance);
 	};
 
-/***/ },
+/***/ }),
 /* 7 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
 
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 	/**
 	 * lodash (Custom Build) <https://lodash.com/>
@@ -971,9 +971,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = throttle;
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
-/***/ },
+/***/ }),
 /* 8 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
@@ -1042,7 +1042,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	exports.default = createSelectable;
 
-/***/ }
+/***/ })
 /******/ ])
 });
 ;
