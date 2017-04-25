@@ -90,7 +90,7 @@ class SelectableGroup extends React.Component {
 	 */
 	_mouseDown (e) {
 		// Disable if target is control by react-dnd
-		if (!!e.target.draggable) return;
+		if (!!e.target.draggable || !!e.target.parentElement.draggable) return;
 
 		const node = ReactDOM.findDOMNode(this);
 		let collides, offsetData, distanceData;
