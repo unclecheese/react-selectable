@@ -1,14 +1,14 @@
 /**
  * Given a node, get everything needed to calculate its boundaries
- * @param  {HTMLElement} node 
+ * @param  {HTMLElement} node
  * @return {Object}
  */
 export default node => {
 	const rect = node.getBoundingClientRect();
-	
+
 	return {
-		top: rect.top+document.body.scrollTop,
-		left: rect.left+document.body.scrollLeft,
+		top: rect.top,
+		left: rect.left,
 		offsetWidth: node.offsetWidth,
 		offsetHeight: node.offsetHeight
 	};
