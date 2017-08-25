@@ -19,6 +19,7 @@ class SelectableGroup extends React.Component {
 		}
 
 		this._mouseDownData = null;
+		this._rect = null;
 		this._registry = [];
 
 		this._openSelector = this._openSelector.bind(this);
@@ -27,7 +28,6 @@ class SelectableGroup extends React.Component {
 		this._selectElements = this._selectElements.bind(this);
 		this._registerSelectable = this._registerSelectable.bind(this);
 		this._unregisterSelectable = this._unregisterSelectable.bind(this);
-
 		this._throttledSelect = throttle(this._selectElements, 50);
 	}
 
@@ -43,17 +43,28 @@ class SelectableGroup extends React.Component {
 
 
 	componentDidMount () {
-		ReactDOM.findDOMNode(this).addEventListener('mousedown', this._mouseDown);
+		document.addEventListener('mousedown', this._mouseDown);
+		this._rect = this._getInitialCoordinates();
 	}
-
 
 	/**
 	 * Remove global event listeners
 	 */
 	componentWillUnmount () {
-		ReactDOM.findDOMNode(this).removeEventListener('mousedown', this._mouseDown);
+		document.removeEventListener('mousedown', this._mouseDown);
 	}
 
+	_getInitialCoordinates() {
+	    const style = window.getComputedStyle(document.body);
+		const t = style.getPropertyValue('margin-top');
+	    const l = style.getPropertyValue('margin-left');
+		const mLeft = parseInt(l.slice(0, l.length - 2), 10);
+		const mTop = parseInt(t.slice(0, t.length - 2), 10);
+
+		const bodyRect = document.body.getBoundingClientRect();
+	    const elemRect = ReactDOM.findDOMNode(this).getBoundingClientRect();
+		return { x: Math.round(elemRect.left - bodyRect.left + mLeft) , y: Math.round(elemRect.top - bodyRect.top + mTop) }
+	}
 
 	_registerSelectable (key, domNode) {
 		this._registry.push({key, domNode});
@@ -70,15 +81,14 @@ class SelectableGroup extends React.Component {
 	 * of the selection box
 	 */
 	_openSelector (e) {
-	    const w = Math.abs(this._mouseDownData.initialW - e.pageX);
-	    const h = Math.abs(this._mouseDownData.initialH - e.pageY);
-
+	    const w = Math.abs(this._mouseDownData.initialW - e.pageX + this._rect.x);
+	    const h = Math.abs(this._mouseDownData.initialH - e.pageY + this._rect.y);
 	    this.setState({
 	    	isBoxSelecting: true,
 	    	boxWidth: w,
 	    	boxHeight: h,
-	    	boxLeft: Math.min(e.pageX, this._mouseDownData.initialW),
-	    	boxTop: Math.min(e.pageY, this._mouseDownData.initialH)
+	    	boxLeft: Math.min(e.pageX - this._rect.x, this._mouseDownData.initialW),
+	    	boxTop: Math.min(e.pageY - this._rect.y, this._mouseDownData.initialH)
 	    });
 
 		if (this.props.selectOnMouseMove) this._throttledSelect(e);
@@ -95,7 +105,7 @@ class SelectableGroup extends React.Component {
 
 		const node = ReactDOM.findDOMNode(this);
 		let collides, offsetData, distanceData;
-		ReactDOM.findDOMNode(this).addEventListener('mouseup', this._mouseUp);
+		document.addEventListener('mouseup', this._mouseUp);
 
 		// Right clicks
 		if(e.which === 3 || e.button === 2) return;
@@ -110,25 +120,25 @@ class SelectableGroup extends React.Component {
 					right: offsetData.offsetWidth
 				},
 				{
-					top: e.pageY,
-					left: e.pageX,
+					top: e.pageY - this._rect.y,
+					left: e.pageX - this._rect.x,
 					offsetWidth: 0,
 					offsetHeight: 0
 				}
 			);
 			if(!collides) return;
 		}
-
+		this._rect = this._getInitialCoordinates();
 		this._mouseDownData = {
-			boxLeft: e.pageX,
-			boxTop: e.pageY,
-	        initialW: e.pageX,
-        	initialH: e.pageY
+			boxLeft: e.pageX - this._rect.x,
+			boxTop: e.pageY - this._rect.y,
+	        initialW: e.pageX - this._rect.x,
+        	initialH: e.pageY - this._rect.y
 		};
 
 		if(this.props.preventDefault) e.preventDefault();
 
-		ReactDOM.findDOMNode(this).addEventListener('mousemove', this._openSelector);
+		document.addEventListener('mousemove', this._openSelector);
 	}
 
 
@@ -136,9 +146,10 @@ class SelectableGroup extends React.Component {
 	 * Called when the user has completed selection
 	 */
 	_mouseUp (e) {
-	    ReactDOM.findDOMNode(this).removeEventListener('mousemove', this._openSelector);
-	    ReactDOM.findDOMNode(this).removeEventListener('mouseup', this._mouseUp);
-
+		e.stopPropagation();
+	    document.removeEventListener('mousemove', this._openSelector);
+	    document.removeEventListener('mouseup', this._mouseUp);
+		// debugger;
 	    if(!this._mouseDownData) return;
 
 	    // Mouse up when not box selecting is a heuristic for a "click"
@@ -184,6 +195,10 @@ class SelectableGroup extends React.Component {
 	 * @return {ReactComponent}
 	 */
 	render () {
+		const wrapperStyle = {
+			position: 'relative',
+			overflow: 'visible'
+		};
 
 		const boxStyle = {
 			left: this.state.boxLeft,
@@ -212,7 +227,7 @@ class SelectableGroup extends React.Component {
         delete filteredProps.preventDefault;
 
         return (
-            <this.props.component {...filteredProps}>
+            <this.props.component {...filteredProps} style={wrapperStyle}>
                 {this.state.isBoxSelecting &&
                   <div style={boxStyle} ref="selectbox"><span style={spanStyle}></span></div>
                 }

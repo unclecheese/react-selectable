@@ -32,8 +32,8 @@
     "babel-preset-react": "^6.3.13",
     "babel-preset-stage-2": "^6.3.13",
     "lodash.throttle": "^4.0.1",
-    "react": "^0.14.7",
-    "react-dom": "^0.14.7",
+    "react": "^15.4.1",
+    "react-dom": "^15.4.1",
     "webpack": "^1.12.11"
   }
 }

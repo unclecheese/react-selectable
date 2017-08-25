@@ -94,6 +94,8 @@ return /******/ (function(modules) { // webpackBootstrap
 		value: true
 	});
 
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	var _react = __webpack_require__(2);
@@ -147,6 +149,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			};
 
 			_this._mouseDownData = null;
+			_this._rect = null;
 			_this._registry = [];
 
 			_this._openSelector = _this._openSelector.bind(_this);
@@ -156,7 +159,6 @@ return /******/ (function(modules) { // webpackBootstrap
 			_this._selectElements = _this._selectElements.bind(_this);
 			_this._registerSelectable = _this._registerSelectable.bind(_this);
 			_this._unregisterSelectable = _this._unregisterSelectable.bind(_this);
-
 			_this._throttledSelect = (0, _lodash2.default)(_this._selectElements, 50);
 			return _this;
 		}
@@ -174,7 +176,8 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'componentDidMount',
 			value: function componentDidMount() {
-				_reactDom2.default.findDOMNode(this).addEventListener('mousedown', this._mouseDown);
+				document.addEventListener('mousedown', this._mouseDown);
+				this._rect = this._getInitialCoordinates();
 			}
 
 			/**
@@ -184,7 +187,20 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'componentWillUnmount',
 			value: function componentWillUnmount() {
-				_reactDom2.default.findDOMNode(this).removeEventListener('mousedown', this._mouseDown);
+				document.removeEventListener('mousedown', this._mouseDown);
+			}
+		}, {
+			key: '_getInitialCoordinates',
+			value: function _getInitialCoordinates() {
+				var style = window.getComputedStyle(document.body);
+				var t = style.getPropertyValue('margin-top');
+				var l = style.getPropertyValue('margin-left');
+				var mLeft = parseInt(l.slice(0, l.length - 2), 10);
+				var mTop = parseInt(t.slice(0, t.length - 2), 10);
+
+				var bodyRect = document.body.getBoundingClientRect();
+				var elemRect = _reactDom2.default.findDOMNode(this).getBoundingClientRect();
+				return { x: Math.round(elemRect.left - bodyRect.left + mLeft), y: Math.round(elemRect.top - bodyRect.top + mTop) };
 			}
 		}, {
 			key: '_registerSelectable',
@@ -207,15 +223,14 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: '_openSelector',
 			value: function _openSelector(e) {
-				var w = Math.abs(this._mouseDownData.initialW - e.pageX);
-				var h = Math.abs(this._mouseDownData.initialH - e.pageY);
-
+				var w = Math.abs(this._mouseDownData.initialW - e.pageX + this._rect.x);
+				var h = Math.abs(this._mouseDownData.initialH - e.pageY + this._rect.y);
 				this.setState({
 					isBoxSelecting: true,
 					boxWidth: w,
 					boxHeight: h,
-					boxLeft: Math.min(e.pageX, this._mouseDownData.initialW),
-					boxTop: Math.min(e.pageY, this._mouseDownData.initialH)
+					boxLeft: Math.min(e.pageX - this._rect.x, this._mouseDownData.initialW),
+					boxTop: Math.min(e.pageY - this._rect.y, this._mouseDownData.initialH)
 				});
 
 				if (this.props.selectOnMouseMove) this._throttledSelect(e);
@@ -238,7 +253,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				var collides = void 0,
 				    offsetData = void 0,
 				    distanceData = void 0;
-				_reactDom2.default.findDOMNode(this).addEventListener('mouseup', this._mouseUp);
+				document.addEventListener('mouseup', this._mouseUp);
 
 				// Right clicks
 				if (e.which === 3 || e.button === 2) return;
@@ -251,24 +266,24 @@ return /******/ (function(modules) { // webpackBootstrap
 						bottom: offsetData.offsetHeight,
 						right: offsetData.offsetWidth
 					}, {
-						top: e.pageY,
-						left: e.pageX,
+						top: e.pageY - this._rect.y,
+						left: e.pageX - this._rect.x,
 						offsetWidth: 0,
 						offsetHeight: 0
 					});
 					if (!collides) return;
 				}
-
+				this._rect = this._getInitialCoordinates();
 				this._mouseDownData = {
-					boxLeft: e.pageX,
-					boxTop: e.pageY,
-					initialW: e.pageX,
-					initialH: e.pageY
+					boxLeft: e.pageX - this._rect.x,
+					boxTop: e.pageY - this._rect.y,
+					initialW: e.pageX - this._rect.x,
+					initialH: e.pageY - this._rect.y
 				};
 
 				if (this.props.preventDefault) e.preventDefault();
 
-				_reactDom2.default.findDOMNode(this).addEventListener('mousemove', this._openSelector);
+				document.addEventListener('mousemove', this._openSelector);
 			}
 
 			/**
@@ -278,9 +293,10 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: '_mouseUp',
 			value: function _mouseUp(e) {
-				_reactDom2.default.findDOMNode(this).removeEventListener('mousemove', this._openSelector);
-				_reactDom2.default.findDOMNode(this).removeEventListener('mouseup', this._mouseUp);
-
+				e.stopPropagation();
+				document.removeEventListener('mousemove', this._openSelector);
+				document.removeEventListener('mouseup', this._mouseUp);
+				// debugger;
 				if (!this._mouseDownData) return;
 
 				// Mouse up when not box selecting is a heuristic for a "click"
@@ -343,6 +359,10 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'render',
 			value: function render() {
+				var wrapperStyle = {
+					position: 'relative',
+					overflow: 'visible'
+				};
 
 				var boxStyle = {
 					left: this.state.boxLeft,
@@ -373,7 +393,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				return _react2.default.createElement(
 					this.props.component,
-					filteredProps,
+					_extends({}, filteredProps, { style: wrapperStyle }),
 					this.state.isBoxSelecting && _react2.default.createElement(
 						'div',
 						{ style: boxStyle, ref: 'selectbox' },

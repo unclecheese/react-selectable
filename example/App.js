@@ -34,12 +34,12 @@ class App extends React.Component {
 
 
 	componentDidMount () {
-		document.addEventListener('click', this.clearItems);
+		document.addEventListener('mousedown', this.clearItems);
 	}
 
 
 	componentWillUnmount () {
-		document.removeEventListener('click', this.clearItems);
+		document.removeEventListener('mousedown', this.clearItems);
 	}
 
 
@@ -76,7 +76,7 @@ class App extends React.Component {
 			<div>
 				<h1>React Selectable Demo</h1>
 				<div className="sidebar">
-					<div className="info">						
+					<div className="info">
 						<strong>Tolerance</strong>: <span>{this.state.tolerance}</span><br/>
 						<em>The number of pixels that must be in the bounding box in order for an item to be selected.</em>
 						<p><input type="range" min="0" max="50" step="1" onChange={this.handleToleranceChange} value={this.state.tolerance} /></p>
@@ -100,27 +100,27 @@ class App extends React.Component {
 					</div>
 				</div>
 				<SelectableGroup
-					className="main" 
+					className="main"
 					ref="selectable"
-					onSelection={this.handleSelection} 
+					onSelection={this.handleSelection}
 					tolerance={this.state.tolerance}
 					selectOnMouseMove={this.state.selectOnMouseMove}>
-				
+
 				{this.props.items.map((item, i) => {
 					const selected = this.state.selectedItems.indexOf(i) > -1;
 					return (
 						<SelectableAlbum
 							selectableKey={i}
-							key={i} 
-							title={item.title} 
-							year={item.year} 
+							key={i}
+							title={item.title}
+							year={item.year}
 							selected={selected} />
 					);
 				})}
 				</SelectableGroup>
 			</div>
 
-		);		
+		);
 	}
 }
 
