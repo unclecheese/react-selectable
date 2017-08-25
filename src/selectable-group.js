@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import isNodeInRoot from './nodeInRoot';
+import isNodeIn from './isNodeIn';
 import getBoundsForNode from './getBoundsForNode';
 import doObjectsCollide from './doObjectsCollide';
 import throttle from 'lodash.throttle';
@@ -90,7 +91,7 @@ class SelectableGroup extends React.Component {
 	 */
 	_mouseDown (e) {
 		// Disable if target is control by react-dnd
-		if (!!e.target.draggable || !!e.target.parentElement.draggable) return;
+		if (isNodeIn(e.target, node => !!node.draggable)) return;
 
 		const node = ReactDOM.findDOMNode(this);
 		let collides, offsetData, distanceData;
@@ -139,6 +140,13 @@ class SelectableGroup extends React.Component {
 	    ReactDOM.findDOMNode(this).removeEventListener('mouseup', this._mouseUp);
 
 	    if(!this._mouseDownData) return;
+
+	    // Mouse up when not box selecting is a heuristic for a "click"
+		if (this.props.onNonItemClick && !this.state.isBoxSelecting) {
+			if (!this._registry.some(({ domNode }) => isNodeInRoot(e.target, domNode))) {
+				this.props.onNonItemClick(e);
+			}
+		}
 
 		this._selectElements(e);
 
@@ -252,7 +260,14 @@ SelectableGroup.propTypes = {
      * True by default. Disable if your app needs to capture this event for other functionalities.
 	 * @type boolean
 	 */
-    preventDefault: React.PropTypes.bool
+    preventDefault: React.PropTypes.bool,
+
+    /**
+     * Triggered when the user clicks in the component, but not on an item, e.g. whitespace
+     * 
+     * @type {Function}
+     */
+    onNonItemClick: React.PropTypes.func,
 
 };
 

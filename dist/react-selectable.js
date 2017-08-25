@@ -59,20 +59,30 @@ return /******/ (function(modules) { // webpackBootstrap
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
-	exports.createSelectable = exports.SelectableGroup = undefined;
+	exports.nodeInRoot = exports.isNodeIn = exports.createSelectable = exports.SelectableGroup = undefined;
 
 	var _selectableGroup = __webpack_require__(1);
 
 	var _selectableGroup2 = _interopRequireDefault(_selectableGroup);
 
-	var _createSelectable = __webpack_require__(8);
+	var _createSelectable = __webpack_require__(9);
 
 	var _createSelectable2 = _interopRequireDefault(_createSelectable);
+
+	var _isNodeIn = __webpack_require__(5);
+
+	var _isNodeIn2 = _interopRequireDefault(_isNodeIn);
+
+	var _nodeInRoot = __webpack_require__(4);
+
+	var _nodeInRoot2 = _interopRequireDefault(_nodeInRoot);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	exports.SelectableGroup = _selectableGroup2.default;
 	exports.createSelectable = _createSelectable2.default;
+	exports.isNodeIn = _isNodeIn2.default;
+	exports.nodeInRoot = _nodeInRoot2.default;
 
 /***/ }),
 /* 1 */
@@ -98,15 +108,19 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _nodeInRoot2 = _interopRequireDefault(_nodeInRoot);
 
-	var _getBoundsForNode = __webpack_require__(5);
+	var _isNodeIn = __webpack_require__(5);
+
+	var _isNodeIn2 = _interopRequireDefault(_isNodeIn);
+
+	var _getBoundsForNode = __webpack_require__(6);
 
 	var _getBoundsForNode2 = _interopRequireDefault(_getBoundsForNode);
 
-	var _doObjectsCollide = __webpack_require__(6);
+	var _doObjectsCollide = __webpack_require__(7);
 
 	var _doObjectsCollide2 = _interopRequireDefault(_doObjectsCollide);
 
-	var _lodash = __webpack_require__(7);
+	var _lodash = __webpack_require__(8);
 
 	var _lodash2 = _interopRequireDefault(_lodash);
 
@@ -138,6 +152,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			_this._openSelector = _this._openSelector.bind(_this);
 			_this._mouseDown = _this._mouseDown.bind(_this);
 			_this._mouseUp = _this._mouseUp.bind(_this);
+			_this._click = _this._click.bind(_this);
 			_this._selectElements = _this._selectElements.bind(_this);
 			_this._registerSelectable = _this._registerSelectable.bind(_this);
 			_this._unregisterSelectable = _this._unregisterSelectable.bind(_this);
@@ -215,7 +230,9 @@ return /******/ (function(modules) { // webpackBootstrap
 			key: '_mouseDown',
 			value: function _mouseDown(e) {
 				// Disable if target is control by react-dnd
-				if (!!e.target.draggable || !!e.target.parentElement.draggable) return;
+				if ((0, _isNodeIn2.default)(e.target, function (node) {
+					return !!node.draggable;
+				})) return;
 
 				var node = _reactDom2.default.findDOMNode(this);
 				var collides = void 0,
@@ -266,6 +283,16 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				if (!this._mouseDownData) return;
 
+				// Mouse up when not box selecting is a heuristic for a "click"
+				if (this.props.onNonItemClick && !this.state.isBoxSelecting) {
+					if (!this._registry.some(function (_ref) {
+						var domNode = _ref.domNode;
+						return (0, _nodeInRoot2.default)(e.target, domNode);
+					})) {
+						this.props.onNonItemClick(e);
+					}
+				}
+
 				this._selectElements(e);
 
 				this._mouseDownData = null;
@@ -275,6 +302,15 @@ return /******/ (function(modules) { // webpackBootstrap
 					boxHeight: 0
 				});
 			}
+
+			/**
+	   * Called when the user has clicked in the group
+	   * @param  {Event} e
+	   */
+
+		}, {
+			key: '_click',
+			value: function _click(e) {}
 
 			/**
 	   * Selects multiple children given x/y coords of the mouse
@@ -327,6 +363,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				};
 
 				var filteredProps = Object.assign({}, this.props);
+				filteredProps.onClick = this._click;
 				delete filteredProps.onSelection;
 				delete filteredProps.fixedPosition;
 				delete filteredProps.selectOnMouseMove;
@@ -388,7 +425,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	  * True by default. Disable if your app needs to capture this event for other functionalities.
 	 * @type boolean
 	 */
-		preventDefault: _react2.default.PropTypes.bool
+		preventDefault: _react2.default.PropTypes.bool,
+
+		/**
+	  * Triggered when the user clicks in the component, but not on an item, e.g. whitespace
+	  * 
+	  * @type {Function}
+	  */
+		onNonItemClick: _react2.default.PropTypes.func
 
 	};
 
@@ -421,28 +465,57 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 4 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
-	  value: true
+		value: true
 	});
-	var isNodeInRoot = function isNodeInRoot(node, root) {
-	  while (node) {
-	    if (node === root) {
-	      return true;
-	    }
-	    node = node.parentNode;
-	  }
 
-	  return false;
+	var _isNodeIn = __webpack_require__(5);
+
+	var _isNodeIn2 = _interopRequireDefault(_isNodeIn);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var isNodeInRoot = function isNodeInRoot(node, root) {
+		return (0, _isNodeIn2.default)(node, function (currentNode) {
+			return currentNode === root;
+		});
 	};
 
 	exports.default = isNodeInRoot;
 
 /***/ }),
 /* 5 */
+/***/ (function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var isNodeIn = function isNodeIn(node, predicate) {
+	  if (typeof predicate !== 'function') {
+	    throw new Error('isNodeIn second parameter must be a function');
+	  }
+
+	  var currentNode = node;
+	  while (currentNode) {
+	    if (predicate(currentNode)) {
+	      return true;
+	    }
+	    currentNode = currentNode.parentNode;
+	  }
+
+	  return false;
+	};
+
+	exports.default = isNodeIn;
+
+/***/ }),
+/* 6 */
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -468,7 +541,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -477,7 +550,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  value: true
 	});
 
-	var _getBoundsForNode = __webpack_require__(5);
+	var _getBoundsForNode = __webpack_require__(6);
 
 	var _getBoundsForNode2 = _interopRequireDefault(_getBoundsForNode);
 
@@ -527,7 +600,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
@@ -972,7 +1045,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';

@@ -1,12 +1,7 @@
-const isNodeInRoot = (node, root) => {
-  while (node) {
-    if (node === root) {
-      return true;
-    }
-    node = node.parentNode;
-  }
+import isNodeIn from './isNodeIn';
 
-  return false;
-};
+const isNodeInRoot = (node, root) => (
+	isNodeIn(node, currentNode => currentNode === root)
+);
 
 export default isNodeInRoot;
