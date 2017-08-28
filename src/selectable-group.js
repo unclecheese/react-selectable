@@ -43,7 +43,7 @@ class SelectableGroup extends React.Component {
 
 
 	componentDidMount () {
-		ReactDOM.findDOMNode(this).addEventListener('mousedown', this._mouseDown);
+		this._applyMousedown(this.props.enabled);
 	}
 
 
@@ -51,9 +51,14 @@ class SelectableGroup extends React.Component {
 	 * Remove global event listeners
 	 */
 	componentWillUnmount () {
-		ReactDOM.findDOMNode(this).removeEventListener('mousedown', this._mouseDown);
+		this._applyMousedown(false);
 	}
 
+	componentWillReceiveProps(nextProps) {
+		if (nextProps.enabled !== this.props.enabled) {
+			this._applyMousedown(nextProps.enabled);
+		}
+	}
 
 	_registerSelectable (key, domNode) {
 		this._registry.push({key, domNode});
@@ -64,6 +69,10 @@ class SelectableGroup extends React.Component {
 		this._registry = this._registry.filter(data => data.key !== key);
 	}
 
+	_applyMousedown(apply) {
+		const funcName = apply ? 'addEventListener' : 'removeEventListener';
+		ReactDOM.findDOMNode(this)[funcName]('mousedown', this._mouseDown);
+	}
 
 	/**
 	 * Called while moving the mouse with the button down. Changes the boundaries
@@ -184,6 +193,22 @@ class SelectableGroup extends React.Component {
 	 * @return {ReactComponent}
 	 */
 	render () {
+		const Component = this.props.component;
+		const filteredProps = Object.assign({}, this.props);
+        delete filteredProps.onSelection;
+        delete filteredProps.fixedPosition;
+        delete filteredProps.selectOnMouseMove;
+        delete filteredProps.component;
+        delete filteredProps.tolerance;
+        delete filteredProps.preventDefault;
+
+		if (!this.props.enabled) {
+			return (
+				<Component {...filteredProps}>
+					{this.props.children}
+				</Component>
+			);
+		}
 
 		const boxStyle = {
 			left: this.state.boxLeft,
@@ -203,21 +228,14 @@ class SelectableGroup extends React.Component {
 			float: 'left'
 		};
 
-		const filteredProps = Object.assign({}, this.props);
-        delete filteredProps.onSelection;
-        delete filteredProps.fixedPosition;
-        delete filteredProps.selectOnMouseMove;
-        delete filteredProps.component;
-        delete filteredProps.tolerance;
-        delete filteredProps.preventDefault;
 
         return (
-            <this.props.component {...filteredProps}>
+            <Component {...filteredProps}>
                 {this.state.isBoxSelecting &&
-                  <div style={boxStyle} ref="selectbox"><span style={spanStyle}></span></div>
+                  <div style={boxStyle} ref="selectbox"><span style={spanStyle} /></div>
                 }
                 {this.props.children}
-            </this.props.component>
+            </Component>
         );
 	}
 }
@@ -269,6 +287,12 @@ SelectableGroup.propTypes = {
      */
     onNonItemClick: React.PropTypes.func,
 
+    /**
+     * If false, all of the selectble features are turned off.
+     * @type {[type]}
+     */
+    enabled: React.PropTypes.bool,
+
 };
 
 SelectableGroup.defaultProps = {
@@ -277,7 +301,8 @@ SelectableGroup.defaultProps = {
 	tolerance: 0,
 	fixedPosition: false,
 	selectOnMouseMove: false,
-    preventDefault: true
+    preventDefault: true,
+    enabled: true,
 };
 
 SelectableGroup.childContextTypes = {

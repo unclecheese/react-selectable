@@ -173,7 +173,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'componentDidMount',
 			value: function componentDidMount() {
-				_reactDom2.default.findDOMNode(this).addEventListener('mousedown', this._mouseDown);
+				this._applyMousedown(this.props.enabled);
 			}
 
 			/**
@@ -183,7 +183,14 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'componentWillUnmount',
 			value: function componentWillUnmount() {
-				_reactDom2.default.findDOMNode(this).removeEventListener('mousedown', this._mouseDown);
+				this._applyMousedown(false);
+			}
+		}, {
+			key: 'componentWillReceiveProps',
+			value: function componentWillReceiveProps(nextProps) {
+				if (nextProps.enabled !== this.props.enabled) {
+					this._applyMousedown(nextProps.enabled);
+				}
 			}
 		}, {
 			key: '_registerSelectable',
@@ -196,6 +203,13 @@ return /******/ (function(modules) { // webpackBootstrap
 				this._registry = this._registry.filter(function (data) {
 					return data.key !== key;
 				});
+			}
+		}, {
+			key: '_applyMousedown',
+			value: function _applyMousedown(apply) {
+				var funcName = apply ? 'addEventListener' : 'removeEventListener';
+				console.log(funcName);
+				_reactDom2.default.findDOMNode(this)[funcName]('mousedown', this._mouseDown);
 			}
 
 			/**
@@ -333,6 +347,22 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'render',
 			value: function render() {
+				var Component = this.props.component;
+				var filteredProps = Object.assign({}, this.props);
+				delete filteredProps.onSelection;
+				delete filteredProps.fixedPosition;
+				delete filteredProps.selectOnMouseMove;
+				delete filteredProps.component;
+				delete filteredProps.tolerance;
+				delete filteredProps.preventDefault;
+
+				if (!this.props.enabled) {
+					return _react2.default.createElement(
+						Component,
+						filteredProps,
+						this.props.children
+					);
+				}
 
 				var boxStyle = {
 					left: this.state.boxLeft,
@@ -352,16 +382,8 @@ return /******/ (function(modules) { // webpackBootstrap
 					float: 'left'
 				};
 
-				var filteredProps = Object.assign({}, this.props);
-				delete filteredProps.onSelection;
-				delete filteredProps.fixedPosition;
-				delete filteredProps.selectOnMouseMove;
-				delete filteredProps.component;
-				delete filteredProps.tolerance;
-				delete filteredProps.preventDefault;
-
 				return _react2.default.createElement(
-					this.props.component,
+					Component,
 					filteredProps,
 					this.state.isBoxSelecting && _react2.default.createElement(
 						'div',
@@ -421,7 +443,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	  * 
 	  * @type {Function}
 	  */
-		onNonItemClick: _react2.default.PropTypes.func
+		onNonItemClick: _react2.default.PropTypes.func,
+
+		/**
+	  * If false, all of the selectble features are turned off.
+	  * @type {[type]}
+	  */
+		enabled: _react2.default.PropTypes.bool
 
 	};
 
@@ -431,7 +459,8 @@ return /******/ (function(modules) { // webpackBootstrap
 		tolerance: 0,
 		fixedPosition: false,
 		selectOnMouseMove: false,
-		preventDefault: true
+		preventDefault: true,
+		enabled: true
 	};
 
 	SelectableGroup.childContextTypes = {
