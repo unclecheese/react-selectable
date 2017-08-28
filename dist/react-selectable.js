@@ -208,7 +208,6 @@ return /******/ (function(modules) { // webpackBootstrap
 			key: '_applyMousedown',
 			value: function _applyMousedown(apply) {
 				var funcName = apply ? 'addEventListener' : 'removeEventListener';
-				console.log(funcName);
 				_reactDom2.default.findDOMNode(this)[funcName]('mousedown', this._mouseDown);
 			}
 
