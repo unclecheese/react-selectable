@@ -95,7 +95,7 @@ class SelectableGroup extends React.Component {
 
 		const node = ReactDOM.findDOMNode(this);
 		let collides, offsetData, distanceData;
-		ReactDOM.findDOMNode(this).addEventListener('mouseup', this._mouseUp);
+		window.addEventListener('mouseup', this._mouseUp);
 
 		// Right clicks
 		if(e.which === 3 || e.button === 2) return;
@@ -128,7 +128,7 @@ class SelectableGroup extends React.Component {
 
 		if(this.props.preventDefault) e.preventDefault();
 
-		ReactDOM.findDOMNode(this).addEventListener('mousemove', this._openSelector);
+		window.addEventListener('mousemove', this._openSelector);
 	}
 
 
@@ -136,8 +136,8 @@ class SelectableGroup extends React.Component {
 	 * Called when the user has completed selection
 	 */
 	_mouseUp (e) {
-	    ReactDOM.findDOMNode(this).removeEventListener('mousemove', this._openSelector);
-	    ReactDOM.findDOMNode(this).removeEventListener('mouseup', this._mouseUp);
+	    window.removeEventListener('mousemove', this._openSelector);
+	    window.removeEventListener('mouseup', this._mouseUp);
 
 	    if(!this._mouseDownData) return;
 

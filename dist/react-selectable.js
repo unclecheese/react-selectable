@@ -152,7 +152,6 @@ return /******/ (function(modules) { // webpackBootstrap
 			_this._openSelector = _this._openSelector.bind(_this);
 			_this._mouseDown = _this._mouseDown.bind(_this);
 			_this._mouseUp = _this._mouseUp.bind(_this);
-			_this._click = _this._click.bind(_this);
 			_this._selectElements = _this._selectElements.bind(_this);
 			_this._registerSelectable = _this._registerSelectable.bind(_this);
 			_this._unregisterSelectable = _this._unregisterSelectable.bind(_this);
@@ -238,7 +237,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				var collides = void 0,
 				    offsetData = void 0,
 				    distanceData = void 0;
-				_reactDom2.default.findDOMNode(this).addEventListener('mouseup', this._mouseUp);
+				window.addEventListener('mouseup', this._mouseUp);
 
 				// Right clicks
 				if (e.which === 3 || e.button === 2) return;
@@ -268,7 +267,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				if (this.props.preventDefault) e.preventDefault();
 
-				_reactDom2.default.findDOMNode(this).addEventListener('mousemove', this._openSelector);
+				window.addEventListener('mousemove', this._openSelector);
 			}
 
 			/**
@@ -278,8 +277,8 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: '_mouseUp',
 			value: function _mouseUp(e) {
-				_reactDom2.default.findDOMNode(this).removeEventListener('mousemove', this._openSelector);
-				_reactDom2.default.findDOMNode(this).removeEventListener('mouseup', this._mouseUp);
+				window.removeEventListener('mousemove', this._openSelector);
+				window.removeEventListener('mouseup', this._mouseUp);
 
 				if (!this._mouseDownData) return;
 
@@ -302,15 +301,6 @@ return /******/ (function(modules) { // webpackBootstrap
 					boxHeight: 0
 				});
 			}
-
-			/**
-	   * Called when the user has clicked in the group
-	   * @param  {Event} e
-	   */
-
-		}, {
-			key: '_click',
-			value: function _click(e) {}
 
 			/**
 	   * Selects multiple children given x/y coords of the mouse
@@ -363,7 +353,6 @@ return /******/ (function(modules) { // webpackBootstrap
 				};
 
 				var filteredProps = Object.assign({}, this.props);
-				filteredProps.onClick = this._click;
 				delete filteredProps.onSelection;
 				delete filteredProps.fixedPosition;
 				delete filteredProps.selectOnMouseMove;
