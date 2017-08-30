@@ -347,18 +347,11 @@ return /******/ (function(modules) { // webpackBootstrap
 			key: 'render',
 			value: function render() {
 				var Component = this.props.component;
-				var filteredProps = Object.assign({}, this.props);
-				delete filteredProps.onSelection;
-				delete filteredProps.fixedPosition;
-				delete filteredProps.selectOnMouseMove;
-				delete filteredProps.component;
-				delete filteredProps.tolerance;
-				delete filteredProps.preventDefault;
 
 				if (!this.props.enabled) {
 					return _react2.default.createElement(
 						Component,
-						filteredProps,
+						{ className: this.props.className },
 						this.props.children
 					);
 				}
@@ -383,7 +376,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				return _react2.default.createElement(
 					Component,
-					filteredProps,
+					{ className: this.props.className },
 					this.state.isBoxSelecting && _react2.default.createElement(
 						'div',
 						{ style: boxStyle, ref: 'selectbox' },
@@ -448,7 +441,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	  * If false, all of the selectble features are turned off.
 	  * @type {[type]}
 	  */
-		enabled: _react2.default.PropTypes.bool
+		enabled: _react2.default.PropTypes.bool,
+
+		/**
+	  * A CSS class to add to the containing element
+	  * @type {string}
+	  */
+		className: _react2.default.PropTypes.string
 
 	};
 

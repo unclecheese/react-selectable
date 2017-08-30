@@ -194,17 +194,10 @@ class SelectableGroup extends React.Component {
 	 */
 	render () {
 		const Component = this.props.component;
-		const filteredProps = Object.assign({}, this.props);
-        delete filteredProps.onSelection;
-        delete filteredProps.fixedPosition;
-        delete filteredProps.selectOnMouseMove;
-        delete filteredProps.component;
-        delete filteredProps.tolerance;
-        delete filteredProps.preventDefault;
 
 		if (!this.props.enabled) {
 			return (
-				<Component {...filteredProps}>
+				<Component className={this.props.className}>
 					{this.props.children}
 				</Component>
 			);
@@ -230,7 +223,7 @@ class SelectableGroup extends React.Component {
 
 
         return (
-            <Component {...filteredProps}>
+            <Component className={this.props.className}>
                 {this.state.isBoxSelecting &&
                   <div style={boxStyle} ref="selectbox"><span style={spanStyle} /></div>
                 }
@@ -292,6 +285,12 @@ SelectableGroup.propTypes = {
      * @type {[type]}
      */
     enabled: React.PropTypes.bool,
+
+    /**
+     * A CSS class to add to the containing element
+     * @type {string}
+     */
+    className: React.PropTypes.string,
 
 };
 
