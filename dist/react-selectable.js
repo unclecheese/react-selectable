@@ -147,6 +147,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			};
 
 			_this._mouseDownData = null;
+			_this._rect = null;
 			_this._registry = [];
 
 			_this._openSelector = _this._openSelector.bind(_this);
@@ -174,6 +175,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			key: 'componentDidMount',
 			value: function componentDidMount() {
 				this._applyMousedown(this.props.enabled);
+				this._rect = this._getInitialCoordinates();
 			}
 
 			/**
@@ -219,18 +221,31 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: '_openSelector',
 			value: function _openSelector(e) {
-				var w = Math.abs(this._mouseDownData.initialW - e.pageX);
-				var h = Math.abs(this._mouseDownData.initialH - e.pageY);
+				var w = Math.abs(this._mouseDownData.initialW - e.pageX + this._rect.x);
+				var h = Math.abs(this._mouseDownData.initialH - e.pageY + this._rect.y);
 
 				this.setState({
 					isBoxSelecting: true,
 					boxWidth: w,
 					boxHeight: h,
-					boxLeft: Math.min(e.pageX, this._mouseDownData.initialW),
-					boxTop: Math.min(e.pageY, this._mouseDownData.initialH)
+					boxLeft: Math.min(e.pageX - this._rect.x, this._mouseDownData.initialW),
+					boxTop: Math.min(e.pageY - this._rect.y, this._mouseDownData.initialH)
 				});
 
 				if (this.props.selectOnMouseMove) this._throttledSelect(e);
+			}
+		}, {
+			key: '_getInitialCoordinates',
+			value: function _getInitialCoordinates() {
+				var style = window.getComputedStyle(document.body);
+				var t = style.getPropertyValue('margin-top');
+				var l = style.getPropertyValue('margin-left');
+				var mLeft = parseInt(l.slice(0, l.length - 2), 10);
+				var mTop = parseInt(t.slice(0, t.length - 2), 10);
+
+				var bodyRect = document.body.getBoundingClientRect();
+				var elemRect = _reactDom2.default.findDOMNode(this).getBoundingClientRect();
+				return { x: Math.round(elemRect.left - bodyRect.left + mLeft), y: Math.round(elemRect.top - bodyRect.top + mTop) };
 			}
 
 			/**
@@ -272,10 +287,10 @@ return /******/ (function(modules) { // webpackBootstrap
 				}
 
 				this._mouseDownData = {
-					boxLeft: e.pageX,
-					boxTop: e.pageY,
-					initialW: e.pageX,
-					initialH: e.pageY
+					boxLeft: e.pageX - this._rect.x,
+					boxTop: e.pageY - this._rect.y,
+					initialW: e.pageX - this._rect.x,
+					initialH: e.pageY - this._rect.y
 				};
 
 				if (this.props.preventDefault) e.preventDefault();
@@ -373,10 +388,14 @@ return /******/ (function(modules) { // webpackBootstrap
 					height: '100%',
 					float: 'left'
 				};
+				var wrapperStyle = {
+					position: 'relative',
+					overflow: 'visible'
+				};
 
 				return _react2.default.createElement(
 					Component,
-					{ className: this.props.className },
+					{ className: this.props.className, style: wrapperStyle },
 					this.state.isBoxSelecting && _react2.default.createElement(
 						'div',
 						{ style: boxStyle, ref: 'selectbox' },
@@ -432,7 +451,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 		/**
 	  * Triggered when the user clicks in the component, but not on an item, e.g. whitespace
-	  * 
+	  *
 	  * @type {Function}
 	  */
 		onNonItemClick: _react2.default.PropTypes.func,
