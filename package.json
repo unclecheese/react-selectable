@@ -1,16 +1,24 @@
 {
   "name": "react-selectable",
   "version": "1.3.3",
-  "description": "",
-  "main": "dist/react-selectable.js",
+  "description": "A component for react that allows mouse selection of child items",
+  "main": "lib/index.js",
+  "module": "es/index.js",
+  "jsnext:main": "es/index.js",
+  "unpkg": "dist/react-selectable.min.js",
   "repository": {
     "type": "git",
     "url": "git://github.com/unclecheese/react-selectable.git"
   },
   "scripts": {
-    "build": "node node_modules/webpack/bin/webpack",
-    "example": "node node_modules/webpack/bin/webpack --config webpack.config.example.js",
-    "watch": "node node_modules/webpack/bin/webpack --watch"
+    "build:commonjs": "cross-env BABEL_ENV=commonjs babel src --out-dir lib",
+    "build:es": "cross-env BABEL_ENV=es babel src --out-dir es",
+    "build:umd": "cross-env BABEL_ENV=commonjs NODE_ENV=development webpack  dist/react-selectable.js",
+    "build:umd:min": "cross-env BABEL_ENV=commonjs NODE_ENV=production webpack -p  dist/react-selectable.min.js",
+    "build": "npm run build:commonjs && npm run build:es && npm run build:umd && npm run build:umd:min",
+    "watch": "npm run build:commonjs -- --watch",
+    "example": "webapack --config webpack.config.example.js",
+    "prepublish": "npm run build"
   },
   "homepage": "http://unclecheese.github.io/react-selectable",
   "keywords": [
@@ -31,9 +39,10 @@
     "babel-preset-es2015": "^6.3.13",
     "babel-preset-react": "^6.3.13",
     "babel-preset-stage-2": "^6.3.13",
+    "cross-env": "^5.0.5",
     "lodash.throttle": "^4.0.1",
     "react": "^0.14.7",
     "react-dom": "^0.14.7",
-    "webpack": "^1.12.11"
+    "webpack": "^3.5.5"
   }
 }
