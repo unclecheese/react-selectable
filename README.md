@@ -1,4 +1,6 @@
 # Selectable items for React
+[![NPM version][npm-image]][npm-url]
+[![NPM downloads][npm-downloads-image]][npm-url]
 
 Allows individual or group selection of items using the mouse.
 
@@ -13,7 +15,7 @@ There have been significant changes in the 0.2 release. Please [read about them 
 ```
 npm install --save react-selectable
 ```
-This assumes you are using npm as your package manager.
+This assumes you are using [npm](https://www.npmjs.com/) as your package manager.
 
 If you are not, you can access these files [through unpkg](https://unpkg.com/react-selectable), download them, or point your package manager to them. For more info on this in, visit [the builds section](#builds)
 
@@ -70,3 +72,7 @@ Most commonly people consume `react-selectable` as a collection of [CommonJS](ht
 The `redux-selectable` source code is written in ES2015 but we precompile both CommonJS and UMD builds to ES5 so they work in [any modern browser](http://caniuse.com/#feat=es5).
 
 If you don't use a module bundler, it's also fine. The `redux-selectable` npm package includes precompiled production and development [UMD](https://github.com/umdjs/umd) builds in the [`dist` folder](https://unpkg.com/react-selectable/dist/). They can be used directly without a bundler and are thus compatible with many popular JavaScript module loaders and environments. For example, you can drop a UMD build as a [`<script>` tag](https://unpkg.com/redux/dist/redux.js) on the page, or [tell Bower to install it](https://github.com/reactjs/redux/pull/1181#issuecomment-167361975). The UMD builds make Redux available as a `window.ReactSelectable` global variable.
+
+[npm-image]: https://img.shields.io/npm/v/react-selectable.svg?style=flat-square
+[npm-downloads-image]: https://img.shields.io/npm/dm/react-selectable.svg?style=flat-square
+[npm-url]: https://npmjs.org/package/react-selectable
