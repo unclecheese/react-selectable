@@ -1,2 +1,7 @@
 node_modules
 example/bundle.js
+dist
+lib
+es
+*.log
+.DS_Store
