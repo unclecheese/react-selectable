@@ -278,13 +278,14 @@ return /******/ (function(modules) { // webpackBootstrap
 						bottom: offsetData.offsetHeight,
 						right: offsetData.offsetWidth
 					}, {
-						top: e.pageY,
-						left: e.pageX,
+						top: e.pageY - this._rect.y,
+						left: e.pageX - this._rect.x,
 						offsetWidth: 0,
 						offsetHeight: 0
 					});
 					if (!collides) return;
 				}
+				this._rect = this._getInitialCoordinates();
 
 				this._mouseDownData = {
 					boxLeft: e.pageX - this._rect.x,
@@ -305,6 +306,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: '_mouseUp',
 			value: function _mouseUp(e) {
+				e.stopPropagation();
 				window.removeEventListener('mousemove', this._openSelector);
 				window.removeEventListener('mouseup', this._mouseUp);
 
@@ -388,6 +390,7 @@ return /******/ (function(modules) { // webpackBootstrap
 					height: '100%',
 					float: 'left'
 				};
+
 				var wrapperStyle = {
 					position: 'relative',
 					overflow: 'visible'

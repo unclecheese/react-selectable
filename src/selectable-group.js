@@ -133,14 +133,15 @@ class SelectableGroup extends React.Component {
 					right: offsetData.offsetWidth
 				},
 				{
-					top: e.pageY,
-					left: e.pageX,
+					top: e.pageY - this._rect.y,
+					left: e.pageX - this._rect.x,
 					offsetWidth: 0,
 					offsetHeight: 0
 				}
 			);
 			if(!collides) return;
 		}
+		this._rect = this._getInitialCoordinates();
 
 		this._mouseDownData = {
 			boxLeft: e.pageX - this._rect.x,
@@ -159,6 +160,7 @@ class SelectableGroup extends React.Component {
 	 * Called when the user has completed selection
 	 */
 	_mouseUp (e) {
+			e.stopPropagation();
 	    window.removeEventListener('mousemove', this._openSelector);
 	    window.removeEventListener('mouseup', this._mouseUp);
 
@@ -234,6 +236,7 @@ class SelectableGroup extends React.Component {
 			height: '100%',
 			float: 'left'
 		};
+
 		const wrapperStyle = {
 			position: 'relative',
 			overflow: 'visible'
