@@ -5,7 +5,8 @@ const config = {
   output: {
     path: './dist', // This is where images AND js will go
     publicPath: '', // This is used to generate URLs to e.g. images
-    libraryTarget: 'umd'
+    libraryTarget: 'umd',
+    library: 'ReactSelectable', // sets window.ReactSelectable
   },
   externals: {
     'react': {
@@ -18,7 +19,7 @@ const config = {
       root: 'ReactDOM',
       commonjs2: 'react-dom',
       commonjs: 'react-dom',
-      amd: 'react-dom'
+      amd: 'react-dom',
     }
   },
   module: {
@@ -26,12 +27,12 @@ const config = {
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        loaders: ['babel-loader']
-      }
+        loaders: ['babel-loader'],
+      },
     ]
   },
   plugins: [
-    new webpack.optimize.ModuleConcatenationPlugin()
+    new webpack.optimize.ModuleConcatenationPlugin(),
   ]
 };
 

@@ -7,14 +7,18 @@ Allows individual or group selection of items using the mouse.
 
 ## Upgrading from 0.1 to 0.2
 There have been significant changes in the 0.2 release. Please [read about them here](UPGRADING.md).
+
 ## Getting started
+
 ```
-npm install react-selectable
+npm install --save react-selectable
 ```
+This assumes you are using npm as your package manager.
+
+If you are not, you can access these files [through unpkg](https://unpkg.com/react-selectable), download them, or point your package manager to them. For more info on this in, visit [the builds section](#builds)
 
 ```js
 import React from 'react';
-import { render } from 'react-dom';
 import { SelectableGroup, createSelectable } from 'react-selectable';
 import SomeComponent from './some-component';
 
@@ -22,18 +26,19 @@ const SelectableComponent = createSelectable(SomeComponent);
 
 class App extends React.Component {
 
-  constructor (props) {
-  	super(props);
-  	this.state = {
-  		selectedKeys: []
-  	};
+  state = {
+    selectedKeys: []
+  }
+
+  handleSelection = (selectedKeys) => {
+    this.setState({ selectedKeys });
   }
 
   render () {
     return (
       <SelectableGroup onSelection={this.handleSelection}>
         {this.props.items.map((item, i) => {
-          	let selected = this.state.selectedKeys.indexOf(item.id) > -1;
+          	const selected = this.state.selectedKeys.indexOf(item.id) > -1;
           	return (
           		<SelectableComponent key={i} selected={selected} selectableKey={item.id}>
           			{item.title}
@@ -42,14 +47,10 @@ class App extends React.Component {
         })}
       </SelectableGroup>
     );
-  },
-
-  handleSelection (selectedKeys) {
-  	this.setState({ selectedKeys });
   }
-
 }
 ```
+
 ## Configuration
 
 The `<SelectableGroup />` component accepts a few optional props:
@@ -61,3 +62,11 @@ The `<SelectableGroup />` component accepts a few optional props:
 * `selectOnMouseMove` (Boolean) Enable to fire the `onSelection` callback while the mouse is moving. Throttled to 50ms for performance in IE/Edge
 * `preventDefault` (Boolean) Allows to enable/disable preventing the default action of the onmousedown event (with e.preventDefault). True by default. Disable if your app needs to capture this event for other functionalities.
 * `enabled` (Boolean) If false, all of the selectable features are disabled, and event handlers removed.
+
+## Builds
+
+Most commonly people consume `react-selectable` as a collection of [CommonJS](http://webpack.github.io/docs/commonjs.html) modules. These modules are what you get when you import `react-selectable` in a [Webpack](https://webpack.js.org/), [Browserify](http://browserify.org/), or a Node environment.
+
+The `redux-selectable` source code is written in ES2015 but we precompile both CommonJS and UMD builds to ES5 so they work in [any modern browser](http://caniuse.com/#feat=es5).
+
+If you don't use a module bundler, it's also fine. The `redux-selectable` npm package includes precompiled production and development [UMD](https://github.com/umdjs/umd) builds in the [`dist` folder](https://unpkg.com/react-selectable/dist/). They can be used directly without a bundler and are thus compatible with many popular JavaScript module loaders and environments. For example, you can drop a UMD build as a [`<script>` tag](https://unpkg.com/redux/dist/redux.js) on the page, or [tell Bower to install it](https://github.com/reactjs/redux/pull/1181#issuecomment-167361975). The UMD builds make Redux available as a `window.ReactSelectable` global variable.
