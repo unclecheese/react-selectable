@@ -61,3 +61,38 @@ The `<SelectableGroup />` component accepts a few optional props:
 * `selectOnMouseMove` (Boolean) Enable to fire the `onSelection` callback while the mouse is moving. Throttled to 50ms for performance in IE/Edge
 * `preventDefault` (Boolean) Allows to enable/disable preventing the default action of the onmousedown event (with e.preventDefault). True by default. Disable if your app needs to capture this event for other functionalities.
 * `enabled` (Boolean) If false, all of the selectable features are disabled, and event handlers removed.
+
+
+### Decorators
+
+Though they are optional, you can use decorators with this `react-selectable`.
+
+A side by side comparison is the best way to illustrate the difference:
+
+#### Without Decorators
+```javascript
+class SomeComponent extends Component {
+
+}
+export default createSelectable(SomeComponent)
+```
+vs.
+
+#### With Decorators
+```javascript
+@createSelectable
+export default class SomeComponent extends Component {
+
+}
+```
+
+In order to enable this functionality, you will most likely need to install a plugin (depending on your build setup). For Babel, you will need to make sure you have installed and enabled  [babel-plugin-transform-decorators-legacy](https://github.com/loganfsmyth/babel-plugin-transform-decorators-legacy) by doing the following:
+
+1. run `npm i --save-dev babel-plugin-transform-decorators-legacy`
+2. Add the following line to your `.babelrc`:
+
+```json
+{
+  "plugins": ["transform-decorators-legacy"]
+}
+```
