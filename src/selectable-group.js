@@ -195,7 +195,11 @@ class SelectableGroup extends React.Component {
 		if(!selectbox) return;
 
 		this._registry.forEach(itemData => {
-			if(itemData.domNode && doObjectsCollide(selectbox, itemData.domNode, tolerance)) {
+			if(
+				itemData.domNode
+				&& doObjectsCollide(selectbox, itemData.domNode, tolerance)
+				&& !currentItems.includes(itemData.key)
+			) {
 				currentItems.push(itemData.key);
 			}
 		});
