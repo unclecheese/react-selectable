@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import PropTypes from 'prop-types';
 
 const createSelectable = (WrappedComponent) => {
 	class SelectableItem extends React.Component {
@@ -24,11 +25,11 @@ const createSelectable = (WrappedComponent) => {
 	}
 
 	SelectableItem.contextTypes = {
-		selectable: React.PropTypes.object
+		selectable: PropTypes.object
 	};
 
 	SelectableItem.propTypes = {
-		selectableKey: React.PropTypes.any.isRequired
+		selectableKey: PropTypes.any.isRequired
 	};
 
 	return SelectableItem;
