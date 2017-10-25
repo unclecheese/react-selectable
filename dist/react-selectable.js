@@ -65,15 +65,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _selectableGroup2 = _interopRequireDefault(_selectableGroup);
 
-	var _createSelectable = __webpack_require__(9);
+	var _createSelectable = __webpack_require__(11);
 
 	var _createSelectable2 = _interopRequireDefault(_createSelectable);
 
-	var _isNodeIn = __webpack_require__(5);
+	var _isNodeIn = __webpack_require__(7);
 
 	var _isNodeIn2 = _interopRequireDefault(_isNodeIn);
 
-	var _nodeInRoot = __webpack_require__(4);
+	var _nodeInRoot = __webpack_require__(6);
 
 	var _nodeInRoot2 = _interopRequireDefault(_nodeInRoot);
 
@@ -104,23 +104,27 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	var _nodeInRoot = __webpack_require__(4);
+	var _classnames = __webpack_require__(4);
+
+	var _classnames2 = _interopRequireDefault(_classnames);
+
+	var _nodeInRoot = __webpack_require__(6);
 
 	var _nodeInRoot2 = _interopRequireDefault(_nodeInRoot);
 
-	var _isNodeIn = __webpack_require__(5);
+	var _isNodeIn = __webpack_require__(7);
 
 	var _isNodeIn2 = _interopRequireDefault(_isNodeIn);
 
-	var _getBoundsForNode = __webpack_require__(6);
+	var _getBoundsForNode = __webpack_require__(8);
 
 	var _getBoundsForNode2 = _interopRequireDefault(_getBoundsForNode);
 
-	var _doObjectsCollide = __webpack_require__(7);
+	var _doObjectsCollide = __webpack_require__(9);
 
 	var _doObjectsCollide2 = _interopRequireDefault(_doObjectsCollide);
 
-	var _lodash = __webpack_require__(8);
+	var _lodash = __webpack_require__(10);
 
 	var _lodash2 = _interopRequireDefault(_lodash);
 
@@ -398,7 +402,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				return _react2.default.createElement(
 					Component,
-					{ className: this.props.className, style: wrapperStyle },
+					{
+						className: (0, _classnames2.default)(this.props.className, this.state.isBoxSelecting && this.props.selectingClassName),
+						style: wrapperStyle
+					},
 					this.state.isBoxSelecting && _react2.default.createElement(
 						'div',
 						{ style: boxStyle, ref: 'selectbox' },
@@ -469,7 +476,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	  * A CSS class to add to the containing element
 	  * @type {string}
 	  */
-		className: _react2.default.PropTypes.string
+		className: _react2.default.PropTypes.string,
+
+		/**
+	  * A CSS class to add to the containing element when we select
+	  * @type {string}
+	  */
+		selectingClassName: _react2.default.PropTypes.string
 
 	};
 
@@ -505,13 +518,78 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
+	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;'use strict';
+
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+	/*!
+	  Copyright (c) 2016 Jed Watson.
+	  Licensed under the MIT License (MIT), see
+	  http://jedwatson.github.io/classnames
+	*/
+	/* global define */
+
+	(function () {
+		'use strict';
+
+		var hasOwn = {}.hasOwnProperty;
+
+		function classNames() {
+			var classes = [];
+
+			for (var i = 0; i < arguments.length; i++) {
+				var arg = arguments[i];
+				if (!arg) continue;
+
+				var argType = typeof arg === 'undefined' ? 'undefined' : _typeof(arg);
+
+				if (argType === 'string' || argType === 'number') {
+					classes.push(arg);
+				} else if (Array.isArray(arg)) {
+					classes.push(classNames.apply(null, arg));
+				} else if (argType === 'object') {
+					for (var key in arg) {
+						if (hasOwn.call(arg, key) && arg[key]) {
+							classes.push(key);
+						}
+					}
+				}
+			}
+
+			return classes.join(' ');
+		}
+
+		if (typeof module !== 'undefined' && module.exports) {
+			module.exports = classNames;
+		} else if ("function" === 'function' && _typeof(__webpack_require__(5)) === 'object' && __webpack_require__(5)) {
+			// register as 'classnames', consistent with npm package name
+			!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
+				return classNames;
+			}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+		} else {
+			window.classNames = classNames;
+		}
+	})();
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports) {
+
+	/* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {module.exports = __webpack_amd_options__;
+
+	/* WEBPACK VAR INJECTION */}.call(exports, {}))
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
 
-	var _isNodeIn = __webpack_require__(5);
+	var _isNodeIn = __webpack_require__(7);
 
 	var _isNodeIn2 = _interopRequireDefault(_isNodeIn);
 
@@ -526,7 +604,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = isNodeInRoot;
 
 /***/ }),
-/* 5 */
+/* 7 */
 /***/ (function(module, exports) {
 
 	'use strict';
@@ -553,7 +631,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = isNodeIn;
 
 /***/ }),
-/* 6 */
+/* 8 */
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -579,7 +657,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ }),
-/* 7 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -588,7 +666,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  value: true
 	});
 
-	var _getBoundsForNode = __webpack_require__(6);
+	var _getBoundsForNode = __webpack_require__(8);
 
 	var _getBoundsForNode2 = _interopRequireDefault(_getBoundsForNode);
 
@@ -638,7 +716,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ }),
-/* 8 */
+/* 10 */
 /***/ (function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
@@ -1083,7 +1161,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ }),
-/* 9 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';

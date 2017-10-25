@@ -61,6 +61,8 @@ The `<SelectableGroup />` component accepts a few optional props:
 * `selectOnMouseMove` (Boolean) Enable to fire the `onSelection` callback while the mouse is moving. Throttled to 50ms for performance in IE/Edge
 * `preventDefault` (Boolean) Allows to enable/disable preventing the default action of the onmousedown event (with e.preventDefault). True by default. Disable if your app needs to capture this event for other functionalities.
 * `enabled` (Boolean) If false, all of the selectable features are disabled, and event handlers removed.
+* `className` (String) A CSS class to add to the containing element.
+* `selectingClassName` (String) A CSS class to add to the containing element when we select.
 
 
 ### Decorators
