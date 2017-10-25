@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import cx from 'classnames';
 import isNodeInRoot from './nodeInRoot';
 import isNodeIn from './isNodeIn';
 import getBoundsForNode from './getBoundsForNode';
@@ -247,7 +248,13 @@ class SelectableGroup extends React.Component {
 		};
 
     return (
-        <Component className={this.props.className} style={wrapperStyle}>
+        <Component
+          className={cx(
+            this.props.className,
+            this.state.isBoxSelecting && this.props.selectingClassName
+          )}
+          style={wrapperStyle}
+        >
             {this.state.isBoxSelecting &&
               <div style={boxStyle} ref="selectbox"><span style={spanStyle} /></div>
             }
@@ -315,6 +322,12 @@ SelectableGroup.propTypes = {
      * @type {string}
      */
     className: React.PropTypes.string,
+
+    /**
+     * A CSS class to add to the containing element when we select
+     * @type {string}
+     */
+    selectingClassName: React.PropTypes.string,
 
 };
 
