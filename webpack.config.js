@@ -1,9 +1,10 @@
 var webpack  = require('webpack');
+const path = require('path');
 
 module.exports = {
   entry: './src/index.js',
   output: {
-    path: './dist', // This is where images AND js will go
+    path: path.resolve(__dirname,'dist'), // This is where images AND js will go
     publicPath: '', // This is used to generate URLs to e.g. images
     filename: 'react-selectable.js',
     libraryTarget: 'umd'
@@ -13,7 +14,7 @@ module.exports = {
 		root: 'React',
 		commonjs2: 'react',
 		commonjs: 'react',
-		amd: 'react',    	
+		amd: 'react',
     },
     'react-dom': {
 		root: 'ReactDOM',
@@ -23,7 +24,7 @@ module.exports = {
   	}
   },
   module: {
-    loaders: [,
+    rules: [
       {
         test: /\.js$/,
         loader: 'babel-loader'
@@ -31,6 +32,6 @@ module.exports = {
     ]
   },
   resolve: {
-      modulesDirectories: ["node_modules"],
+      modules: ["node_modules"],
   }
 };

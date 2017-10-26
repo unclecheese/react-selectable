@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import PropTypes from 'prop-types'
 import isNodeInRoot from './nodeInRoot';
 import isNodeIn from './isNodeIn';
 import getBoundsForNode from './getBoundsForNode';
@@ -262,59 +263,59 @@ SelectableGroup.propTypes = {
 	/**
 	 * Event that will fire when items are selected. Passes an array of keys
 	 */
-	onSelection: React.PropTypes.func,
+	onSelection: PropTypes.func,
 
 	/**
 	 * The component that will represent the Selectable DOM node
 	 */
-	component: React.PropTypes.node,
+	component: PropTypes.node,
 
 	/**
 	 * Amount of forgiveness an item will offer to the selectbox before registering
 	 * a selection, i.e. if only 1px of the item is in the selection, it shouldn't be
 	 * included.
 	 */
-	tolerance: React.PropTypes.number,
+	tolerance: PropTypes.number,
 
 	/**
 	 * In some cases, it the bounding box may need fixed positioning, if your layout
 	 * is relying on fixed positioned elements, for instance.
 	 * @type boolean
 	 */
-	fixedPosition: React.PropTypes.bool,
+	fixedPosition: PropTypes.bool,
 
 	/**
 	 * Enable to fire the onSelection callback while the mouse is moving. Throttled to 50ms
 	 * for performance in IE/Edge
 	 * @type boolean
 	 */
-	selectOnMouseMove: React.PropTypes.bool,
+	selectOnMouseMove: PropTypes.bool,
 
     /**
 	 * Allows to enable/disable preventing the default action of the onmousedown event (with e.preventDefault).
      * True by default. Disable if your app needs to capture this event for other functionalities.
 	 * @type boolean
 	 */
-    preventDefault: React.PropTypes.bool,
+    preventDefault: PropTypes.bool,
 
     /**
      * Triggered when the user clicks in the component, but not on an item, e.g. whitespace
      *
      * @type {Function}
      */
-    onNonItemClick: React.PropTypes.func,
+    onNonItemClick: PropTypes.func,
 
     /**
      * If false, all of the selectble features are turned off.
      * @type {[type]}
      */
-    enabled: React.PropTypes.bool,
+    enabled: PropTypes.bool,
 
     /**
      * A CSS class to add to the containing element
      * @type {string}
      */
-    className: React.PropTypes.string,
+    className: PropTypes.string,
 
 };
 
@@ -329,7 +330,7 @@ SelectableGroup.defaultProps = {
 };
 
 SelectableGroup.childContextTypes = {
-	selectable: React.PropTypes.object
+	selectable: PropTypes.object
 };
 
 export default SelectableGroup;
