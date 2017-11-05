@@ -1,12 +1,12 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import {Component, createElement} from 'react';
+import {findDOMNode} from 'react-dom';
 import PropTypes from 'prop-types';
 
 const createSelectable = (WrappedComponent) => {
-	class SelectableItem extends React.Component {
+	class SelectableItem extends Component {
 
 		componentDidMount () {
-			this.context.selectable.register(this.props.selectableKey, ReactDOM.findDOMNode(this));
+			this.context.selectable.register(this.props.selectableKey, findDOMNode(this));
 		}
 
 
@@ -16,7 +16,7 @@ const createSelectable = (WrappedComponent) => {
 
 
 		render () {
-			return React.createElement(
+			return createElement(
 				WrappedComponent,
 				this.props,
 				this.props.children
@@ -29,11 +29,11 @@ const createSelectable = (WrappedComponent) => {
 	};
 
 	SelectableItem.propTypes = {
+		children: PropTypes.node,
 		selectableKey: PropTypes.any.isRequired
 	};
 
 	return SelectableItem;
-}
-
+};
 
 export default createSelectable;

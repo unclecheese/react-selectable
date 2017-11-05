@@ -1,14 +1,14 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import PropTypes from 'prop-types'
+import React, {Component} from 'react';
+import {findDOMNode} from 'react-dom';
+import PropTypes from 'prop-types';
+import cx from 'classnames';
 import isNodeInRoot from './nodeInRoot';
 import isNodeIn from './isNodeIn';
 import getBoundsForNode from './getBoundsForNode';
 import doObjectsCollide from './doObjectsCollide';
 import throttle from 'lodash.throttle';
 
-class SelectableGroup extends React.Component {
-
+class SelectableGroup extends Component {
 
 	constructor (props) {
 		super(props);
@@ -17,7 +17,7 @@ class SelectableGroup extends React.Component {
 			isBoxSelecting: false,
 			boxWidth: 0,
 			boxHeight: 0
-		}
+		};
 
 		this._mouseDownData = null;
 		this._rect = null;
@@ -57,7 +57,7 @@ class SelectableGroup extends React.Component {
 		this._applyMousedown(false);
 	}
 
-	componentWillReceiveProps(nextProps) {
+	componentWillReceiveProps (nextProps) {
 		if (nextProps.enabled !== this.props.enabled) {
 			this._applyMousedown(nextProps.enabled);
 		}
@@ -72,9 +72,9 @@ class SelectableGroup extends React.Component {
 		this._registry = this._registry.filter(data => data.key !== key);
 	}
 
-	_applyMousedown(apply) {
+	_applyMousedown (apply) {
 		const funcName = apply ? 'addEventListener' : 'removeEventListener';
-		ReactDOM.findDOMNode(this)[funcName]('mousedown', this._mouseDown);
+		findDOMNode(this)[funcName]('mousedown', this._mouseDown);
 	}
 
 	/**
@@ -82,21 +82,21 @@ class SelectableGroup extends React.Component {
 	 * of the selection box
 	 */
 	_openSelector (e) {
-	    const w = Math.abs(this._mouseDownData.initialW - e.pageX + this._rect.x);
-	    const h = Math.abs(this._mouseDownData.initialH - e.pageY + this._rect.y);
+		const w = Math.abs(this._mouseDownData.initialW - e.pageX + this._rect.x);
+		const h = Math.abs(this._mouseDownData.initialH - e.pageY + this._rect.y);
 
-	    this.setState({
-	    	isBoxSelecting: true,
-	    	boxWidth: w,
-	    	boxHeight: h,
-	    	boxLeft: Math.min(e.pageX - this._rect.x, this._mouseDownData.initialW),
-	    	boxTop: Math.min(e.pageY - this._rect.y, this._mouseDownData.initialH)
-	    });
+		this.setState({
+			isBoxSelecting: true,
+			boxWidth: w,
+			boxHeight: h,
+			boxLeft: Math.min(e.pageX - this._rect.x, this._mouseDownData.initialW),
+			boxTop: Math.min(e.pageY - this._rect.y, this._mouseDownData.initialH)
+		});
 
-		if (this.props.selectOnMouseMove) this._throttledSelect(e);
+		this._throttledSelect(e);
 	}
 
-	_getInitialCoordinates() {
+	_getInitialCoordinates () {
 		const style = window.getComputedStyle(document.body);
 		const t = style.getPropertyValue('margin-top');
 		const l = style.getPropertyValue('margin-left');
@@ -104,8 +104,11 @@ class SelectableGroup extends React.Component {
 		const mTop = parseInt(t.slice(0, t.length - 2), 10);
 
 		const bodyRect = document.body.getBoundingClientRect();
-		const elemRect = ReactDOM.findDOMNode(this).getBoundingClientRect();
-		return { x: Math.round(elemRect.left - bodyRect.left + mLeft) , y: Math.round(elemRect.top - bodyRect.top + mTop) }
+		const elemRect = findDOMNode(this).getBoundingClientRect();
+		return {
+			x: Math.round(elemRect.left - bodyRect.left + mLeft),
+			y: Math.round(elemRect.top - bodyRect.top + mTop)
+		};
 	}
 
 
@@ -114,17 +117,21 @@ class SelectableGroup extends React.Component {
 	 * be added, and if so, attach event listeners
 	 */
 	_mouseDown (e) {
+		const {onBeginSelection, preventDefault} = this.props;
+
 		// Disable if target is control by react-dnd
 		if (isNodeIn(e.target, node => !!node.draggable)) return;
 
-		const node = ReactDOM.findDOMNode(this);
-		let collides, offsetData, distanceData;
+		if (typeof onBeginSelection === 'function') onBeginSelection(e);
+
+		const node = findDOMNode(this);
+		let collides, offsetData;
 		window.addEventListener('mouseup', this._mouseUp);
 
 		// Right clicks
-		if(e.which === 3 || e.button === 2) return;
+		if (e.which === 3 || e.button === 2) return;
 
-		if(!isNodeInRoot(e.target, node)) {
+		if (!isNodeInRoot(e.target, node)) {
 			offsetData = getBoundsForNode(node);
 			collides = doObjectsCollide(
 				{
@@ -140,18 +147,18 @@ class SelectableGroup extends React.Component {
 					offsetHeight: 0
 				}
 			);
-			if(!collides) return;
+			if (!collides) return;
 		}
 		this._rect = this._getInitialCoordinates();
 
 		this._mouseDownData = {
 			boxLeft: e.pageX - this._rect.x,
 			boxTop: e.pageY - this._rect.y,
-	        initialW: e.pageX - this._rect.x,
-        	initialH: e.pageY - this._rect.y
+			initialW: e.pageX - this._rect.x,
+			initialH: e.pageY - this._rect.y
 		};
 
-		if(this.props.preventDefault) e.preventDefault();
+		if (preventDefault) e.preventDefault();
 
 		window.addEventListener('mousemove', this._openSelector);
 	}
@@ -161,20 +168,24 @@ class SelectableGroup extends React.Component {
 	 * Called when the user has completed selection
 	 */
 	_mouseUp (e) {
-			e.stopPropagation();
-	    window.removeEventListener('mousemove', this._openSelector);
-	    window.removeEventListener('mouseup', this._mouseUp);
+		const {onNonItemClick} = this.props;
+		const {isBoxSelecting} = this.state;
 
-	    if(!this._mouseDownData) return;
+		e.stopPropagation();
 
-	    // Mouse up when not box selecting is a heuristic for a "click"
-		if (this.props.onNonItemClick && !this.state.isBoxSelecting) {
-			if (!this._registry.some(({ domNode }) => isNodeInRoot(e.target, domNode))) {
-				this.props.onNonItemClick(e);
+		window.removeEventListener('mousemove', this._openSelector);
+		window.removeEventListener('mouseup', this._mouseUp);
+
+		if (!this._mouseDownData) return;
+
+		// Mouse up when not box selecting is a heuristic for a "click"
+		if (onNonItemClick && !isBoxSelecting) {
+			if (!this._registry.some(({domNode}) => isNodeInRoot(e.target, domNode))) {
+				onNonItemClick(e);
 			}
 		}
 
-		this._selectElements(e);
+		this._selectElements(e, true);
 
 		this._mouseDownData = null;
 		this.setState({
@@ -188,24 +199,29 @@ class SelectableGroup extends React.Component {
 	/**
 	 * Selects multiple children given x/y coords of the mouse
 	 */
-	_selectElements (e) {
-	    const currentItems = [],
-		      selectbox = ReactDOM.findDOMNode(this.refs.selectbox),
-		      {tolerance} = this.props;
+	_selectElements (e, isEnd = false) {
+		const {tolerance, onSelection, onEndSelection} = this.props;
 
-		if(!selectbox) return;
+		const currentItems = [];
+		const _selectbox = findDOMNode(this.refs.selectbox);
+
+		if (!_selectbox) return;
 
 		this._registry.forEach(itemData => {
-			if(
+			if (
 				itemData.domNode
-				&& doObjectsCollide(selectbox, itemData.domNode, tolerance)
+				&& doObjectsCollide(_selectbox, itemData.domNode, tolerance)
 				&& !currentItems.includes(itemData.key)
 			) {
 				currentItems.push(itemData.key);
 			}
 		});
 
-		this.props.onSelection(currentItems, e);
+		if (isEnd) {
+			if (typeof onEndSelection === 'function') onEndSelection(currentItems, e);
+		} else {
+			if (typeof onSelection === 'function') onSelection(currentItems, e);
+		}
 	}
 
 
@@ -214,23 +230,25 @@ class SelectableGroup extends React.Component {
 	 * @return {ReactComponent}
 	 */
 	render () {
+		const {children, enabled, fixedPosition, className, selectingClassName} = this.props;
+		const {isBoxSelecting, boxLeft, boxTop, boxWidth, boxHeight} = this.state;
 		const Component = this.props.component;
 
-		if (!this.props.enabled) {
+		if (!enabled) {
 			return (
-				<Component className={this.props.className}>
-					{this.props.children}
+				<Component className={className}>
+					{children}
 				</Component>
 			);
 		}
 
 		const boxStyle = {
-			left: this.state.boxLeft,
-			top: this.state.boxTop,
-			width: this.state.boxWidth,
-			height: this.state.boxHeight,
+			left: boxLeft,
+			top: boxTop,
+			width: boxWidth,
+			height: boxHeight,
 			zIndex: 9000,
-			position: this.props.fixedPosition ? 'fixed' : 'absolute',
+			position: fixedPosition ? 'fixed' : 'absolute',
 			cursor: 'default'
 		};
 
@@ -247,26 +265,73 @@ class SelectableGroup extends React.Component {
 			overflow: 'visible'
 		};
 
-    return (
-        <Component className={this.props.className} style={wrapperStyle}>
-            {this.state.isBoxSelecting &&
-              <div style={boxStyle} ref="selectbox"><span style={spanStyle} /></div>
-            }
-            {this.props.children}
-        </Component>
-    );
+		return (
+			<Component
+				className={cx(
+					className,
+					isBoxSelecting ? selectingClassName : null
+				)}
+				style={wrapperStyle}
+			>
+				{
+					isBoxSelecting ?
+						<div
+							style={boxStyle}
+							ref="selectbox"
+						>
+							<span
+								style={spanStyle}
+							/>
+						</div>
+						: null
+				}
+				{children}
+			</Component>
+		);
 	}
 }
 
 SelectableGroup.propTypes = {
+	/**
+	 * @typedef {Object} MouseEvent
+	 * @typedef {Object} HTMLElement
+	 */
+
+	/**
+	 * @type {HTMLElement} node
+	 */
+	children: PropTypes.node,
+
+	/**
+	 * Event that will fire when selection was started
+	 *
+	 * @type {Function}
+	 * @param {MouseEvent} event - MouseEvent
+	 */
+	onBeginSelection: PropTypes.func,
+
+	/**
+	 * Event that will fire when selection was finished. Passes an array of keys
+	 *
+	 * @type {Function}
+	 * @param {Array} items - The array of selected items
+	 * @param {MouseEvent} event - MouseEvent
+	 */
+	onEndSelection: PropTypes.func,
 
 	/**
 	 * Event that will fire when items are selected. Passes an array of keys
+	 *
+	 * @type {Function}
+	 * @param {Array} items - The array of selected items
+	 * @param {MouseEvent} event - MouseEvent
 	 */
 	onSelection: PropTypes.func,
 
 	/**
 	 * The component that will represent the Selectable DOM node
+	 *
+	 * @type {HTMLElement} node
 	 */
 	component: PropTypes.node,
 
@@ -274,59 +339,60 @@ SelectableGroup.propTypes = {
 	 * Amount of forgiveness an item will offer to the selectbox before registering
 	 * a selection, i.e. if only 1px of the item is in the selection, it shouldn't be
 	 * included.
+	 *
+	 * @type {Number}
 	 */
 	tolerance: PropTypes.number,
 
 	/**
 	 * In some cases, it the bounding box may need fixed positioning, if your layout
 	 * is relying on fixed positioned elements, for instance.
-	 * @type boolean
+	 *
+	 * @type {Boolean}
 	 */
 	fixedPosition: PropTypes.bool,
 
 	/**
-	 * Enable to fire the onSelection callback while the mouse is moving. Throttled to 50ms
-	 * for performance in IE/Edge
-	 * @type boolean
-	 */
-	selectOnMouseMove: PropTypes.bool,
-
-    /**
 	 * Allows to enable/disable preventing the default action of the onmousedown event (with e.preventDefault).
-     * True by default. Disable if your app needs to capture this event for other functionalities.
-	 * @type boolean
+	 * True by default. Disable if your app needs to capture this event for other functionalities.
+	 *
+	 * @type {Boolean}
 	 */
-    preventDefault: PropTypes.bool,
+	preventDefault: PropTypes.bool,
 
-    /**
-     * Triggered when the user clicks in the component, but not on an item, e.g. whitespace
-     *
-     * @type {Function}
-     */
-    onNonItemClick: PropTypes.func,
+	/**
+	 * Triggered when the user clicks in the component, but not on an item, e.g. whitespace
+	 *
+	 * @type {Function}
+	 */
+	onNonItemClick: PropTypes.func,
 
-    /**
-     * If false, all of the selectble features are turned off.
-     * @type {[type]}
-     */
-    enabled: PropTypes.bool,
+	/**
+	 * If false, all of the selectble features are turned off.
+	 * @type {[type]}
+	 */
+	enabled: PropTypes.bool,
 
-    /**
-     * A CSS class to add to the containing element
-     * @type {string}
-     */
-    className: PropTypes.string,
+	/**
+	 * A CSS class to add to the containing element
+	 * @type {string}
+	 */
+	className: PropTypes.string,
+
+	/**
+	 * A CSS class to add to the containing element when we select
+	 * @type {string}
+	 */
+	selectingClassName: PropTypes.string
 
 };
 
 SelectableGroup.defaultProps = {
-	onSelection: () => {},
 	component: 'div',
 	tolerance: 0,
 	fixedPosition: false,
-	selectOnMouseMove: false,
-    preventDefault: true,
-    enabled: true,
+	preventDefault: true,
+	enabled: true
 };
 
 SelectableGroup.childContextTypes = {

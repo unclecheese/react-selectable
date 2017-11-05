@@ -70,7 +70,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 11);
+/******/ 	return __webpack_require__(__webpack_require__.s = 12);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -394,22 +394,22 @@ module.exports = ReactPropTypesSecret;
 
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+	value: true
 });
 var isNodeIn = function isNodeIn(node, predicate) {
-  if (typeof predicate !== 'function') {
-    throw new Error('isNodeIn second parameter must be a function');
-  }
+	if (typeof predicate !== 'function') {
+		throw new Error('isNodeIn second parameter must be a function');
+	}
 
-  var currentNode = node;
-  while (currentNode) {
-    if (predicate(currentNode)) {
-      return true;
-    }
-    currentNode = currentNode.parentNode;
-  }
+	var currentNode = node;
+	while (currentNode) {
+		if (predicate(currentNode)) {
+			return true;
+		}
+		currentNode = currentNode.parentNode;
+	}
 
-  return false;
+	return false;
 };
 
 exports.default = isNodeIn;
@@ -452,11 +452,11 @@ if (process.env.NODE_ENV !== 'production') {
   // By explicitly using `prop-types` you are opting into new development behavior.
   // http://fb.me/prop-types-in-prod
   var throwOnDirectAccess = true;
-  module.exports = __webpack_require__(13)(isValidElement, throwOnDirectAccess);
+  module.exports = __webpack_require__(14)(isValidElement, throwOnDirectAccess);
 } else {
   // By explicitly using `prop-types` you are opting into new production behavior.
   // http://fb.me/prop-types-in-prod
-  module.exports = __webpack_require__(16)();
+  module.exports = __webpack_require__(17)();
 }
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
@@ -531,6 +531,15 @@ module.exports = warning;
 
 /***/ }),
 /* 9 */
+/***/ (function(module, exports) {
+
+/* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {/* globals __webpack_amd_options__ */
+module.exports = __webpack_amd_options__;
+
+/* WEBPACK VAR INJECTION */}.call(exports, {}))
+
+/***/ }),
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -555,7 +564,7 @@ var isNodeInRoot = function isNodeInRoot(node, root) {
 exports.default = isNodeInRoot;
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -567,7 +576,7 @@ Object.defineProperty(exports, "__esModule", {
 
 /**
  * Given a node, get everything needed to calculate its boundaries
- * @param  {HTMLElement} node 
+ * @param  {HTMLElement} node
  * @return {Object}
  */
 exports.default = function (node) {
@@ -582,7 +591,7 @@ exports.default = function (node) {
 };
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -593,11 +602,11 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.nodeInRoot = exports.isNodeIn = exports.createSelectable = exports.SelectableGroup = undefined;
 
-var _selectableGroup = __webpack_require__(12);
+var _selectableGroup = __webpack_require__(13);
 
 var _selectableGroup2 = _interopRequireDefault(_selectableGroup);
 
-var _createSelectable = __webpack_require__(20);
+var _createSelectable = __webpack_require__(22);
 
 var _createSelectable2 = _interopRequireDefault(_createSelectable);
 
@@ -605,7 +614,7 @@ var _isNodeIn = __webpack_require__(4);
 
 var _isNodeIn2 = _interopRequireDefault(_isNodeIn);
 
-var _nodeInRoot = __webpack_require__(9);
+var _nodeInRoot = __webpack_require__(10);
 
 var _nodeInRoot2 = _interopRequireDefault(_nodeInRoot);
 
@@ -617,7 +626,7 @@ exports.isNodeIn = _isNodeIn2.default;
 exports.nodeInRoot = _nodeInRoot2.default;
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -635,13 +644,15 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactDom = __webpack_require__(6);
 
-var _reactDom2 = _interopRequireDefault(_reactDom);
-
 var _propTypes = __webpack_require__(7);
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
-var _nodeInRoot = __webpack_require__(9);
+var _classnames = __webpack_require__(18);
+
+var _classnames2 = _interopRequireDefault(_classnames);
+
+var _nodeInRoot = __webpack_require__(10);
 
 var _nodeInRoot2 = _interopRequireDefault(_nodeInRoot);
 
@@ -649,15 +660,15 @@ var _isNodeIn = __webpack_require__(4);
 
 var _isNodeIn2 = _interopRequireDefault(_isNodeIn);
 
-var _getBoundsForNode = __webpack_require__(10);
+var _getBoundsForNode = __webpack_require__(11);
 
 var _getBoundsForNode2 = _interopRequireDefault(_getBoundsForNode);
 
-var _doObjectsCollide = __webpack_require__(17);
+var _doObjectsCollide = __webpack_require__(19);
 
 var _doObjectsCollide2 = _interopRequireDefault(_doObjectsCollide);
 
-var _lodash = __webpack_require__(18);
+var _lodash = __webpack_require__(20);
 
 var _lodash2 = _interopRequireDefault(_lodash);
 
@@ -669,8 +680,8 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var SelectableGroup = function (_React$Component) {
-	_inherits(SelectableGroup, _React$Component);
+var SelectableGroup = function (_Component) {
+	_inherits(SelectableGroup, _Component);
 
 	function SelectableGroup(props) {
 		_classCallCheck(this, SelectableGroup);
@@ -747,7 +758,7 @@ var SelectableGroup = function (_React$Component) {
 		key: '_applyMousedown',
 		value: function _applyMousedown(apply) {
 			var funcName = apply ? 'addEventListener' : 'removeEventListener';
-			_reactDom2.default.findDOMNode(this)[funcName]('mousedown', this._mouseDown);
+			(0, _reactDom.findDOMNode)(this)[funcName]('mousedown', this._mouseDown);
 		}
 
 		/**
@@ -769,7 +780,7 @@ var SelectableGroup = function (_React$Component) {
 				boxTop: Math.min(e.pageY - this._rect.y, this._mouseDownData.initialH)
 			});
 
-			if (this.props.selectOnMouseMove) this._throttledSelect(e);
+			this._throttledSelect(e);
 		}
 	}, {
 		key: '_getInitialCoordinates',
@@ -781,8 +792,11 @@ var SelectableGroup = function (_React$Component) {
 			var mTop = parseInt(t.slice(0, t.length - 2), 10);
 
 			var bodyRect = document.body.getBoundingClientRect();
-			var elemRect = _reactDom2.default.findDOMNode(this).getBoundingClientRect();
-			return { x: Math.round(elemRect.left - bodyRect.left + mLeft), y: Math.round(elemRect.top - bodyRect.top + mTop) };
+			var elemRect = (0, _reactDom.findDOMNode)(this).getBoundingClientRect();
+			return {
+				x: Math.round(elemRect.left - bodyRect.left + mLeft),
+				y: Math.round(elemRect.top - bodyRect.top + mTop)
+			};
 		}
 
 		/**
@@ -793,15 +807,21 @@ var SelectableGroup = function (_React$Component) {
 	}, {
 		key: '_mouseDown',
 		value: function _mouseDown(e) {
+			var _props = this.props,
+			    onBeginSelection = _props.onBeginSelection,
+			    preventDefault = _props.preventDefault;
+
 			// Disable if target is control by react-dnd
+
 			if ((0, _isNodeIn2.default)(e.target, function (node) {
 				return !!node.draggable;
 			})) return;
 
-			var node = _reactDom2.default.findDOMNode(this);
+			if (typeof onBeginSelection === 'function') onBeginSelection(e);
+
+			var node = (0, _reactDom.findDOMNode)(this);
 			var collides = void 0,
-			    offsetData = void 0,
-			    distanceData = void 0;
+			    offsetData = void 0;
 			window.addEventListener('mouseup', this._mouseUp);
 
 			// Right clicks
@@ -831,7 +851,7 @@ var SelectableGroup = function (_React$Component) {
 				initialH: e.pageY - this._rect.y
 			};
 
-			if (this.props.preventDefault) e.preventDefault();
+			if (preventDefault) e.preventDefault();
 
 			window.addEventListener('mousemove', this._openSelector);
 		}
@@ -843,23 +863,28 @@ var SelectableGroup = function (_React$Component) {
 	}, {
 		key: '_mouseUp',
 		value: function _mouseUp(e) {
+			var onNonItemClick = this.props.onNonItemClick;
+			var isBoxSelecting = this.state.isBoxSelecting;
+
+
 			e.stopPropagation();
+
 			window.removeEventListener('mousemove', this._openSelector);
 			window.removeEventListener('mouseup', this._mouseUp);
 
 			if (!this._mouseDownData) return;
 
 			// Mouse up when not box selecting is a heuristic for a "click"
-			if (this.props.onNonItemClick && !this.state.isBoxSelecting) {
+			if (onNonItemClick && !isBoxSelecting) {
 				if (!this._registry.some(function (_ref) {
 					var domNode = _ref.domNode;
 					return (0, _nodeInRoot2.default)(e.target, domNode);
 				})) {
-					this.props.onNonItemClick(e);
+					onNonItemClick(e);
 				}
 			}
 
-			this._selectElements(e);
+			this._selectElements(e, true);
 
 			this._mouseDownData = null;
 			this.setState({
@@ -876,20 +901,29 @@ var SelectableGroup = function (_React$Component) {
 	}, {
 		key: '_selectElements',
 		value: function _selectElements(e) {
-			var currentItems = [],
-			    selectbox = _reactDom2.default.findDOMNode(this.refs.selectbox),
-			    tolerance = this.props.tolerance;
+			var isEnd = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+			var _props2 = this.props,
+			    tolerance = _props2.tolerance,
+			    onSelection = _props2.onSelection,
+			    onEndSelection = _props2.onEndSelection;
 
 
-			if (!selectbox) return;
+			var currentItems = [];
+			var _selectbox = (0, _reactDom.findDOMNode)(this.refs.selectbox);
+
+			if (!_selectbox) return;
 
 			this._registry.forEach(function (itemData) {
-				if (itemData.domNode && (0, _doObjectsCollide2.default)(selectbox, itemData.domNode, tolerance) && !currentItems.includes(itemData.key)) {
+				if (itemData.domNode && (0, _doObjectsCollide2.default)(_selectbox, itemData.domNode, tolerance) && !currentItems.includes(itemData.key)) {
 					currentItems.push(itemData.key);
 				}
 			});
 
-			this.props.onSelection(currentItems, e);
+			if (isEnd) {
+				if (typeof onEndSelection === 'function') onEndSelection(currentItems, e);
+			} else {
+				if (typeof onSelection === 'function') onSelection(currentItems, e);
+			}
 		}
 
 		/**
@@ -900,23 +934,36 @@ var SelectableGroup = function (_React$Component) {
 	}, {
 		key: 'render',
 		value: function render() {
+			var _props3 = this.props,
+			    children = _props3.children,
+			    enabled = _props3.enabled,
+			    fixedPosition = _props3.fixedPosition,
+			    className = _props3.className,
+			    selectingClassName = _props3.selectingClassName;
+			var _state = this.state,
+			    isBoxSelecting = _state.isBoxSelecting,
+			    boxLeft = _state.boxLeft,
+			    boxTop = _state.boxTop,
+			    boxWidth = _state.boxWidth,
+			    boxHeight = _state.boxHeight;
+
 			var Component = this.props.component;
 
-			if (!this.props.enabled) {
+			if (!enabled) {
 				return _react2.default.createElement(
 					Component,
-					{ className: this.props.className },
-					this.props.children
+					{ className: className },
+					children
 				);
 			}
 
 			var boxStyle = {
-				left: this.state.boxLeft,
-				top: this.state.boxTop,
-				width: this.state.boxWidth,
-				height: this.state.boxHeight,
+				left: boxLeft,
+				top: boxTop,
+				width: boxWidth,
+				height: boxHeight,
 				zIndex: 9000,
-				position: this.props.fixedPosition ? 'fixed' : 'absolute',
+				position: fixedPosition ? 'fixed' : 'absolute',
 				cursor: 'default'
 			};
 
@@ -935,29 +982,69 @@ var SelectableGroup = function (_React$Component) {
 
 			return _react2.default.createElement(
 				Component,
-				{ className: this.props.className, style: wrapperStyle },
-				this.state.isBoxSelecting && _react2.default.createElement(
+				{
+					className: (0, _classnames2.default)(className, isBoxSelecting ? selectingClassName : null),
+					style: wrapperStyle
+				},
+				isBoxSelecting ? _react2.default.createElement(
 					'div',
-					{ style: boxStyle, ref: 'selectbox' },
-					_react2.default.createElement('span', { style: spanStyle })
-				),
-				this.props.children
+					{
+						style: boxStyle,
+						ref: 'selectbox'
+					},
+					_react2.default.createElement('span', {
+						style: spanStyle
+					})
+				) : null,
+				children
 			);
 		}
 	}]);
 
 	return SelectableGroup;
-}(_react2.default.Component);
+}(_react.Component);
 
 SelectableGroup.propTypes = {
+	/**
+  * @typedef {Object} MouseEvent
+  * @typedef {Object} HTMLElement
+  */
+
+	/**
+  * @type {HTMLElement} node
+  */
+	children: _propTypes2.default.node,
+
+	/**
+  * Event that will fire when selection was started
+  *
+  * @type {Function}
+  * @param {MouseEvent} event - MouseEvent
+  */
+	onBeginSelection: _propTypes2.default.func,
+
+	/**
+  * Event that will fire when selection was finished. Passes an array of keys
+  *
+  * @type {Function}
+  * @param {Array} items - The array of selected items
+  * @param {MouseEvent} event - MouseEvent
+  */
+	onEndSelection: _propTypes2.default.func,
 
 	/**
   * Event that will fire when items are selected. Passes an array of keys
+  *
+  * @type {Function}
+  * @param {Array} items - The array of selected items
+  * @param {MouseEvent} event - MouseEvent
   */
 	onSelection: _propTypes2.default.func,
 
 	/**
   * The component that will represent the Selectable DOM node
+  *
+  * @type {HTMLElement} node
   */
 	component: _propTypes2.default.node,
 
@@ -965,28 +1052,25 @@ SelectableGroup.propTypes = {
   * Amount of forgiveness an item will offer to the selectbox before registering
   * a selection, i.e. if only 1px of the item is in the selection, it shouldn't be
   * included.
+  *
+  * @type {Number}
   */
 	tolerance: _propTypes2.default.number,
 
 	/**
   * In some cases, it the bounding box may need fixed positioning, if your layout
   * is relying on fixed positioned elements, for instance.
-  * @type boolean
+  *
+  * @type {Boolean}
   */
 	fixedPosition: _propTypes2.default.bool,
 
 	/**
-  * Enable to fire the onSelection callback while the mouse is moving. Throttled to 50ms
-  * for performance in IE/Edge
-  * @type boolean
-  */
-	selectOnMouseMove: _propTypes2.default.bool,
-
-	/**
- * Allows to enable/disable preventing the default action of the onmousedown event (with e.preventDefault).
+  * Allows to enable/disable preventing the default action of the onmousedown event (with e.preventDefault).
   * True by default. Disable if your app needs to capture this event for other functionalities.
- * @type boolean
- */
+  *
+  * @type {Boolean}
+  */
 	preventDefault: _propTypes2.default.bool,
 
 	/**
@@ -1006,16 +1090,20 @@ SelectableGroup.propTypes = {
   * A CSS class to add to the containing element
   * @type {string}
   */
-	className: _propTypes2.default.string
+	className: _propTypes2.default.string,
+
+	/**
+  * A CSS class to add to the containing element when we select
+  * @type {string}
+  */
+	selectingClassName: _propTypes2.default.string
 
 };
 
 SelectableGroup.defaultProps = {
-	onSelection: function onSelection() {},
 	component: 'div',
 	tolerance: 0,
 	fixedPosition: false,
-	selectOnMouseMove: false,
 	preventDefault: true,
 	enabled: true
 };
@@ -1027,7 +1115,7 @@ SelectableGroup.childContextTypes = {
 exports.default = SelectableGroup;
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1045,10 +1133,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 var emptyFunction = __webpack_require__(1);
 var invariant = __webpack_require__(2);
 var warning = __webpack_require__(8);
-var assign = __webpack_require__(14);
+var assign = __webpack_require__(15);
 
 var ReactPropTypesSecret = __webpack_require__(3);
-var checkPropTypes = __webpack_require__(15);
+var checkPropTypes = __webpack_require__(16);
 
 module.exports = function (isValidElement, throwOnDirectAccess) {
   /* global Symbol */
@@ -1552,7 +1640,7 @@ module.exports = function (isValidElement, throwOnDirectAccess) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1648,7 +1736,7 @@ module.exports = shouldUseNative() ? Object.assign : function (target, source) {
 };
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1716,7 +1804,7 @@ module.exports = checkPropTypes;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1775,17 +1863,76 @@ module.exports = function () {
 };
 
 /***/ }),
-/* 17 */
+/* 18 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+/*!
+  Copyright (c) 2016 Jed Watson.
+  Licensed under the MIT License (MIT), see
+  http://jedwatson.github.io/classnames
+*/
+/* global define */
+
+(function () {
+	'use strict';
+
+	var hasOwn = {}.hasOwnProperty;
+
+	function classNames() {
+		var classes = [];
+
+		for (var i = 0; i < arguments.length; i++) {
+			var arg = arguments[i];
+			if (!arg) continue;
+
+			var argType = typeof arg === 'undefined' ? 'undefined' : _typeof(arg);
+
+			if (argType === 'string' || argType === 'number') {
+				classes.push(arg);
+			} else if (Array.isArray(arg)) {
+				classes.push(classNames.apply(null, arg));
+			} else if (argType === 'object') {
+				for (var key in arg) {
+					if (hasOwn.call(arg, key) && arg[key]) {
+						classes.push(key);
+					}
+				}
+			}
+		}
+
+		return classes.join(' ');
+	}
+
+	if (typeof module !== 'undefined' && module.exports) {
+		module.exports = classNames;
+	} else if ("function" === 'function' && _typeof(__webpack_require__(9)) === 'object' && __webpack_require__(9)) {
+		// register as 'classnames', consistent with npm package name
+		!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
+			return classNames;
+		}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	} else {
+		window.classNames = classNames;
+	}
+})();
+
+/***/ }),
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+	value: true
 });
 
-var _getBoundsForNode = __webpack_require__(10);
+var _getBoundsForNode = __webpack_require__(11);
 
 var _getBoundsForNode2 = _interopRequireDefault(_getBoundsForNode);
 
@@ -1793,49 +1940,49 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 /**
  * Given offsets, widths, and heights of two objects, determine if they collide (overlap).
- * @param  {int} aTop    The top position of the first object
- * @param  {int} aLeft   The left position of the first object
- * @param  {int} bTop    The top position of the second object
- * @param  {int} bLeft   The left position of the second object
- * @param  {int} aWidth  The width of the first object
- * @param  {int} aHeight The height of the first object
- * @param  {int} bWidth  The width of the second object
- * @param  {int} bHeight The height of the second object
+ * @param  {int} aTop        The top position of the first object
+ * @param  {int} aLeft       The left position of the first object
+ * @param  {int} bTop        The top position of the second object
+ * @param  {int} bLeft       The left position of the second object
+ * @param  {int} aWidth      The width of the first object
+ * @param  {int} aHeight     The height of the first object
+ * @param  {int} bWidth      The width of the second object
+ * @param  {int} bHeight     The height of the second object
+ * @param  {int} tolerance   Amount of forgiveness an item will offer to the selectbox before registering a selection
  * @return {bool}
  */
 var coordsCollide = function coordsCollide(aTop, aLeft, bTop, bLeft, aWidth, aHeight, bWidth, bHeight, tolerance) {
-  if (typeof tolerance === 'undefined') {
-    tolerance = 0;
-  }
-
-  return !(
-  // 'a' bottom doesn't touch 'b' top
-  aTop + aHeight - tolerance < bTop ||
-  // 'a' top doesn't touch 'b' bottom
-  aTop + tolerance > bTop + bHeight ||
-  // 'a' right doesn't touch 'b' left
-  aLeft + aWidth - tolerance < bLeft ||
-  // 'a' left doesn't touch 'b' right
-  aLeft + tolerance > bLeft + bWidth);
+	return !(
+	// 'a' bottom doesn't touch 'b' top
+	aTop + aHeight - tolerance < bTop ||
+	// 'a' top doesn't touch 'b' bottom
+	aTop + tolerance > bTop + bHeight ||
+	// 'a' right doesn't touch 'b' left
+	aLeft + aWidth - tolerance < bLeft ||
+	// 'a' left doesn't touch 'b' right
+	aLeft + tolerance > bLeft + bWidth);
 };
 
 /**
  * Given two objects containing "top", "left", "offsetWidth" and "offsetHeight"
- * properties, determine if they collide. 
+ * properties, determine if they collide.
  * @param  {Object|HTMLElement} a
- * @param  {Object|HTMLElement} b	 
+ * @param  {Object|HTMLElement} b
+ * @param  {int} tolerance
  * @return {bool}
  */
 
-exports.default = function (a, b, tolerance) {
-  var aObj = a instanceof HTMLElement ? (0, _getBoundsForNode2.default)(a) : a,
-      bObj = b instanceof HTMLElement ? (0, _getBoundsForNode2.default)(b) : b;
+exports.default = function (a, b) {
+	var tolerance = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
 
-  return coordsCollide(aObj.top, aObj.left, bObj.top, bObj.left, aObj.offsetWidth, aObj.offsetHeight, bObj.offsetWidth, bObj.offsetHeight, tolerance);
+	var aObj = a instanceof HTMLElement ? (0, _getBoundsForNode2.default)(a) : a;
+	var bObj = b instanceof HTMLElement ? (0, _getBoundsForNode2.default)(b) : b;
+
+	return coordsCollide(aObj.top, aObj.left, bObj.top, bObj.left, aObj.offsetWidth, aObj.offsetHeight, bObj.offsetWidth, bObj.offsetHeight, tolerance);
 };
 
 /***/ }),
-/* 18 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2278,10 +2425,10 @@ function toNumber(value) {
 }
 
 module.exports = throttle;
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(19)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(21)))
 
 /***/ }),
-/* 19 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2311,7 +2458,7 @@ try {
 module.exports = g;
 
 /***/ }),
-/* 20 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2325,11 +2472,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _react = __webpack_require__(5);
 
-var _react2 = _interopRequireDefault(_react);
-
 var _reactDom = __webpack_require__(6);
-
-var _reactDom2 = _interopRequireDefault(_reactDom);
 
 var _propTypes = __webpack_require__(7);
 
@@ -2344,8 +2487,8 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var createSelectable = function createSelectable(WrappedComponent) {
-	var SelectableItem = function (_React$Component) {
-		_inherits(SelectableItem, _React$Component);
+	var SelectableItem = function (_Component) {
+		_inherits(SelectableItem, _Component);
 
 		function SelectableItem() {
 			_classCallCheck(this, SelectableItem);
@@ -2356,7 +2499,7 @@ var createSelectable = function createSelectable(WrappedComponent) {
 		_createClass(SelectableItem, [{
 			key: 'componentDidMount',
 			value: function componentDidMount() {
-				this.context.selectable.register(this.props.selectableKey, _reactDom2.default.findDOMNode(this));
+				this.context.selectable.register(this.props.selectableKey, (0, _reactDom.findDOMNode)(this));
 			}
 		}, {
 			key: 'componentWillUnmount',
@@ -2366,18 +2509,19 @@ var createSelectable = function createSelectable(WrappedComponent) {
 		}, {
 			key: 'render',
 			value: function render() {
-				return _react2.default.createElement(WrappedComponent, this.props, this.props.children);
+				return (0, _react.createElement)(WrappedComponent, this.props, this.props.children);
 			}
 		}]);
 
 		return SelectableItem;
-	}(_react2.default.Component);
+	}(_react.Component);
 
 	SelectableItem.contextTypes = {
 		selectable: _propTypes2.default.object
 	};
 
 	SelectableItem.propTypes = {
+		children: _propTypes2.default.node,
 		selectableKey: _propTypes2.default.any.isRequired
 	};
 
