@@ -13,9 +13,9 @@ declare module 'react-selectable' {
     }
 
     interface ReactSelectableComponentProps {
-        key: number|string;
-        selected: boolean;
-        selectableKey: number|string;
+        key?: number|string;
+        selected?: boolean;
+        selectableKey?: number|string;
         [key: string]: any;
     }
 
