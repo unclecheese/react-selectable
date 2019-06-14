@@ -16,11 +16,11 @@ const createSelectable = (WrappedComponent) => {
 
 
 		render () {
-			return React.createElement(
-				WrappedComponent,
-				this.props,
-				this.props.children
-			);
+          return <div id={"selectableItem-"+this.props.selectableKey}>
+            <WrappedComponent {...this.props}>
+              {this.props.children}
+            </WrappedComponent>
+          </div>
 		}
 	}
 
