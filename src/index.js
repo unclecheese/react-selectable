@@ -7,5 +7,5 @@ export {
 	SelectableGroup,
 	createSelectable,
 	isNodeIn,
-	nodeInRoot
+	nodeInRoot,
 };
