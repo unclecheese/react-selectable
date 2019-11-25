@@ -3,10 +3,12 @@ declare module 'react-selectable' {
     interface ReactSelectableGroupProps {
         onSelection?: (selectedItems: Array<any>) => void;
         onNonItemClick?: () => void;
+        onBeginSelection?: () => void;
+        onEndSelection?: () => void;
+        selectingClassName?: string;
         tolerance?: number;
         component?: string;
         fixedPosition?: boolean;
-        selectOnMouseMove?: boolean;
         preventDefault?: boolean;
         enabled?: boolean;
         [key: string]: any;
