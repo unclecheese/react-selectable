@@ -96,7 +96,11 @@ class SelectableGroup extends Component {
 		this._throttledSelect(e);
 	}
 
-	_getInitialCoordinates () {
+	_getInitialCoordinates() {
+		if (this.props.fixedPosition) {
+			return { x: 0, y: 0 }
+		}
+
 		const style = window.getComputedStyle(document.body);
 		const t = style.getPropertyValue('margin-top');
 		const l = style.getPropertyValue('margin-left');
