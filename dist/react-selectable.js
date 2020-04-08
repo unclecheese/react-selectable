@@ -70,7 +70,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 9);
+/******/ 	return __webpack_require__(__webpack_require__.s = 10);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -344,11 +344,11 @@ if (process.env.NODE_ENV !== 'production') {
   // By explicitly using `prop-types` you are opting into new development behavior.
   // http://fb.me/prop-types-in-prod
   var throwOnDirectAccess = true;
-  module.exports = __webpack_require__(13)(ReactIs.isElement, throwOnDirectAccess);
+  module.exports = __webpack_require__(14)(ReactIs.isElement, throwOnDirectAccess);
 } else {
   // By explicitly using `prop-types` you are opting into new production behavior.
   // http://fb.me/prop-types-in-prod
-  module.exports = __webpack_require__(16)();
+  module.exports = __webpack_require__(17)();
 }
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
@@ -360,14 +360,23 @@ if (process.env.NODE_ENV !== 'production') {
 /* WEBPACK VAR INJECTION */(function(process) {
 
 if (process.env.NODE_ENV === 'production') {
-  module.exports = __webpack_require__(11);
-} else {
   module.exports = __webpack_require__(12);
+} else {
+  module.exports = __webpack_require__(13);
 }
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
 /* 7 */
+/***/ (function(module, exports) {
+
+/* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {/* globals __webpack_amd_options__ */
+module.exports = __webpack_amd_options__;
+
+/* WEBPACK VAR INJECTION */}.call(exports, {}))
+
+/***/ }),
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -392,7 +401,7 @@ var isNodeInRoot = function isNodeInRoot(node, root) {
 exports.default = isNodeInRoot;
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -419,7 +428,7 @@ exports.default = function (node) {
 };
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -430,11 +439,11 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.nodeInRoot = exports.isNodeIn = exports.createSelectable = exports.SelectableGroup = undefined;
 
-var _selectableGroup = __webpack_require__(10);
+var _selectableGroup = __webpack_require__(11);
 
 var _selectableGroup2 = _interopRequireDefault(_selectableGroup);
 
-var _createSelectable = __webpack_require__(20);
+var _createSelectable = __webpack_require__(22);
 
 var _createSelectable2 = _interopRequireDefault(_createSelectable);
 
@@ -442,7 +451,7 @@ var _isNodeIn = __webpack_require__(2);
 
 var _isNodeIn2 = _interopRequireDefault(_isNodeIn);
 
-var _nodeInRoot = __webpack_require__(7);
+var _nodeInRoot = __webpack_require__(8);
 
 var _nodeInRoot2 = _interopRequireDefault(_nodeInRoot);
 
@@ -454,7 +463,7 @@ exports.isNodeIn = _isNodeIn2.default;
 exports.nodeInRoot = _nodeInRoot2.default;
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -472,13 +481,15 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactDom = __webpack_require__(4);
 
-var _reactDom2 = _interopRequireDefault(_reactDom);
-
 var _propTypes = __webpack_require__(5);
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
-var _nodeInRoot = __webpack_require__(7);
+var _classnames = __webpack_require__(18);
+
+var _classnames2 = _interopRequireDefault(_classnames);
+
+var _nodeInRoot = __webpack_require__(8);
 
 var _nodeInRoot2 = _interopRequireDefault(_nodeInRoot);
 
@@ -486,15 +497,15 @@ var _isNodeIn = __webpack_require__(2);
 
 var _isNodeIn2 = _interopRequireDefault(_isNodeIn);
 
-var _getBoundsForNode = __webpack_require__(8);
+var _getBoundsForNode = __webpack_require__(9);
 
 var _getBoundsForNode2 = _interopRequireDefault(_getBoundsForNode);
 
-var _doObjectsCollide = __webpack_require__(17);
+var _doObjectsCollide = __webpack_require__(19);
 
 var _doObjectsCollide2 = _interopRequireDefault(_doObjectsCollide);
 
-var _lodash = __webpack_require__(18);
+var _lodash = __webpack_require__(20);
 
 var _lodash2 = _interopRequireDefault(_lodash);
 
@@ -506,8 +517,8 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var SelectableGroup = function (_React$Component) {
-	_inherits(SelectableGroup, _React$Component);
+var SelectableGroup = function (_Component) {
+	_inherits(SelectableGroup, _Component);
 
 	function SelectableGroup(props) {
 		_classCallCheck(this, SelectableGroup);
@@ -584,7 +595,7 @@ var SelectableGroup = function (_React$Component) {
 		key: '_applyMousedown',
 		value: function _applyMousedown(apply) {
 			var funcName = apply ? 'addEventListener' : 'removeEventListener';
-			_reactDom2.default.findDOMNode(this)[funcName]('mousedown', this._mouseDown);
+			(0, _reactDom.findDOMNode)(this)[funcName]('mousedown', this._mouseDown);
 		}
 
 		/**
@@ -606,7 +617,7 @@ var SelectableGroup = function (_React$Component) {
 				boxTop: Math.min(e.pageY - this._rect.y, this._mouseDownData.initialH)
 			});
 
-			if (this.props.selectOnMouseMove) this._throttledSelect(e);
+			this._throttledSelect(e);
 		}
 	}, {
 		key: '_getInitialCoordinates',
@@ -622,8 +633,11 @@ var SelectableGroup = function (_React$Component) {
 			var mTop = parseInt(t.slice(0, t.length - 2), 10);
 
 			var bodyRect = document.body.getBoundingClientRect();
-			var elemRect = _reactDom2.default.findDOMNode(this).getBoundingClientRect();
-			return { x: Math.round(elemRect.left - bodyRect.left + mLeft), y: Math.round(elemRect.top - bodyRect.top + mTop) };
+			var elemRect = (0, _reactDom.findDOMNode)(this).getBoundingClientRect();
+			return {
+				x: Math.round(elemRect.left - bodyRect.left + mLeft),
+				y: Math.round(elemRect.top - bodyRect.top + mTop)
+			};
 		}
 
 		/**
@@ -634,15 +648,21 @@ var SelectableGroup = function (_React$Component) {
 	}, {
 		key: '_mouseDown',
 		value: function _mouseDown(e) {
+			var _props = this.props,
+			    onBeginSelection = _props.onBeginSelection,
+			    preventDefault = _props.preventDefault;
+
 			// Disable if target is control by react-dnd
+
 			if ((0, _isNodeIn2.default)(e.target, function (node) {
 				return !!node.draggable;
 			})) return;
 
-			var node = _reactDom2.default.findDOMNode(this);
+			if (typeof onBeginSelection === 'function') onBeginSelection(e);
+
+			var node = (0, _reactDom.findDOMNode)(this);
 			var collides = void 0,
-			    offsetData = void 0,
-			    distanceData = void 0;
+			    offsetData = void 0;
 			window.addEventListener('mouseup', this._mouseUp);
 
 			// Right clicks
@@ -672,7 +692,7 @@ var SelectableGroup = function (_React$Component) {
 				initialH: e.pageY - this._rect.y
 			};
 
-			if (this.props.preventDefault) e.preventDefault();
+			if (preventDefault) e.preventDefault();
 
 			window.addEventListener('mousemove', this._openSelector);
 		}
@@ -684,23 +704,28 @@ var SelectableGroup = function (_React$Component) {
 	}, {
 		key: '_mouseUp',
 		value: function _mouseUp(e) {
+			var onNonItemClick = this.props.onNonItemClick;
+			var isBoxSelecting = this.state.isBoxSelecting;
+
+
 			e.stopPropagation();
+
 			window.removeEventListener('mousemove', this._openSelector);
 			window.removeEventListener('mouseup', this._mouseUp);
 
 			if (!this._mouseDownData) return;
 
 			// Mouse up when not box selecting is a heuristic for a "click"
-			if (this.props.onNonItemClick && !this.state.isBoxSelecting) {
+			if (onNonItemClick && !isBoxSelecting) {
 				if (!this._registry.some(function (_ref) {
 					var domNode = _ref.domNode;
 					return (0, _nodeInRoot2.default)(e.target, domNode);
 				})) {
-					this.props.onNonItemClick(e);
+					onNonItemClick(e);
 				}
 			}
 
-			this._selectElements(e);
+			this._selectElements(e, true);
 
 			this._mouseDownData = null;
 			this.setState({
@@ -717,20 +742,29 @@ var SelectableGroup = function (_React$Component) {
 	}, {
 		key: '_selectElements',
 		value: function _selectElements(e) {
-			var currentItems = [],
-			    selectbox = _reactDom2.default.findDOMNode(this.refs.selectbox),
-			    tolerance = this.props.tolerance;
+			var isEnd = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+			var _props2 = this.props,
+			    tolerance = _props2.tolerance,
+			    onSelection = _props2.onSelection,
+			    onEndSelection = _props2.onEndSelection;
 
 
-			if (!selectbox) return;
+			var currentItems = [];
+			var _selectbox = (0, _reactDom.findDOMNode)(this.refs.selectbox);
+
+			if (!_selectbox) return;
 
 			this._registry.forEach(function (itemData) {
-				if (itemData.domNode && (0, _doObjectsCollide2.default)(selectbox, itemData.domNode, tolerance) && !currentItems.includes(itemData.key)) {
+				if (itemData.domNode && (0, _doObjectsCollide2.default)(_selectbox, itemData.domNode, tolerance) && !currentItems.includes(itemData.key)) {
 					currentItems.push(itemData.key);
 				}
 			});
 
-			this.props.onSelection(currentItems, e);
+			if (isEnd) {
+				if (typeof onEndSelection === 'function') onEndSelection(currentItems, e);
+			} else {
+				if (typeof onSelection === 'function') onSelection(currentItems, e);
+			}
 		}
 
 		/**
@@ -741,23 +775,36 @@ var SelectableGroup = function (_React$Component) {
 	}, {
 		key: 'render',
 		value: function render() {
+			var _props3 = this.props,
+			    children = _props3.children,
+			    enabled = _props3.enabled,
+			    fixedPosition = _props3.fixedPosition,
+			    className = _props3.className,
+			    selectingClassName = _props3.selectingClassName;
+			var _state = this.state,
+			    isBoxSelecting = _state.isBoxSelecting,
+			    boxLeft = _state.boxLeft,
+			    boxTop = _state.boxTop,
+			    boxWidth = _state.boxWidth,
+			    boxHeight = _state.boxHeight;
+
 			var Component = this.props.component;
 
-			if (!this.props.enabled) {
+			if (!enabled) {
 				return _react2.default.createElement(
 					Component,
-					{ className: this.props.className },
-					this.props.children
+					{ className: className },
+					children
 				);
 			}
 
 			var boxStyle = {
-				left: this.state.boxLeft,
-				top: this.state.boxTop,
-				width: this.state.boxWidth,
-				height: this.state.boxHeight,
+				left: boxLeft,
+				top: boxTop,
+				width: boxWidth,
+				height: boxHeight,
 				zIndex: 9000,
-				position: this.props.fixedPosition ? 'fixed' : 'absolute',
+				position: fixedPosition ? 'fixed' : 'absolute',
 				cursor: 'default'
 			};
 
@@ -776,29 +823,69 @@ var SelectableGroup = function (_React$Component) {
 
 			return _react2.default.createElement(
 				Component,
-				{ className: this.props.className, style: wrapperStyle },
-				this.state.isBoxSelecting && _react2.default.createElement(
+				{
+					className: (0, _classnames2.default)(className, isBoxSelecting ? selectingClassName : null),
+					style: wrapperStyle
+				},
+				isBoxSelecting ? _react2.default.createElement(
 					'div',
-					{ style: boxStyle, ref: 'selectbox' },
-					_react2.default.createElement('span', { style: spanStyle })
-				),
-				this.props.children
+					{
+						style: boxStyle,
+						ref: 'selectbox'
+					},
+					_react2.default.createElement('span', {
+						style: spanStyle
+					})
+				) : null,
+				children
 			);
 		}
 	}]);
 
 	return SelectableGroup;
-}(_react2.default.Component);
+}(_react.Component);
 
 SelectableGroup.propTypes = {
+	/**
+  * @typedef {Object} MouseEvent
+  * @typedef {Object} HTMLElement
+  */
+
+	/**
+  * @type {HTMLElement} node
+  */
+	children: _propTypes2.default.node,
+
+	/**
+  * Event that will fire when selection was started
+  *
+  * @type {Function}
+  * @param {MouseEvent} event - MouseEvent
+  */
+	onBeginSelection: _propTypes2.default.func,
+
+	/**
+  * Event that will fire when selection was finished. Passes an array of keys
+  *
+  * @type {Function}
+  * @param {Array} items - The array of selected items
+  * @param {MouseEvent} event - MouseEvent
+  */
+	onEndSelection: _propTypes2.default.func,
 
 	/**
   * Event that will fire when items are selected. Passes an array of keys
+  *
+  * @type {Function}
+  * @param {Array} items - The array of selected items
+  * @param {MouseEvent} event - MouseEvent
   */
 	onSelection: _propTypes2.default.func,
 
 	/**
   * The component that will represent the Selectable DOM node
+  *
+  * @type {HTMLElement} node
   */
 	component: _propTypes2.default.node,
 
@@ -806,28 +893,25 @@ SelectableGroup.propTypes = {
   * Amount of forgiveness an item will offer to the selectbox before registering
   * a selection, i.e. if only 1px of the item is in the selection, it shouldn't be
   * included.
+  *
+  * @type {Number}
   */
 	tolerance: _propTypes2.default.number,
 
 	/**
   * In some cases, it the bounding box may need fixed positioning, if your layout
   * is relying on fixed positioned elements, for instance.
-  * @type boolean
+  *
+  * @type {Boolean}
   */
 	fixedPosition: _propTypes2.default.bool,
 
 	/**
-  * Enable to fire the onSelection callback while the mouse is moving. Throttled to 50ms
-  * for performance in IE/Edge
-  * @type boolean
-  */
-	selectOnMouseMove: _propTypes2.default.bool,
-
-	/**
- * Allows to enable/disable preventing the default action of the onmousedown event (with e.preventDefault).
+  * Allows to enable/disable preventing the default action of the onmousedown event (with e.preventDefault).
   * True by default. Disable if your app needs to capture this event for other functionalities.
- * @type boolean
- */
+  *
+  * @type {Boolean}
+  */
 	preventDefault: _propTypes2.default.bool,
 
 	/**
@@ -847,16 +931,20 @@ SelectableGroup.propTypes = {
   * A CSS class to add to the containing element
   * @type {string}
   */
-	className: _propTypes2.default.string
+	className: _propTypes2.default.string,
+
+	/**
+  * A CSS class to add to the containing element when we select
+  * @type {string}
+  */
+	selectingClassName: _propTypes2.default.string
 
 };
 
 SelectableGroup.defaultProps = {
-	onSelection: function onSelection() {},
 	component: 'div',
 	tolerance: 0,
 	fixedPosition: false,
-	selectOnMouseMove: false,
 	preventDefault: true,
 	enabled: true
 };
@@ -868,11 +956,11 @@ SelectableGroup.childContextTypes = {
 exports.default = SelectableGroup;
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/** @license React v16.8.6
+/** @license React v16.12.0
  * react-is.production.min.js
  *
  * Copyright (c) Facebook, Inc. and its affiliates.
@@ -898,56 +986,60 @@ var b = "function" === typeof Symbol && Symbol.for,
     m = b ? Symbol.for("react.concurrent_mode") : 60111,
     n = b ? Symbol.for("react.forward_ref") : 60112,
     p = b ? Symbol.for("react.suspense") : 60113,
-    q = b ? Symbol.for("react.memo") : 60115,
-    r = b ? Symbol.for("react.lazy") : 60116;function t(a) {
+    q = b ? Symbol.for("react.suspense_list") : 60120,
+    r = b ? Symbol.for("react.memo") : 60115,
+    t = b ? Symbol.for("react.lazy") : 60116,
+    v = b ? Symbol.for("react.fundamental") : 60117,
+    w = b ? Symbol.for("react.responder") : 60118,
+    x = b ? Symbol.for("react.scope") : 60119;function y(a) {
   if ("object" === (typeof a === "undefined" ? "undefined" : _typeof(a)) && null !== a) {
     var u = a.$$typeof;switch (u) {case c:
         switch (a = a.type, a) {case l:case m:case e:case g:case f:case p:
             return a;default:
-            switch (a = a && a.$$typeof, a) {case k:case n:case h:
+            switch (a = a && a.$$typeof, a) {case k:case n:case t:case r:case h:
                 return a;default:
-                return u;}}case r:case q:case d:
+                return u;}}case d:
         return u;}
   }
-}function v(a) {
-  return t(a) === m;
-}exports.typeOf = t;exports.AsyncMode = l;exports.ConcurrentMode = m;exports.ContextConsumer = k;exports.ContextProvider = h;exports.Element = c;exports.ForwardRef = n;
-exports.Fragment = e;exports.Lazy = r;exports.Memo = q;exports.Portal = d;exports.Profiler = g;exports.StrictMode = f;exports.Suspense = p;exports.isValidElementType = function (a) {
-  return "string" === typeof a || "function" === typeof a || a === e || a === m || a === g || a === f || a === p || "object" === (typeof a === "undefined" ? "undefined" : _typeof(a)) && null !== a && (a.$$typeof === r || a.$$typeof === q || a.$$typeof === h || a.$$typeof === k || a.$$typeof === n);
+}function z(a) {
+  return y(a) === m;
+}
+exports.typeOf = y;exports.AsyncMode = l;exports.ConcurrentMode = m;exports.ContextConsumer = k;exports.ContextProvider = h;exports.Element = c;exports.ForwardRef = n;exports.Fragment = e;exports.Lazy = t;exports.Memo = r;exports.Portal = d;exports.Profiler = g;exports.StrictMode = f;exports.Suspense = p;
+exports.isValidElementType = function (a) {
+  return "string" === typeof a || "function" === typeof a || a === e || a === m || a === g || a === f || a === p || a === q || "object" === (typeof a === "undefined" ? "undefined" : _typeof(a)) && null !== a && (a.$$typeof === t || a.$$typeof === r || a.$$typeof === h || a.$$typeof === k || a.$$typeof === n || a.$$typeof === v || a.$$typeof === w || a.$$typeof === x);
 };exports.isAsyncMode = function (a) {
-  return v(a) || t(a) === l;
-};exports.isConcurrentMode = v;exports.isContextConsumer = function (a) {
-  return t(a) === k;
+  return z(a) || y(a) === l;
+};exports.isConcurrentMode = z;exports.isContextConsumer = function (a) {
+  return y(a) === k;
+};exports.isContextProvider = function (a) {
+  return y(a) === h;
 };
-exports.isContextProvider = function (a) {
-  return t(a) === h;
-};exports.isElement = function (a) {
+exports.isElement = function (a) {
   return "object" === (typeof a === "undefined" ? "undefined" : _typeof(a)) && null !== a && a.$$typeof === c;
 };exports.isForwardRef = function (a) {
-  return t(a) === n;
+  return y(a) === n;
 };exports.isFragment = function (a) {
-  return t(a) === e;
+  return y(a) === e;
 };exports.isLazy = function (a) {
-  return t(a) === r;
+  return y(a) === t;
 };exports.isMemo = function (a) {
-  return t(a) === q;
+  return y(a) === r;
 };exports.isPortal = function (a) {
-  return t(a) === d;
+  return y(a) === d;
 };exports.isProfiler = function (a) {
-  return t(a) === g;
+  return y(a) === g;
 };exports.isStrictMode = function (a) {
-  return t(a) === f;
-};
-exports.isSuspense = function (a) {
-  return t(a) === p;
+  return y(a) === f;
+};exports.isSuspense = function (a) {
+  return y(a) === p;
 };
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(process) {/** @license React v16.8.6
+/* WEBPACK VAR INJECTION */(function(process) {/** @license React v16.12.0
  * react-is.development.js
  *
  * Copyright (c) Facebook, Inc. and its affiliates.
@@ -969,25 +1061,29 @@ if (process.env.NODE_ENV !== "production") {
     // The Symbol used to tag the ReactElement-like types. If there is no native Symbol
     // nor polyfill, then a plain number is used for performance.
     var hasSymbol = typeof Symbol === 'function' && Symbol.for;
-
     var REACT_ELEMENT_TYPE = hasSymbol ? Symbol.for('react.element') : 0xeac7;
     var REACT_PORTAL_TYPE = hasSymbol ? Symbol.for('react.portal') : 0xeaca;
     var REACT_FRAGMENT_TYPE = hasSymbol ? Symbol.for('react.fragment') : 0xeacb;
     var REACT_STRICT_MODE_TYPE = hasSymbol ? Symbol.for('react.strict_mode') : 0xeacc;
     var REACT_PROFILER_TYPE = hasSymbol ? Symbol.for('react.profiler') : 0xead2;
     var REACT_PROVIDER_TYPE = hasSymbol ? Symbol.for('react.provider') : 0xeacd;
-    var REACT_CONTEXT_TYPE = hasSymbol ? Symbol.for('react.context') : 0xeace;
+    var REACT_CONTEXT_TYPE = hasSymbol ? Symbol.for('react.context') : 0xeace; // TODO: We don't use AsyncMode or ConcurrentMode anymore. They were temporary
+    // (unstable) APIs that have been removed. Can we remove the symbols?
+
     var REACT_ASYNC_MODE_TYPE = hasSymbol ? Symbol.for('react.async_mode') : 0xeacf;
     var REACT_CONCURRENT_MODE_TYPE = hasSymbol ? Symbol.for('react.concurrent_mode') : 0xeacf;
     var REACT_FORWARD_REF_TYPE = hasSymbol ? Symbol.for('react.forward_ref') : 0xead0;
     var REACT_SUSPENSE_TYPE = hasSymbol ? Symbol.for('react.suspense') : 0xead1;
+    var REACT_SUSPENSE_LIST_TYPE = hasSymbol ? Symbol.for('react.suspense_list') : 0xead8;
     var REACT_MEMO_TYPE = hasSymbol ? Symbol.for('react.memo') : 0xead3;
     var REACT_LAZY_TYPE = hasSymbol ? Symbol.for('react.lazy') : 0xead4;
+    var REACT_FUNDAMENTAL_TYPE = hasSymbol ? Symbol.for('react.fundamental') : 0xead5;
+    var REACT_RESPONDER_TYPE = hasSymbol ? Symbol.for('react.responder') : 0xead6;
+    var REACT_SCOPE_TYPE = hasSymbol ? Symbol.for('react.scope') : 0xead7;
 
     function isValidElementType(type) {
-      return typeof type === 'string' || typeof type === 'function' ||
-      // Note: its typeof might be other than 'symbol' or 'number' if it's a polyfill.
-      type === REACT_FRAGMENT_TYPE || type === REACT_CONCURRENT_MODE_TYPE || type === REACT_PROFILER_TYPE || type === REACT_STRICT_MODE_TYPE || type === REACT_SUSPENSE_TYPE || (typeof type === 'undefined' ? 'undefined' : _typeof(type)) === 'object' && type !== null && (type.$$typeof === REACT_LAZY_TYPE || type.$$typeof === REACT_MEMO_TYPE || type.$$typeof === REACT_PROVIDER_TYPE || type.$$typeof === REACT_CONTEXT_TYPE || type.$$typeof === REACT_FORWARD_REF_TYPE);
+      return typeof type === 'string' || typeof type === 'function' || // Note: its typeof might be other than 'symbol' or 'number' if it's a polyfill.
+      type === REACT_FRAGMENT_TYPE || type === REACT_CONCURRENT_MODE_TYPE || type === REACT_PROFILER_TYPE || type === REACT_STRICT_MODE_TYPE || type === REACT_SUSPENSE_TYPE || type === REACT_SUSPENSE_LIST_TYPE || (typeof type === 'undefined' ? 'undefined' : _typeof(type)) === 'object' && type !== null && (type.$$typeof === REACT_LAZY_TYPE || type.$$typeof === REACT_MEMO_TYPE || type.$$typeof === REACT_PROVIDER_TYPE || type.$$typeof === REACT_CONTEXT_TYPE || type.$$typeof === REACT_FORWARD_REF_TYPE || type.$$typeof === REACT_FUNDAMENTAL_TYPE || type.$$typeof === REACT_RESPONDER_TYPE || type.$$typeof === REACT_SCOPE_TYPE);
     }
 
     /**
@@ -1003,12 +1099,11 @@ if (process.env.NODE_ENV !== "production") {
      * paths. Removing the logging code for production environments will keep the
      * same logic and follow the same code paths.
      */
-
-    var lowPriorityWarning = function lowPriorityWarning() {};
+    var lowPriorityWarningWithoutStack = function lowPriorityWarningWithoutStack() {};
 
     {
       var printWarning = function printWarning(format) {
-        for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+        for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
           args[_key - 1] = arguments[_key];
         }
 
@@ -1016,9 +1111,11 @@ if (process.env.NODE_ENV !== "production") {
         var message = 'Warning: ' + format.replace(/%s/g, function () {
           return args[argIndex++];
         });
+
         if (typeof console !== 'undefined') {
           console.warn(message);
         }
+
         try {
           // --- Welcome to debugging React ---
           // This error was thrown as a convenience so that you can use this stack
@@ -1027,25 +1124,27 @@ if (process.env.NODE_ENV !== "production") {
         } catch (x) {}
       };
 
-      lowPriorityWarning = function lowPriorityWarning(condition, format) {
+      lowPriorityWarningWithoutStack = function lowPriorityWarningWithoutStack(condition, format) {
         if (format === undefined) {
-          throw new Error('`lowPriorityWarning(condition, format, ...args)` requires a warning ' + 'message argument');
+          throw new Error('`lowPriorityWarningWithoutStack(condition, format, ...args)` requires a warning ' + 'message argument');
         }
+
         if (!condition) {
-          for (var _len2 = arguments.length, args = Array(_len2 > 2 ? _len2 - 2 : 0), _key2 = 2; _key2 < _len2; _key2++) {
+          for (var _len2 = arguments.length, args = new Array(_len2 > 2 ? _len2 - 2 : 0), _key2 = 2; _key2 < _len2; _key2++) {
             args[_key2 - 2] = arguments[_key2];
           }
 
-          printWarning.apply(undefined, [format].concat(args));
+          printWarning.apply(void 0, [format].concat(args));
         }
       };
     }
 
-    var lowPriorityWarning$1 = lowPriorityWarning;
+    var lowPriorityWarningWithoutStack$1 = lowPriorityWarningWithoutStack;
 
     function typeOf(object) {
       if ((typeof object === 'undefined' ? 'undefined' : _typeof(object)) === 'object' && object !== null) {
         var $$typeof = object.$$typeof;
+
         switch ($$typeof) {
           case REACT_ELEMENT_TYPE:
             var type = object.type;
@@ -1058,29 +1157,32 @@ if (process.env.NODE_ENV !== "production") {
               case REACT_STRICT_MODE_TYPE:
               case REACT_SUSPENSE_TYPE:
                 return type;
+
               default:
                 var $$typeofType = type && type.$$typeof;
 
                 switch ($$typeofType) {
                   case REACT_CONTEXT_TYPE:
                   case REACT_FORWARD_REF_TYPE:
+                  case REACT_LAZY_TYPE:
+                  case REACT_MEMO_TYPE:
                   case REACT_PROVIDER_TYPE:
                     return $$typeofType;
+
                   default:
                     return $$typeof;
                 }
+
             }
-          case REACT_LAZY_TYPE:
-          case REACT_MEMO_TYPE:
+
           case REACT_PORTAL_TYPE:
             return $$typeof;
         }
       }
 
       return undefined;
-    }
+    } // AsyncMode is deprecated along with isAsyncMode
 
-    // AsyncMode is deprecated along with isAsyncMode
     var AsyncMode = REACT_ASYNC_MODE_TYPE;
     var ConcurrentMode = REACT_CONCURRENT_MODE_TYPE;
     var ContextConsumer = REACT_CONTEXT_TYPE;
@@ -1094,17 +1196,16 @@ if (process.env.NODE_ENV !== "production") {
     var Profiler = REACT_PROFILER_TYPE;
     var StrictMode = REACT_STRICT_MODE_TYPE;
     var Suspense = REACT_SUSPENSE_TYPE;
+    var hasWarnedAboutDeprecatedIsAsyncMode = false; // AsyncMode should be deprecated
 
-    var hasWarnedAboutDeprecatedIsAsyncMode = false;
-
-    // AsyncMode should be deprecated
     function isAsyncMode(object) {
       {
         if (!hasWarnedAboutDeprecatedIsAsyncMode) {
           hasWarnedAboutDeprecatedIsAsyncMode = true;
-          lowPriorityWarning$1(false, 'The ReactIs.isAsyncMode() alias has been deprecated, ' + 'and will be removed in React 17+. Update your code to use ' + 'ReactIs.isConcurrentMode() instead. It has the exact same API.');
+          lowPriorityWarningWithoutStack$1(false, 'The ReactIs.isAsyncMode() alias has been deprecated, ' + 'and will be removed in React 17+. Update your code to use ' + 'ReactIs.isConcurrentMode() instead. It has the exact same API.');
         }
       }
+
       return isConcurrentMode(object) || typeOf(object) === REACT_ASYNC_MODE_TYPE;
     }
     function isConcurrentMode(object) {
@@ -1177,7 +1278,7 @@ if (process.env.NODE_ENV !== "production") {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1193,10 +1294,10 @@ if (process.env.NODE_ENV !== "production") {
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 var ReactIs = __webpack_require__(6);
-var assign = __webpack_require__(14);
+var assign = __webpack_require__(15);
 
 var ReactPropTypesSecret = __webpack_require__(1);
-var checkPropTypes = __webpack_require__(15);
+var checkPropTypes = __webpack_require__(16);
 
 var has = Function.call.bind(Object.prototype.hasOwnProperty);
 var printWarning = function printWarning() {};
@@ -1755,7 +1856,7 @@ module.exports = function (isValidElement, throwOnDirectAccess) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1851,7 +1952,7 @@ module.exports = shouldUseNative() ? Object.assign : function (target, source) {
 };
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1950,7 +2051,7 @@ module.exports = checkPropTypes;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2016,17 +2117,80 @@ module.exports = function () {
 };
 
 /***/ }),
-/* 17 */
+/* 18 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+/*!
+  Copyright (c) 2017 Jed Watson.
+  Licensed under the MIT License (MIT), see
+  http://jedwatson.github.io/classnames
+*/
+/* global define */
+
+(function () {
+	'use strict';
+
+	var hasOwn = {}.hasOwnProperty;
+
+	function classNames() {
+		var classes = [];
+
+		for (var i = 0; i < arguments.length; i++) {
+			var arg = arguments[i];
+			if (!arg) continue;
+
+			var argType = typeof arg === 'undefined' ? 'undefined' : _typeof(arg);
+
+			if (argType === 'string' || argType === 'number') {
+				classes.push(arg);
+			} else if (Array.isArray(arg) && arg.length) {
+				var inner = classNames.apply(null, arg);
+				if (inner) {
+					classes.push(inner);
+				}
+			} else if (argType === 'object') {
+				for (var key in arg) {
+					if (hasOwn.call(arg, key) && arg[key]) {
+						classes.push(key);
+					}
+				}
+			}
+		}
+
+		return classes.join(' ');
+	}
+
+	if (typeof module !== 'undefined' && module.exports) {
+		classNames.default = classNames;
+		module.exports = classNames;
+	} else if ("function" === 'function' && _typeof(__webpack_require__(7)) === 'object' && __webpack_require__(7)) {
+		// register as 'classnames', consistent with npm package name
+		!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = (function () {
+			return classNames;
+		}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	} else {
+		window.classNames = classNames;
+	}
+})();
+
+/***/ }),
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+	value: true
 });
 
-var _getBoundsForNode = __webpack_require__(8);
+var _getBoundsForNode = __webpack_require__(9);
 
 var _getBoundsForNode2 = _interopRequireDefault(_getBoundsForNode);
 
@@ -2034,49 +2198,49 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 /**
  * Given offsets, widths, and heights of two objects, determine if they collide (overlap).
- * @param  {int} aTop    The top position of the first object
- * @param  {int} aLeft   The left position of the first object
- * @param  {int} bTop    The top position of the second object
- * @param  {int} bLeft   The left position of the second object
- * @param  {int} aWidth  The width of the first object
- * @param  {int} aHeight The height of the first object
- * @param  {int} bWidth  The width of the second object
- * @param  {int} bHeight The height of the second object
+ * @param  {int} aTop        The top position of the first object
+ * @param  {int} aLeft       The left position of the first object
+ * @param  {int} bTop        The top position of the second object
+ * @param  {int} bLeft       The left position of the second object
+ * @param  {int} aWidth      The width of the first object
+ * @param  {int} aHeight     The height of the first object
+ * @param  {int} bWidth      The width of the second object
+ * @param  {int} bHeight     The height of the second object
+ * @param  {int} tolerance   Amount of forgiveness an item will offer to the selectbox before registering a selection
  * @return {bool}
  */
 var coordsCollide = function coordsCollide(aTop, aLeft, bTop, bLeft, aWidth, aHeight, bWidth, bHeight, tolerance) {
-  if (typeof tolerance === 'undefined') {
-    tolerance = 0;
-  }
-
-  return !(
-  // 'a' bottom doesn't touch 'b' top
-  aTop + aHeight - tolerance < bTop ||
-  // 'a' top doesn't touch 'b' bottom
-  aTop + tolerance > bTop + bHeight ||
-  // 'a' right doesn't touch 'b' left
-  aLeft + aWidth - tolerance < bLeft ||
-  // 'a' left doesn't touch 'b' right
-  aLeft + tolerance > bLeft + bWidth);
+	return !(
+	// 'a' bottom doesn't touch 'b' top
+	aTop + aHeight - tolerance < bTop ||
+	// 'a' top doesn't touch 'b' bottom
+	aTop + tolerance > bTop + bHeight ||
+	// 'a' right doesn't touch 'b' left
+	aLeft + aWidth - tolerance < bLeft ||
+	// 'a' left doesn't touch 'b' right
+	aLeft + tolerance > bLeft + bWidth);
 };
 
 /**
  * Given two objects containing "top", "left", "offsetWidth" and "offsetHeight"
- * properties, determine if they collide. 
+ * properties, determine if they collide.
  * @param  {Object|HTMLElement} a
- * @param  {Object|HTMLElement} b	 
+ * @param  {Object|HTMLElement} b
+ * @param  {int} tolerance
  * @return {bool}
  */
 
-exports.default = function (a, b, tolerance) {
-  var aObj = a instanceof HTMLElement ? (0, _getBoundsForNode2.default)(a) : a,
-      bObj = b instanceof HTMLElement ? (0, _getBoundsForNode2.default)(b) : b;
+exports.default = function (a, b) {
+	var tolerance = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
 
-  return coordsCollide(aObj.top, aObj.left, bObj.top, bObj.left, aObj.offsetWidth, aObj.offsetHeight, bObj.offsetWidth, bObj.offsetHeight, tolerance);
+	var aObj = a instanceof HTMLElement ? (0, _getBoundsForNode2.default)(a) : a;
+	var bObj = b instanceof HTMLElement ? (0, _getBoundsForNode2.default)(b) : b;
+
+	return coordsCollide(aObj.top, aObj.left, bObj.top, bObj.left, aObj.offsetWidth, aObj.offsetHeight, bObj.offsetWidth, bObj.offsetHeight, tolerance);
 };
 
 /***/ }),
-/* 18 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2519,10 +2683,10 @@ function toNumber(value) {
 }
 
 module.exports = throttle;
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(19)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(21)))
 
 /***/ }),
-/* 19 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2552,7 +2716,7 @@ try {
 module.exports = g;
 
 /***/ }),
-/* 20 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2569,8 +2733,6 @@ var _react = __webpack_require__(3);
 var _react2 = _interopRequireDefault(_react);
 
 var _reactDom = __webpack_require__(4);
-
-var _reactDom2 = _interopRequireDefault(_reactDom);
 
 var _propTypes = __webpack_require__(5);
 
@@ -2597,7 +2759,7 @@ var createSelectable = function createSelectable(WrappedComponent) {
 		_createClass(SelectableItem, [{
 			key: 'componentDidMount',
 			value: function componentDidMount() {
-				this.context.selectable.register(this.props.selectableKey, _reactDom2.default.findDOMNode(this));
+				this.context.selectable.register(this.props.selectableKey, (0, _reactDom.findDOMNode)(this));
 			}
 		}, {
 			key: 'componentWillUnmount',
@@ -2627,6 +2789,7 @@ var createSelectable = function createSelectable(WrappedComponent) {
 	};
 
 	SelectableItem.propTypes = {
+		children: _propTypes2.default.node,
 		selectableKey: _propTypes2.default.any.isRequired
 	};
 
