@@ -1,4 +1,4 @@
-import getBoundsForNode from './getBoundsForNode';
+import {getBoundsForNode} from './getBoundsForNode';
 
 /**
  * Given offsets, widths, and heights of two objects, determine if they collide (overlap).
@@ -14,16 +14,16 @@ import getBoundsForNode from './getBoundsForNode';
  * @return {bool}
  */
 const coordsCollide = (aTop, aLeft, bTop, bLeft, aWidth, aHeight, bWidth, bHeight, tolerance) => {
-	return !(
-		// 'a' bottom doesn't touch 'b' top
-		( (aTop + aHeight - tolerance) < bTop ) ||
-		// 'a' top doesn't touch 'b' bottom
-		( (aTop + tolerance) > (bTop + bHeight) ) ||
-		// 'a' right doesn't touch 'b' left
-		( (aLeft + aWidth - tolerance) < bLeft ) ||
-		// 'a' left doesn't touch 'b' right
-		( (aLeft + tolerance) > (bLeft + bWidth) )
-	);
+    return !(
+        // 'a' bottom doesn't touch 'b' top
+        ((aTop + aHeight - tolerance) < bTop) ||
+        // 'a' top doesn't touch 'b' bottom
+        ((aTop + tolerance) > (bTop + bHeight)) ||
+        // 'a' right doesn't touch 'b' left
+        ((aLeft + aWidth - tolerance) < bLeft) ||
+        // 'a' left doesn't touch 'b' right
+        ((aLeft + tolerance) > (bLeft + bWidth))
+    );
 };
 
 /**
@@ -34,19 +34,19 @@ const coordsCollide = (aTop, aLeft, bTop, bLeft, aWidth, aHeight, bWidth, bHeigh
  * @param  {int} tolerance
  * @return {bool}
  */
-export default (a, b, tolerance = 0) => {
-	const aObj = (a instanceof HTMLElement) ? getBoundsForNode(a) : a;
-	const bObj = (b instanceof HTMLElement) ? getBoundsForNode(b) : b;
+export const doObjectsCollide = (a, b, tolerance = 0) => {
+    const aObj = (a instanceof HTMLElement) ? getBoundsForNode(a) : a;
+    const bObj = (b instanceof HTMLElement) ? getBoundsForNode(b) : b;
 
-	return coordsCollide(
-		aObj.top,
-		aObj.left,
-		bObj.top,
-		bObj.left,
-		aObj.offsetWidth,
-		aObj.offsetHeight,
-		bObj.offsetWidth,
-		bObj.offsetHeight,
-		tolerance
-	);
+    return coordsCollide(
+        aObj.top,
+        aObj.left,
+        bObj.top,
+        bObj.left,
+        aObj.offsetWidth,
+        aObj.offsetHeight,
+        bObj.offsetWidth,
+        bObj.offsetHeight,
+        tolerance
+    );
 };

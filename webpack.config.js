@@ -1,37 +1,42 @@
-var webpack  = require('webpack');
+const webpack = require('webpack');
 const path = require('path');
 
+// const env = process.env.NODE_ENV || 'development';
+const env = 'production';
+
+const externalAliasesList = [
+    'react',
+    'react-dom',
+];
+
+/** https://webpack.js.org/configuration/externals/#function */
+const externals = function(context, request, callback) {
+    if (externalAliasesList.includes(request)) {
+        return callback(null, 'commonjs ' + request);
+    }
+    callback();
+};
+
 module.exports = {
-  entry: './src/index.js',
-  output: {
-    path: path.resolve(__dirname,'dist'), // This is where images AND js will go
-    publicPath: '', // This is used to generate URLs to e.g. images
-    filename: 'react-selectable.js',
-    libraryTarget: 'umd'
-  },
-  externals: {
-    'react': {
-		root: 'React',
-		commonjs2: 'react',
-		commonjs: 'react',
-		amd: 'react',
+    mode: env,
+    entry: path.resolve(__dirname, 'src', 'index.ts'),
+    output: {
+        path: path.resolve(__dirname, 'dist'), // This is where images AND js will go
+        publicPath: '', // This is used to generate URLs to e.g. images
+        filename: 'react-selectable.js',
+        libraryTarget: 'umd',
     },
-    'react-dom': {
-		root: 'ReactDOM',
-		commonjs2: 'react-dom',
-		commonjs: 'react-dom',
-		amd: 'react-dom'
-  	}
-  },
-  module: {
-    rules: [
-      {
-        test: /\.js$/,
-        loader: 'babel-loader'
-      }
-    ]
-  },
-  resolve: {
-      modules: ["node_modules"],
-  }
+    externals,
+    module: {
+        rules: [
+            {
+                test: /\.(js|ts|tsx)$/,
+                exclude: /node_modules/,
+                loader: 'babel-loader',
+            },
+        ]
+    },
+    resolve: {
+        extensions: ['.ts', '.tsx', '.js'],
+    }
 };
