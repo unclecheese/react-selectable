@@ -126,7 +126,10 @@ class SelectableGroup extends Component {
 		// Disable if target is control by react-dnd
 		if (isNodeIn(e.target, node => !!node.draggable)) return;
 
-		if (typeof onBeginSelection === 'function') onBeginSelection(e);
+		// Allow onBeginSelection to cancel selection by return an explicit false
+		if (typeof onBeginSelection === 'function' && onBeginSelection(e) === false) {
+			return;
+		}
 
 		const node = findDOMNode(this);
 		let collides, offsetData;
