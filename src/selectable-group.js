@@ -124,6 +124,7 @@ class SelectableGroup extends Component {
 		const {onBeginSelection, preventDefault} = this.props;
 
 		// Disable if target is control by react-dnd
+		console.log("react selectable mouse down event");
 		if (isNodeIn(e.target, node => !!node.draggable)) return;
 
 		// Allow onBeginSelection to cancel selection by return an explicit false
